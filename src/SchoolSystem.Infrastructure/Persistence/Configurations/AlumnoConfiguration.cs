@@ -199,17 +199,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             builder.Property(a => a.CreatedAt)
                 .HasColumnName("created_at")
-                                .IsRequired();
+                .HasDefaultValueSql("GETDATE()")
+                .IsRequired();
 
-
-
-            builder.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("GETDATE()");
-            /*
             builder.Property(a => a.UpdatedAt)
                 .HasColumnName("updated_at")
-                                .IsRequired();
-            */
+                .HasDefaultValueSql("GETDATE()")
+                .IsRequired();
+
             builder.Property(a => a.CreatedBy)
                 .HasColumnName("created_by");
 
