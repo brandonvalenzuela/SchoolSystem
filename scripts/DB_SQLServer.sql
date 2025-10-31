@@ -295,7 +295,7 @@ CREATE TABLE padres (
     deleted_at DATETIME2,
     deleted_by INT,
     FOREIGN KEY (escuela_id) REFERENCES escuelas(id) ON DELETE CASCADE,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE NO ACTION
 );
 GO
 
@@ -340,9 +340,9 @@ CREATE TABLE alumnos (
     deleted_at DATETIME2,
     deleted_by INT,
     FOREIGN KEY (escuela_id) REFERENCES escuelas(id) ON DELETE CASCADE,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
-    CONSTRAINT uk_matricula UNIQUE (matricula),
-    CONSTRAINT uk_curp UNIQUE (curp)
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE NO ACTION,
+    CONSTRAINT uk_alumno_matricula UNIQUE (matricula),
+    CONSTRAINT uk_alumno_curp UNIQUE (curp)
 );
 GO
 
@@ -367,8 +367,8 @@ CREATE TABLE alumno_padres (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE CASCADE,
-    FOREIGN KEY (padre_id) REFERENCES padres(id),
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION,
+    FOREIGN KEY (padre_id) REFERENCES padres(id) ON DELETE NO ACTION,
     CONSTRAINT uk_alumno_padre UNIQUE (alumno_id, padre_id)
 );
 GO
@@ -398,7 +398,7 @@ CREATE TABLE maestros (
     deleted_at DATETIME2,
     deleted_by INT,
     FOREIGN KEY (escuela_id) REFERENCES escuelas(id) ON DELETE CASCADE,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE NO ACTION,
     CONSTRAINT uk_numero_empleado UNIQUE (numero_empleado)
 );
 GO
@@ -422,10 +422,10 @@ CREATE TABLE grupo_materia_maestros (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (grupo_id) REFERENCES grupos(id) ON DELETE CASCADE,
-    FOREIGN KEY (materia_id) REFERENCES materias(id),
-    FOREIGN KEY (maestro_id) REFERENCES maestros(id),
-    CONSTRAINT uk_grupo_materia UNIQUE (grupo_id, materia_id)
+    FOREIGN KEY (grupo_id) REFERENCES grupos(id) ON DELETE NO ACTION,
+    FOREIGN KEY (materia_id) REFERENCES materias(id) ON DELETE NO ACTION,
+    FOREIGN KEY (maestro_id) REFERENCES maestros(id) ON DELETE NO ACTION,
+    CONSTRAINT uk_grupo_materia_maestro UNIQUE (grupo_id, materia_id)
 );
 GO
 
@@ -449,8 +449,8 @@ CREATE TABLE inscripciones (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id),
-    FOREIGN KEY (grupo_id) REFERENCES grupos(id)
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION,
+    FOREIGN KEY (grupo_id) REFERENCES grupos(id) ON DELETE NO ACTION
 );
 GO
 
@@ -505,9 +505,9 @@ CREATE TABLE calificaciones (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id),
-    FOREIGN KEY (materia_id) REFERENCES materias(id),
-    FOREIGN KEY (periodo_evaluacion_id) REFERENCES periodos_evaluacion(id),
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION,
+    FOREIGN KEY (materia_id) REFERENCES materias(id) ON DELETE NO ACTION,
+    FOREIGN KEY (periodo_evaluacion_id) REFERENCES periodos_evaluacion(id) ON DELETE NO ACTION,
     CONSTRAINT uk_alumno_materia_periodo UNIQUE (alumno_id, materia_id, periodo_evaluacion_id)
 );
 GO
@@ -530,8 +530,8 @@ CREATE TABLE asistencias (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id),
-    FOREIGN KEY (grupo_id) REFERENCES grupos(id)
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION,
+    FOREIGN KEY (grupo_id) REFERENCES grupos(id) ON DELETE NO ACTION
 );
 GO
 
@@ -562,8 +562,8 @@ CREATE TABLE registros_conducta (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id),
-    FOREIGN KEY (maestro_id) REFERENCES maestros(id)
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION,
+    FOREIGN KEY (maestro_id) REFERENCES maestros(id) ON DELETE NO ACTION
 );
 GO
 
@@ -586,8 +586,8 @@ CREATE TABLE alumno_puntos (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE CASCADE,
-    CONSTRAINT uk_alumno UNIQUE (alumno_id)
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION,
+    CONSTRAINT uk_alumno_puntos UNIQUE (alumno_id)
 );
 GO
 
@@ -604,7 +604,7 @@ CREATE TABLE historial_puntos (
     tipo NVARCHAR(20) NOT NULL,
     created_at DATETIME2 DEFAULT GETDATE(),
     created_by INT,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE CASCADE
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION
 );
 GO
 
@@ -644,8 +644,8 @@ CREATE TABLE alumno_insignias (
     fecha_obtencion DATETIME2 DEFAULT GETDATE(),
     created_at DATETIME2 DEFAULT GETDATE(),
     created_by INT,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE CASCADE,
-    FOREIGN KEY (insignia_id) REFERENCES insignias(id),
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION,
+    FOREIGN KEY (insignia_id) REFERENCES insignias(id) ON DELETE NO ACTION,
     CONSTRAINT uk_alumno_insignia UNIQUE (alumno_id, insignia_id)
 );
 GO
@@ -669,7 +669,7 @@ CREATE TABLE sanciones (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id)
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION
 );
 GO
 
@@ -724,8 +724,8 @@ CREATE TABLE cargos (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id),
-    FOREIGN KEY (concepto_pago_id) REFERENCES conceptos_pago(id)
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION,
+    FOREIGN KEY (concepto_pago_id) REFERENCES conceptos_pago(id) ON DELETE NO ACTION
 );
 GO
 
@@ -752,8 +752,8 @@ CREATE TABLE pagos (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id),
-    FOREIGN KEY (cargo_id) REFERENCES cargos(id) ON DELETE SET NULL
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION,
+    FOREIGN KEY (cargo_id) REFERENCES cargos(id) ON DELETE NO ACTION
 );
 GO
 
@@ -778,7 +778,7 @@ CREATE TABLE estados_cuenta (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE CASCADE,
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION,
     CONSTRAINT uk_alumno_ciclo UNIQUE (alumno_id, ciclo_escolar)
 );
 GO
@@ -837,7 +837,7 @@ CREATE TABLE libros (
     deleted_at DATETIME2,
     deleted_by INT,
     FOREIGN KEY (escuela_id) REFERENCES escuelas(id) ON DELETE CASCADE,
-    FOREIGN KEY (categoria_id) REFERENCES categorias_recurso(id) ON DELETE SET NULL
+    FOREIGN KEY (categoria_id) REFERENCES categorias_recurso(id) ON DELETE NO ACTION
 );
 GO
 
@@ -864,8 +864,8 @@ CREATE TABLE prestamos (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (libro_id) REFERENCES libros(id),
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+    FOREIGN KEY (libro_id) REFERENCES libros(id) ON DELETE NO ACTION,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE NO ACTION
 );
 GO
 
@@ -896,8 +896,8 @@ CREATE TABLE expedientes_medicos (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE CASCADE,
-    CONSTRAINT uk_alumno UNIQUE (alumno_id)
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION,
+    CONSTRAINT uk_expediente_alumno UNIQUE (alumno_id)
 );
 GO
 
@@ -919,7 +919,7 @@ CREATE TABLE vacunas (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (expediente_medico_id) REFERENCES expedientes_medicos(id) ON DELETE CASCADE
+    FOREIGN KEY (expediente_medico_id) REFERENCES expedientes_medicos(id) ON DELETE NO ACTION
 );
 GO
 
@@ -941,7 +941,7 @@ CREATE TABLE alergias (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (expediente_medico_id) REFERENCES expedientes_medicos(id) ON DELETE CASCADE
+    FOREIGN KEY (expediente_medico_id) REFERENCES expedientes_medicos(id) ON DELETE NO ACTION
 );
 GO
 
@@ -967,7 +967,7 @@ CREATE TABLE medicamentos (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (expediente_medico_id) REFERENCES expedientes_medicos(id) ON DELETE CASCADE
+    FOREIGN KEY (expediente_medico_id) REFERENCES expedientes_medicos(id) ON DELETE NO ACTION
 );
 GO
 
@@ -991,7 +991,7 @@ CREATE TABLE historial_medico (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (expediente_medico_id) REFERENCES expedientes_medicos(id) ON DELETE CASCADE
+    FOREIGN KEY (expediente_medico_id) REFERENCES expedientes_medicos(id) ON DELETE NO ACTION
 );
 GO
 
@@ -1022,8 +1022,8 @@ CREATE TABLE mensajes (
     deleted_at DATETIME2,
     deleted_by INT,
     FOREIGN KEY (escuela_id) REFERENCES escuelas(id) ON DELETE CASCADE,
-    FOREIGN KEY (remitente_id) REFERENCES usuarios(id),
-    FOREIGN KEY (destinatario_id) REFERENCES usuarios(id)
+    FOREIGN KEY (remitente_id) REFERENCES usuarios(id) ON DELETE NO ACTION,
+    FOREIGN KEY (destinatario_id) REFERENCES usuarios(id) ON DELETE NO ACTION
 );
 GO
 
@@ -1087,8 +1087,8 @@ CREATE TABLE comunicados_lectura (
     usuario_id INT NOT NULL,
     fecha_lectura DATETIME2 DEFAULT GETDATE(),
     created_at DATETIME2 DEFAULT GETDATE(),
-    FOREIGN KEY (comunicado_id) REFERENCES comunicados(id) ON DELETE CASCADE,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (comunicado_id) REFERENCES comunicados(id) ON DELETE NO ACTION,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE NO ACTION,
     CONSTRAINT uk_comunicado_usuario UNIQUE (comunicado_id, usuario_id)
 );
 GO
@@ -1108,7 +1108,7 @@ CREATE TABLE notificaciones_sms_log (
     costo DECIMAL(10, 4),
     respuesta_proveedor NVARCHAR(MAX),
     created_at DATETIME2 DEFAULT GETDATE(),
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE NO ACTION
 );
 GO
 
@@ -1164,7 +1164,7 @@ CREATE TABLE documentos (
     deleted_at DATETIME2,
     deleted_by INT,
     FOREIGN KEY (escuela_id) REFERENCES escuelas(id) ON DELETE CASCADE,
-    FOREIGN KEY (plantilla_id) REFERENCES plantillas_documento(id) ON DELETE SET NULL
+    FOREIGN KEY (plantilla_id) REFERENCES plantillas_documento(id) ON DELETE NO ACTION
 );
 GO
 
@@ -1251,8 +1251,8 @@ CREATE TABLE logs_auditoria (
     datos_antes NVARCHAR(MAX) CHECK (ISJSON(datos_antes) = 1),
     datos_despues NVARCHAR(MAX) CHECK (ISJSON(datos_despues) = 1),
     created_at DATETIME2 DEFAULT GETDATE(),
-    FOREIGN KEY (escuela_id) REFERENCES escuelas(id) ON DELETE SET NULL,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
+    FOREIGN KEY (escuela_id) REFERENCES escuelas(id) ON DELETE NO ACTION,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE NO ACTION
 );
 GO
 
@@ -1270,7 +1270,7 @@ CREATE TABLE cambios_entidad (
     valor_nuevo NVARCHAR(MAX),
     tipo_cambio NVARCHAR(20),
     created_at DATETIME2 DEFAULT GETDATE(),
-    FOREIGN KEY (log_auditoria_id) REFERENCES logs_auditoria(id) ON DELETE CASCADE
+    FOREIGN KEY (log_auditoria_id) REFERENCES logs_auditoria(id) ON DELETE NO ACTION
 );
 GO
 
@@ -1292,7 +1292,7 @@ CREATE TABLE sincronizaciones (
     fecha_fin DATETIME2,
     created_at DATETIME2 DEFAULT GETDATE(),
     FOREIGN KEY (escuela_id) REFERENCES escuelas(id) ON DELETE CASCADE,
-    FOREIGN KEY (dispositivo_id) REFERENCES dispositivos(id) ON DELETE SET NULL
+    FOREIGN KEY (dispositivo_id) REFERENCES dispositivos(id) ON DELETE NO ACTION
 );
 GO
 
@@ -1394,9 +1394,9 @@ CREATE TABLE tareas (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (maestro_id) REFERENCES maestros(id),
-    FOREIGN KEY (grupo_id) REFERENCES grupos(id) ON DELETE CASCADE,
-    FOREIGN KEY (materia_id) REFERENCES materias(id)
+    FOREIGN KEY (maestro_id) REFERENCES maestros(id) ON DELETE NO ACTION,
+    FOREIGN KEY (grupo_id) REFERENCES grupos(id) ON DELETE NO ACTION,
+    FOREIGN KEY (materia_id) REFERENCES materias(id) ON DELETE NO ACTION
 );
 GO
 
@@ -1423,8 +1423,8 @@ CREATE TABLE tareas_entregas (
     is_deleted BIT DEFAULT 0,
     deleted_at DATETIME2,
     deleted_by INT,
-    FOREIGN KEY (tarea_id) REFERENCES tareas(id) ON DELETE CASCADE,
-    FOREIGN KEY (alumno_id) REFERENCES alumnos(id),
+    FOREIGN KEY (tarea_id) REFERENCES tareas(id) ON DELETE NO ACTION,
+    FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE NO ACTION,
     CONSTRAINT uk_tarea_alumno UNIQUE (tarea_id, alumno_id)
 );
 GO
