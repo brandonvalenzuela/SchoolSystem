@@ -1,0 +1,167 @@
+# Arquitectura del proyecto
+
+Estructura del repositorio generada automáticamente (rutas relativas al root):
+
+- `src/`
+ - `SchoolSystem.Domain/`
+ - `SchoolSystem.Domain.csproj`
+ - `Entities/`
+ - `Common/`
+ - `BaseEntity.cs`
+ - `IAuditableEntity.cs`
+ - `ISoftDeletable.cs`
+ - `Academico/`
+ - `Alumno.cs`
+ - `Grupo.cs`
+ - `Materia.cs`
+ - `NivelEducativo.cs`
+ - `Inscripcion.cs`
+ - `Maestro.cs`
+ - `Padre.cs`
+ - `Grado.cs`
+ - `GrupoMateriaMaestro.cs`
+ - `Conducta/`
+ - `RegistroConducta.cs`
+ - `AlumnoPuntos.cs`
+ - `Insignia.cs`
+ - `Sancion.cs`
+ - `Escuelas/`
+ - `Escuela.cs`
+ - `Evaluacion/`
+ - `Asistencia.cs`
+ - `Calificacion.cs`
+ - `PeriodoEvaluacion.cs`
+ - `Usuarios/`
+ - `Usuario.cs`
+ - `Finanzas/`
+ - `Cargo.cs`
+ - `Pago.cs`
+ - `ConceptoPago.cs`
+ - `EstadoCuenta.cs`
+ - `Medico/`
+ - `ExpedienteMedico.cs`
+ - `Alergia.cs`
+ - `Vacuna.cs`
+ - `Medicamento.cs`
+ - `HistorialMedico.cs`
+ - `Comunicacion/`
+ - `Mensaje.cs`
+ - `Notificacion.cs`
+ - `NotificacionSmsLog.cs`
+ - `Documentos/`
+ - `PlantillaDocumento.cs`
+ - `Documento.cs`
+ - `ReportePersonalizado.cs`
+ - `Calendario/`
+ - `Evento.cs`
+ - `Biblioteca/`
+ - `Libro.cs`
+ - `CategoriaRecurso.cs`
+ - `Prestamo.cs`
+ - `Configuracion/`
+ - `ConfiguracionEscuela.cs`
+ - `ParametroSistema.cs`
+ - `PreferenciaUsuario.cs`
+ - `Auditoria/`
+ - `LogAuditoria.cs`
+ - `CambioEntidad.cs`
+ - `Sincronizacion.cs`
+ - `Enums/`
+ - `Comunicacion/`
+ - `TipoNotificacion.cs`
+ - `CanalNotificacion.cs`
+ - `PrioridadNotificacion.cs`
+ - `EstatusSms.cs`
+ - `Conducta/`
+ - `TipoConducta.cs`
+ - `CategoriaConducta.cs`
+ - `GravedadIncidente.cs`
+ - `EstadoRegistroConducta.cs`
+ - `CategoriaPuntos.cs`
+ - `TipoRacha.cs`
+ - `Academico/`
+ - `EstatusAlumno.cs`
+ - `Turno.cs`
+ - `EstatusInscripcion.cs`
+ - `RelacionFamiliar.cs`
+ - `Genero.cs`
+ - `Finanzas/`
+ - `TipoConceptoPago.cs`
+ - `MetodoPago.cs`
+ - `PeriodicidadPago.cs`
+ - `EstatusCargo.cs`
+ - `Medico/`
+ - `TipoSangre.cs`
+ - `TipoAlergia.cs`
+ - `NivelGravedad.cs`
+ - `ViaAdministracion.cs`
+ - `EstadoMedicamento.cs`
+ - `Documentos/`
+ - `TipoDocumento.cs`
+ - `OrientacionPagina.cs`
+ - `EstadoDocumento.cs`
+ - `Interfaces/`
+ - `IRepository.cs`
+ - `SchoolSystem.Application/`
+ - `SchoolSystem.Application.csproj`
+ - `Services/` (posible vacío)
+ - `DTOs/` (posible vacío)
+ - `Commands/` (posible vacío)
+ - `Queries/` (posible vacío)
+ - `SchoolSystem.Infrastructure/`
+ - `SchoolSystem.Infrastructure.csproj`
+ - `Persistence/`
+ - `Context/`
+ - `SchoolSystemDbContext.cs`
+ - `SchoolContext.cs`
+ - `Configurations/`
+ - `AlumnoConfiguration.cs`
+ - `UsuarioConfiguration.cs`
+ - `CalificacionConfiguration.cs`
+ - `EscuelaConfiguration.cs`
+ - `AlergiaConfiguration.cs`
+ - `VacunaConfiguration.cs`
+ - `ExpedienteMedicoConfiguration.cs`
+ - `MedicamentoConfiguration.cs`
+ - `HistorialMedicoConfiguration.cs`
+ - `NotificacionConfiguration.cs`
+ - `MensajeConfiguration.cs`
+ - `NotificacionSmsLogConfiguration.cs`
+ - `ConceptoPagoConfiguration.cs`
+ - `CargoConfiguration.cs`
+ - `PagoConfiguration.cs`
+ - `EstadoCuentaConfiguration.cs`
+ - `LibroConfiguration.cs`
+ - `CategoriaRecursoConfiguration.cs`
+ - `PrestamoConfiguration.cs`
+ - `PlantillaDocumentoConfiguration.cs`
+ - `DocumentoConfiguration.cs`
+ - `ReportePersonalizadoConfiguration.cs`
+ - `LogAuditoriaConfiguration.cs`
+ - `CambioEntidadConfiguration.cs`
+ - `SincronizacionConfiguration.cs`
+ - `Migrations/` (posible vacío)
+ - `SchoolSystem.Shared/`
+ - `SchoolSystem.Shared.csproj`
+ - `Utils/` (posible vacío)
+ - `Dtos/` (posible vacío)
+- `SchoolSystem.API/`
+ - `SchoolSystem.API.csproj`
+ - `appsettings.json`
+ - `Controllers/` (posible vacío)
+ - `Program.cs` (posible)
+ - `Startup.cs` (posible)
+- `tests/`
+ - `SchoolSystem.UnitTests/`
+ - `SchoolSystem.UnitTests.csproj`
+ - `SchoolSystem.FunctionalTests/`
+ - `SchoolSystem.FunctionalTests.csproj`
+ - `SchoolSystem.IntegrationTests/`
+ - `SchoolSystem.IntegrationTests.csproj`
+- `scripts/`
+ - `DB.sql`
+- `README.md` (posible)
+- `.gitignore` (posible)
+
+---
+
