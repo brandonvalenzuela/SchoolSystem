@@ -32,7 +32,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Proveedor
             builder.Property(nsl => nsl.Proveedor)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(nsl => nsl.Estatus)
                 .IsRequired()
@@ -41,7 +42,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(EstatusSms.Pendiente);
 
             builder.Property(nsl => nsl.SidProveedor)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             // Costos y fechas
             builder.Property(nsl => nsl.Costo)
@@ -60,10 +62,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Error y reintentos
             builder.Property(nsl => nsl.ErrorMensaje)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(nsl => nsl.CodigoError)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(nsl => nsl.NumeroIntentos)
                 .HasDefaultValue(0);
@@ -73,7 +77,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Metadata
             builder.Property(nsl => nsl.Metadata)
-                .HasColumnType( "LONGTEXT");
+                .HasColumnType( "LONGTEXT")
+                .IsRequired(false);
 
             // Relaciones
             builder.HasOne(nsl => nsl.Notificacion)

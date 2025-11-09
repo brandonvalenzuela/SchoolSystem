@@ -27,54 +27,70 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(300);
 
             builder.Property(ce => ce.NombreCorto)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(ce => ce.Lema)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(ce => ce.Mision)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(ce => ce.Vision)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(ce => ce.Valores)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Datos de contacto
             builder.Property(ce => ce.Direccion)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(ce => ce.Ciudad)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(ce => ce.Estado)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(ce => ce.CodigoPostal)
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .IsRequired(false);
 
             builder.Property(ce => ce.Pais)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(ce => ce.Telefono)
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .IsRequired(false);
 
             builder.Property(ce => ce.TelefonoAlternativo)
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .IsRequired(false);
 
             builder.Property(ce => ce.Email)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(ce => ce.SitioWeb)
-                .HasMaxLength(300);
+                .HasMaxLength(300)
+                .IsRequired(false);
 
             // Identidad visual
             builder.Property(ce => ce.LogoUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(ce => ce.LogoPequenoUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(ce => ce.ColorPrimario)
                 .HasMaxLength(7)
@@ -89,7 +105,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue("#FF9800");
 
             builder.Property(ce => ce.ImagenFondoLoginUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Configuración académica
             builder.Property(ce => ce.SistemaCalificacion)
@@ -205,7 +222,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             builder.Property(ce => ce.ProveedorPagos)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(ce => ce.MonedaPredeterminada)
                 .HasMaxLength(10)
@@ -246,7 +264,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Integraciones
             builder.Property(ce => ce.GoogleApiKey)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(ce => ce.IntegracionGoogleClassroomHabilitada)
                 .HasDefaultValue(false);
@@ -258,10 +277,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             builder.Property(ce => ce.ConfiguracionSMTP)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(ce => ce.ConfiguracionSMS)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Licencia y límites
             builder.Property(ce => ce.TipoPlan)
@@ -282,10 +303,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Metadata
             builder.Property(ce => ce.DatosAdicionales)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(ce => ce.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(ce => ce.CreatedAt)

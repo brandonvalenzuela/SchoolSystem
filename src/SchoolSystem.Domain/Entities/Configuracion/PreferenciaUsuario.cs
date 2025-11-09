@@ -60,7 +60,7 @@ namespace SchoolSystem.Domain.Entities.Configuracion
         /// Descripción de la preferencia
         /// </summary>
         [StringLength(500)]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Categoría de la preferencia

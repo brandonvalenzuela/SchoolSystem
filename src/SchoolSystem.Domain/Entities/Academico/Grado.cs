@@ -51,7 +51,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Descripción del grado (opcional)
         /// </summary>
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Orden dentro del nivel educativo
@@ -86,7 +86,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Requisitos para ingresar a este grado
         /// </summary>
-        public string Requisitos { get; set; }
+        public string? Requisitos { get; set; }
 
         #endregion
 

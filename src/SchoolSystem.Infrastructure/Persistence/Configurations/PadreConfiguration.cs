@@ -45,7 +45,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(100);
 
             builder.Property(p => p.Carrera)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             // Información adicional
             builder.Property(p => p.EstadoCivil)

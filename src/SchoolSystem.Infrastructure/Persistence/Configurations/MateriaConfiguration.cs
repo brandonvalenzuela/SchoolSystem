@@ -30,8 +30,16 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(20);
 
             builder.Property(m => m.Descripcion)
+                .IsRequired(false)
                 .HasMaxLength(1000);
 
+            // Icono
+            builder.Property(m => m.Icono)
+                .IsRequired(false)
+                .HasConversion<string>()
+                .HasMaxLength(50);
+
+            // Color
             builder.Property(m => m.Color)
                 .HasMaxLength(7); // Para formato hexadecimal #FFFFFF
 
@@ -41,9 +49,13 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Configuración de la materia
             builder.Property(m => m.Area)
+                .IsRequired()
+                .HasConversion<string>()
                 .HasMaxLength(100);
 
             builder.Property(m => m.Tipo)
+                .IsRequired()
+                .HasConversion<string>()
                 .HasMaxLength(50);
 
             builder.Property(m => m.NivelDificultad)
@@ -53,26 +65,32 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             builder.Property(m => m.MaterialesRequeridos)
-                .HasMaxLength(1000);
+                .HasMaxLength(1000)
+                .IsRequired(false);
 
             builder.Property(m => m.RequiereInstalacionesEspeciales)
                 .HasDefaultValue(false);
 
             builder.Property(m => m.InstalacionesRequeridas)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Objetivos y contenido
             builder.Property(m => m.Objetivos)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(m => m.Competencias)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(m => m.ContenidoTematico)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(m => m.Bibliografia)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(m => m.CreatedAt)
@@ -89,7 +107,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Relaciones
             builder.HasOne(m => m.Escuela)
-                .WithMany()
+                .WithMany(e => e.Materias)
                 .HasForeignKey(m => m.EscuelaId)
                 .OnDelete(DeleteBehavior.Restrict);
 

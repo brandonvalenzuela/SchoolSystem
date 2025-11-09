@@ -19,7 +19,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
         {
             #region Tabla
 
-            builder.ToTable("alumnos");
+            builder.ToTable("Alumnos");
 
             #endregion
 
@@ -28,7 +28,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasKey(a => a.Id);
 
             builder.Property(a => a.Id)
-                .HasColumnName("id")
                 .ValueGeneratedOnAdd();
 
             #endregion
@@ -37,12 +36,10 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Escuela ID (Multi-tenant)
             builder.Property(a => a.EscuelaId)
-                .HasColumnName("escuela_id")
                 .IsRequired();
 
             // Usuario ID (opcional)
-            builder.Property(a => a.UsuarioId)
-                .HasColumnName("usuario_id");
+            builder.Property(a => a.UsuarioId);
 
             #endregion
 
@@ -50,13 +47,11 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Matrícula
             builder.Property(a => a.Matricula)
-                .HasColumnName("matricula")
                 .HasMaxLength(50)
                 .IsRequired();
 
             // CURP
             builder.Property(a => a.CURP)
-                .HasColumnName("curp")
                 .HasMaxLength(18);
 
             #endregion
@@ -65,37 +60,32 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Nombre
             builder.Property(a => a.Nombre)
-                .HasColumnName("nombre")
                 .HasMaxLength(100)
                 .IsRequired();
 
             // Apellido Paterno
             builder.Property(a => a.ApellidoPaterno)
-                .HasColumnName("apellido_paterno")
                 .HasMaxLength(100)
                 .IsRequired();
 
             // Apellido Materno
             builder.Property(a => a.ApellidoMaterno)
-                .HasColumnName("apellido_materno")
                 .HasMaxLength(100);
 
             // Fecha Nacimiento
             builder.Property(a => a.FechaNacimiento)
-                .HasColumnName("fecha_nacimiento")
                 .HasColumnType("DATE")
                 .IsRequired();
 
             // Género
             builder.Property(a => a.Genero)
-                .HasColumnName("genero")
                 .HasConversion<string>()
                 .HasMaxLength(20)
                 .IsRequired();
 
             // Foto URL
             builder.Property(a => a.FotoUrl)
-                .HasColumnName("foto_url")
+                .IsRequired(false)
                 .HasMaxLength(500);
 
             #endregion
@@ -104,17 +94,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Dirección
             builder.Property(a => a.Direccion)
-                .HasColumnName("direccion")
                 .HasMaxLength(300);
 
             // Teléfono
             builder.Property(a => a.Telefono)
-                .HasColumnName("telefono")
                 .HasMaxLength(20);
 
             // Email
             builder.Property(a => a.Email)
-                .HasColumnName("email")
                 .HasMaxLength(100);
 
             #endregion
@@ -123,22 +110,21 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Tipo Sangre
             builder.Property(a => a.TipoSangre)
-                .HasColumnName("tipo_sangre")
                 .HasMaxLength(5);
 
             // Alergias
             builder.Property(a => a.Alergias)
-                .HasColumnName("alergias")
+                .IsRequired(false)
                 .HasColumnType("TEXT");
 
             // Condiciones Médicas
             builder.Property(a => a.CondicionesMedicas)
-                .HasColumnName("condiciones_medicas")
+                .IsRequired(false)
                 .HasColumnType("TEXT");
 
             // Medicamentos
             builder.Property(a => a.Medicamentos)
-                .HasColumnName("medicamentos")
+                .IsRequired(false)
                 .HasColumnType("TEXT");
 
             #endregion
@@ -147,17 +133,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Contacto Emergencia Nombre
             builder.Property(a => a.ContactoEmergenciaNombre)
-                .HasColumnName("contacto_emergencia_nombre")
                 .HasMaxLength(100);
 
             // Contacto Emergencia Teléfono
             builder.Property(a => a.ContactoEmergenciaTelefono)
-                .HasColumnName("contacto_emergencia_telefono")
                 .HasMaxLength(20);
 
             // Contacto Emergencia Relación
             builder.Property(a => a.ContactoEmergenciaRelacion)
-                .HasColumnName("contacto_emergencia_relacion")
                 .HasMaxLength(50);
 
             #endregion
@@ -166,23 +149,20 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Fecha Ingreso
             builder.Property(a => a.FechaIngreso)
-                .HasColumnName("fecha_ingreso")
                 .HasColumnType("DATE")
                 .IsRequired();
 
             // Fecha Baja
             builder.Property(a => a.FechaBaja)
-                .HasColumnName("fecha_baja")
                 .HasColumnType("DATE");
 
             // Motivo Baja
             builder.Property(a => a.MotivoBaja)
-                .HasColumnName("motivo_baja")
+                .IsRequired(false)
                 .HasColumnType("TEXT");
 
             // Estatus
             builder.Property(a => a.Estatus)
-                .HasColumnName("estatus")
                 .HasConversion<string>()
                 .HasMaxLength(20)
                 .HasDefaultValue(EstatusAlumno.Activo)
@@ -190,7 +170,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Observaciones
             builder.Property(a => a.Observaciones)
-                .HasColumnName("observaciones")
+                .IsRequired(false)
                 .HasColumnType("TEXT");
 
             #endregion
@@ -198,20 +178,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             #region Auditoría
 
             builder.Property(a => a.CreatedAt)
-                .HasColumnName("created_at")
-                .HasDefaultValueSql("GETDATE()")
                 .IsRequired();
 
             builder.Property(a => a.UpdatedAt)
-                .HasColumnName("updated_at")
-                .HasDefaultValueSql("GETDATE()")
                 .IsRequired();
 
-            builder.Property(a => a.CreatedBy)
-                .HasColumnName("created_by");
+            builder.Property(a => a.CreatedBy);
 
-            builder.Property(a => a.UpdatedBy)
-                .HasColumnName("updated_by");
+            builder.Property(a => a.UpdatedBy);
 
             #endregion
 
@@ -219,18 +193,15 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Is Deleted
             builder.Property(a => a.IsDeleted)
-                .HasColumnName("is_deleted")
                 .HasDefaultValue(false)
                 .IsRequired();
 
             // Deleted At
             builder.Property(a => a.DeletedAt)
-                .HasColumnName("deleted_at")
                 .HasColumnType("DATETIME");
 
             // Deleted By
-            builder.Property(a => a.DeletedBy)
-                .HasColumnName("deleted_by");
+            builder.Property(a => a.DeletedBy);
 
             // Query Filter para Soft Delete (solo mostrar no eliminados por defecto)
             builder.HasQueryFilter(a => !a.IsDeleted);
@@ -254,26 +225,26 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Índice único en Matrícula
             builder.HasIndex(a => a.Matricula)
-                .HasDatabaseName("idx_alumno_matricula")
+                .HasDatabaseName("IX_Alumno_Matricula")
                 .IsUnique();
 
             // Índice único en CURP (si existe)
             builder.HasIndex(a => a.CURP)
-                .HasDatabaseName("idx_alumno_curp")
+                .HasDatabaseName("IX_Alumno_Curp")
                 .IsUnique()
                 .HasFilter("curp IS NOT NULL");
 
             // Índice en Estatus
             builder.HasIndex(a => a.Estatus)
-                .HasDatabaseName("idx_alumno_estatus");
+                .HasDatabaseName("IX_Alumno_Estatus");
 
             // Índice compuesto en EscuelaId y Estatus (búsquedas muy frecuentes)
             builder.HasIndex(a => new { a.EscuelaId, a.Estatus })
-                .HasDatabaseName("idx_alumno_escuela_estatus");
+                .HasDatabaseName("IX_Alumno_Escuela_Estatus");
 
             // Índice en IsDeleted para Soft Delete
             builder.HasIndex(a => a.IsDeleted)
-                .HasDatabaseName("idx_alumno_is_deleted");
+                .HasDatabaseName("IX_Alumno_Is_Deleted");
 
             #endregion
 

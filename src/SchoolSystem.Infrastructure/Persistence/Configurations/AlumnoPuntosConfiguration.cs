@@ -11,6 +11,11 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<AlumnoPuntos> builder)
         {
+            // Aplicar un filtro que coincida con el filtro de Alumno.
+            // Esto asegura que si un Alumno es "soft-deleted", su registro de puntos
+            // también se oculte automáticamente de todas las consultas.
+            builder.HasQueryFilter(ap => !ap.Alumno.IsDeleted);
+
             // Nombre de tabla
             builder.ToTable("AlumnoPuntos");
 
@@ -158,10 +163,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(true);
 
             builder.Property(ap => ap.AvatarUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(ap => ap.Lema)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(ap => ap.CreatedAt)
@@ -178,16 +185,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Relaciones
             builder.HasOne(ap => ap.Alumno)
-                .WithMany()
+                .WithMany(a => a.Puntos) // Asumiendo que Alumno tiene una ICollection<AlumnoPuntos> llamada "Puntos"
                 .HasForeignKey(ap => ap.AlumnoId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade); // Comportamiento lógico: si borras al alumno, borras sus puntos.
 
             builder.HasMany(ap => ap.HistorialPuntos)
-                .WithOne()
-                .HasForeignKey("AlumnoPuntosId")
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(ap => ap.InsigniasGanadas)
                 .WithOne()
                 .HasForeignKey("AlumnoPuntosId")
                 .OnDelete(DeleteBehavior.Cascade);

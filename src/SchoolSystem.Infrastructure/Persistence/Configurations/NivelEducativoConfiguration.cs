@@ -26,9 +26,11 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(100);
 
             builder.Property(ne => ne.Abreviatura)
-                .HasMaxLength(10);
+                .HasMaxLength(10)
+                .IsRequired(false);
 
             builder.Property(ne => ne.Descripcion)
+                .IsRequired(false)
                 .HasMaxLength(500);
 
             builder.Property(ne => ne.Orden)
@@ -49,8 +51,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(ne => ne.Color)
-                .HasMaxLength(7); // Para formato hexadecimal #FFFFFF
-
+                .HasMaxLength(7) // Para formato hexadecimal #FFFFFF
+                .IsRequired(false);
             // Auditoría
             builder.Property(ne => ne.CreatedAt)
                 .IsRequired();
@@ -66,7 +68,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Relaciones
             builder.HasOne(ne => ne.Escuela)
-                .WithMany()
+                .WithMany(e => e.NivelesEducativos)
                 .HasForeignKey(ne => ne.EscuelaId)
                 .OnDelete(DeleteBehavior.Restrict);
 

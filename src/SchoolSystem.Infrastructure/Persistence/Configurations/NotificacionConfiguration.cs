@@ -73,13 +73,16 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Metadata
             builder.Property(n => n.Metadata)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(n => n.Icono)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(n => n.Color)
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .IsRequired(false);
 
             builder.Property(n => n.ReproducirSonido)
                 .HasDefaultValue(false);

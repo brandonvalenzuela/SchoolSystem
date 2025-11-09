@@ -53,6 +53,22 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(e => e.Direccion)
                 .HasMaxLength(300);
 
+            // Ciudad
+            builder.Property(e => e.Ciudad)
+                .HasMaxLength(100);
+
+            // Estado
+            builder.Property(e => e.Estado)
+                .HasMaxLength(100);
+
+            // Código Postal
+            builder.Property(e => e.CodigoPostal)
+                .HasMaxLength(20);
+
+            // País
+            builder.Property(e => e.Pais)
+                .HasMaxLength(100);
+
             // Teléfono
             builder.Property(e => e.Telefono)
                 .HasMaxLength(20);
@@ -69,13 +85,19 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(e => e.LogoUrl)
                 .HasMaxLength(500);
 
+            // Teléfono Alternativo
+            builder.Property(e => e.TelefonoAlternativo)
+                .HasMaxLength(20);
+
             #endregion
 
             #region Suscripción
 
             // Plan ID
-            builder.Property(e => e.PlanId)
-                .IsRequired(false);
+            builder.Property(e => e.TipoPlan)
+                .IsRequired(false)
+                .HasConversion<string>()
+                .HasMaxLength(20);
 
             // Fecha Registro
             builder.Property(e => e.FechaRegistro)
@@ -96,7 +118,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Configuración (JSON)
             builder.Property(e => e.Configuracion)
-                .HasColumnType("JSON");
+                .HasColumnType("JSON")
+                .IsRequired(false);
 
             // Max Alumnos
             builder.Property(e => e.MaxAlumnos)

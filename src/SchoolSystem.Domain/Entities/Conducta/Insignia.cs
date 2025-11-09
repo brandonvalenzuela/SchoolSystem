@@ -37,7 +37,7 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// </summary>
         [Required]
         [StringLength(500)]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Criterios para obtener la insignia
@@ -70,7 +70,7 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// Requisitos en formato JSON o texto
         /// </summary>
         [StringLength(1000)]
-        public string Requisitos { get; set; }
+        public string? Requisitos { get; set; }
 
         /// <summary>
         /// Si es recurrente se puede obtener múltiples veces

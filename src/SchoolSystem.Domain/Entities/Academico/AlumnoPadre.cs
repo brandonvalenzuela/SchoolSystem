@@ -21,7 +21,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Alumno (Navigation Property)
         /// </summary>
-        public virtual Alumno Alumno { get; set; }
+        public virtual Alumno? Alumno { get; set; }
 
         /// <summary>
         /// ID del padre/tutor
@@ -31,7 +31,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Padre/tutor (Navigation Property)
         /// </summary>
-        public virtual Padre Padre { get; set; }
+        public virtual required Padre Padre { get; set; }
 
         /// <summary>
         /// Relación familiar con el alumno

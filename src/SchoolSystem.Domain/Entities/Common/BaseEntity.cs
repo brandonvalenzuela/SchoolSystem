@@ -1,10 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SchoolSystem.Domain.Entities.Common
 {
     /// <summary>
-    /// Entidad base para la mayoría de las entidades del dominio.
-    /// Proporciona identificador único.
+    /// Clase base abstracta para todas las entidades con una clave primaria numérica.
     /// </summary>
     public abstract class BaseEntity
     {
@@ -13,6 +14,8 @@ namespace SchoolSystem.Domain.Entities.Common
         /// <summary>
         /// Identificador único de la entidad
         /// </summary>
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         #endregion

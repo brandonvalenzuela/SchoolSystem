@@ -32,6 +32,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(30);
 
             builder.Property(pd => pd.Descripcion)
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             // Contenido
@@ -40,10 +41,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasColumnType("LONGTEXT");
 
             builder.Property(pd => pd.EstilosCSS)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(pd => pd.VariablesDisponibles)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Configuración de página
             builder.Property(pd => pd.TamanioPagina)
@@ -74,7 +77,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             builder.Property(pd => pd.EncabezadoHtml)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(pd => pd.AlturaEncabezado)
                 .IsRequired(false);
@@ -83,7 +87,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             builder.Property(pd => pd.PiePaginaHtml)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(pd => pd.AlturaPiePagina)
                 .IsRequired(false);
@@ -93,10 +98,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             builder.Property(pd => pd.TextoMarcaAgua)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(pd => pd.ImagenMarcaAguaUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(pd => pd.OpacidadMarcaAgua)
                 .IsRequired(false);
@@ -112,7 +119,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             builder.Property(pd => pd.PrefijoFolio)
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .IsRequired(false);
 
             builder.Property(pd => pd.ConsecutivoFolio)
                 .IsRequired(false);
@@ -127,14 +135,17 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue("1.0");
 
             builder.Property(pd => pd.NotasVersion)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Metadata
             builder.Property(pd => pd.Categoria)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(pd => pd.Tags)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(pd => pd.VecesUsada)
                 .HasDefaultValue(0);

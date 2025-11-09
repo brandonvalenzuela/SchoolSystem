@@ -93,23 +93,27 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Bajas y cambios
             builder.Property(i => i.MotivoBaja)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(i => i.GrupoAnteriorId)
                 .IsRequired(false);
 
             builder.Property(i => i.MotivoCambioGrupo)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Información adicional
             builder.Property(i => i.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(i => i.Becado)
                 .HasDefaultValue(false);
 
             builder.Property(i => i.TipoBeca)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(i => i.PorcentajeBeca)
                 .IsRequired(false)
@@ -140,7 +144,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasOne(i => i.Alumno)
                 .WithMany(a => a.Inscripciones)
                 .HasForeignKey(i => i.AlumnoId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
 
             builder.HasOne(i => i.Grupo)
                 .WithMany(g => g.Inscripciones)

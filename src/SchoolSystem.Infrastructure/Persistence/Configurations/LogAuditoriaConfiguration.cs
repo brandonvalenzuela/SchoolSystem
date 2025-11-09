@@ -26,10 +26,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(la => la.NombreUsuario)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(la => la.EmailUsuario)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             // Acción
             builder.Property(la => la.TipoAccion)
@@ -38,7 +40,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(30);
 
             builder.Property(la => la.Descripcion)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             builder.Property(la => la.FechaHora)
@@ -46,39 +48,49 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Entidad afectada
             builder.Property(la => la.EntidadAfectada)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(la => la.EntidadAfectadaId)
                 .IsRequired(false);
 
             builder.Property(la => la.TipoEntidad)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             // Cambios
             builder.Property(la => la.ValoresAnteriores)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(la => la.ValoresNuevos)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(la => la.CamposModificados)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Información técnica
             builder.Property(la => la.DireccionIP)
-                .HasMaxLength(45);
+                .HasMaxLength(45)
+                .IsRequired(false);
 
             builder.Property(la => la.UserAgent)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(la => la.Navegador)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(la => la.SistemaOperativo)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(la => la.Dispositivo)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             // Resultado
             builder.Property(la => la.Exitoso)
@@ -89,10 +101,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(la => la.MensajeError)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(la => la.StackTrace)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Rendimiento
             builder.Property(la => la.DuracionMs)
@@ -100,20 +114,25 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Módulo y funcionalidad
             builder.Property(la => la.Modulo)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(la => la.Funcionalidad)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(la => la.Controlador)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(la => la.Metodo)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             // Metadata
             builder.Property(la => la.DatosAdicionales)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(la => la.Severidad)
                 .IsRequired(false)
@@ -121,7 +140,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(20);
 
             builder.Property(la => la.Tags)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Relaciones
             builder.HasOne(la => la.Usuario)
@@ -189,9 +209,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Ignore(la => la.Resumen);
 
             // Constraints
-            builder.HasCheckConstraint("CK_LogsAuditoria_FechaHora",
-                "`FechaHora` <= GETDATE()");
-
             builder.HasCheckConstraint("CK_LogsAuditoria_DuracionMs",
                 "`DuracionMs` IS NULL OR `DuracionMs` >= 0");
 

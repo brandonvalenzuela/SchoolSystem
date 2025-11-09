@@ -27,6 +27,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(200);
 
             builder.Property(e => e.Descripcion)
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             builder.Property(e => e.Tipo)
@@ -47,8 +48,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Destinatarios
             builder.Property(e => e.GruposAfectadosJson)
-                .HasColumnName("GruposAfectados")
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(e => e.AplicaATodos)
                 .IsRequired()
@@ -56,13 +57,15 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Detalles
             builder.Property(e => e.Ubicacion)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(e => e.RecordatorioMinutos)
                 .IsRequired(false);
 
             builder.Property(e => e.Color)
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .IsRequired(false);
 
             builder.Property(e => e.Prioridad)
                 .IsRequired()
@@ -88,14 +91,17 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             builder.Property(e => e.ConfiguracionRecurrencia)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Archivos
             builder.Property(e => e.ArchivoAdjuntoUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(e => e.ArchivoAdjuntoNombre)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(e => e.CreatedAt)

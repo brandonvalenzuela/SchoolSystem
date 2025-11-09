@@ -33,7 +33,7 @@ namespace SchoolSystem.Domain.Entities.Documentos
         /// Descripción del reporte
         /// </summary>
         [Column(TypeName = "NVARCHAR(MAX)")]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Tipo de reporte

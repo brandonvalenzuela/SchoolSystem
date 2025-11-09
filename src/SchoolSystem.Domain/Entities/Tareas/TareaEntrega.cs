@@ -32,7 +32,7 @@ namespace SchoolSystem.Domain.Entities.Tareas
         /// Alumno que entrega la tarea
         /// </summary>
         [Required]
-        public int AlumnoId { get; set; }
+        public int? AlumnoId { get; set; }
 
         #endregion
 
@@ -151,7 +151,7 @@ namespace SchoolSystem.Domain.Entities.Tareas
         /// Alumno que entregó
         /// </summary>
         [ForeignKey("AlumnoId")]
-        public virtual Alumno Alumno { get; set; }
+        public virtual Alumno? Alumno { get; set; }
 
         /// <summary>
         /// Maestro que revisó

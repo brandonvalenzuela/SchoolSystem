@@ -83,10 +83,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(EstatusCargo.Pendiente);
 
             builder.Property(c => c.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(c => c.MotivoCancelacion)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(c => c.FechaCancelacion)
                 .IsRequired(false);
@@ -96,10 +98,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Metadata
             builder.Property(c => c.NumeroRecibo)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(c => c.ReferenciaExterna)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(c => c.GeneradoAutomaticamente)
                 .HasDefaultValue(false);
@@ -124,7 +128,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasOne(c => c.Alumno)
                 .WithMany()
                 .HasForeignKey(c => c.AlumnoId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
 
             builder.HasOne(c => c.ConceptoPago)
                 .WithMany(cp => cp.Cargos)

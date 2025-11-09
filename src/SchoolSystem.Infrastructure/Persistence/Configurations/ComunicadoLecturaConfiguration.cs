@@ -35,7 +35,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(cl => cl.Comentario)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Relaciones
             builder.HasOne(cl => cl.Comunicado)

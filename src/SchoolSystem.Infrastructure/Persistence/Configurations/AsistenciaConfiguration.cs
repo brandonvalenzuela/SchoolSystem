@@ -11,6 +11,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Asistencia> builder)
         {
+            builder.HasQueryFilter(a => !a.Alumno.IsDeleted);
+
             // Nombre de tabla
             builder.ToTable("Asistencias");
 
@@ -54,10 +56,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             builder.Property(a => a.Motivo)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(a => a.JustificanteUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(a => a.FechaJustificacion)
                 .IsRequired(false);
@@ -67,7 +71,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Observaciones
             builder.Property(a => a.Observaciones)
-                .HasMaxLength(1000);
+                .HasMaxLength(1000)
+                .IsRequired(false);
 
             builder.Property(a => a.PadresNotificados)
                 .HasDefaultValue(false);
@@ -86,7 +91,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(a => a.MotivoModificacion)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(a => a.CreatedAt)
@@ -108,9 +114,10 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(a => a.Alumno)
-                .WithMany()
+                .WithMany(alum => alum.Asistencias)
                 .HasForeignKey(a => a.AlumnoId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(a => a.Grupo)
                 .WithMany(g => g.Asistencias)
@@ -179,9 +186,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             builder.HasCheckConstraint("CK_Asistencias_Horarios",
                 "`HoraEntrada` IS NULL OR `HoraSalida` IS NULL OR `HoraEntrada` < `HoraSalida`");
-
-            builder.HasCheckConstraint("CK_Asistencias_Fecha",
-                "`Fecha` <= CAST(GETDATE() AS DATE)");
         }
     }
 }

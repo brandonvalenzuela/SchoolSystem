@@ -3,29 +3,28 @@
 namespace SchoolSystem.Domain.Entities.Common
 {
     /// <summary>
-    /// Interfaz para entidades que requieren auditoría
-    /// Proporciona propiedades para rastrear cuándo y quién creó/modificó una entidad
+    /// Interfaz para entidades que requieren campos de auditoría de creación y modificación.
     /// </summary>
     public interface IAuditableEntity
     {
         /// <summary>
-        /// Fecha y hora de creación de la entidad
+        /// Fecha y hora de creación del registro.
         /// </summary>
-        DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         /// <summary>
-        /// Fecha y hora de la última actualización
+        /// ID del usuario que creó el registro.
         /// </summary>
-        DateTime UpdatedAt { get; set; }
+        public int? CreatedBy { get; set; }
 
         /// <summary>
-        /// ID del usuario que creó la entidad (opcional)
+        /// Fecha y hora de la última actualización.
         /// </summary>
-        int? CreatedBy { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         /// <summary>
-        /// ID del usuario que realizó la última actualización (opcional)
+        /// ID del usuario que realizó la última actualización.
         /// </summary>
-        int? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }

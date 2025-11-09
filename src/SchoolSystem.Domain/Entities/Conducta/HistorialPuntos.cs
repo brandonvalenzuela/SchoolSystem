@@ -36,7 +36,7 @@ public class HistorialPuntos : BaseEntity
     /// <summary>
     /// Descripción o motivo del cambio
     /// </summary>
-    public string Descripcion { get; set; }
+    public string? Descripcion { get; set; }
 
     /// <summary>
     /// Origen del cambio (ID de la entidad que generó los puntos)

@@ -29,7 +29,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(500);
 
             builder.Property(i => i.Descripcion)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(500);
 
             builder.Property(i => i.Criterios)
@@ -48,7 +48,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired();
 
             builder.Property(i => i.Requisitos)
-                .HasMaxLength(1000);
+                .HasMaxLength(1000)
+                .IsRequired(false);
 
             builder.Property(i => i.EsRecurrente)
                 .IsRequired()

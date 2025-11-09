@@ -35,14 +35,14 @@ namespace SchoolSystem.Domain.Entities.Academico
 
         /// <summary>
         /// Abreviatura del nivel educativo
-        /// Ejemplos: "K", "PRIM", "SEC", "PREP"
+        /// Ejemplos: "PREES", "K", "PRIM", "SEC", "PREP"
         /// </summary>
-        public string Abreviatura { get; set; }
+        public string? Abreviatura { get; set; }
 
         /// <summary>
         /// Descripción del nivel educativo
         /// </summary>
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Orden de visualización y jerarquía
@@ -79,7 +79,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// Color representativo del nivel (código hexadecimal para UI)
         /// Ejemplo: "#FF5733"
         /// </summary>
-        public string Color { get; set; }
+        public string? Color { get; set; }
 
         #endregion
 
@@ -241,7 +241,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Obtiene el primer grado del nivel (por orden)
         /// </summary>
-        public Grado ObtenerPrimerGrado()
+        public Grado? ObtenerPrimerGrado()
         {
             return Grados?
                 .Where(g => g.Activo)
@@ -252,7 +252,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Obtiene el último grado del nivel (por orden)
         /// </summary>
-        public Grado ObtenerUltimoGrado()
+        public Grado? ObtenerUltimoGrado()
         {
             return Grados?
                 .Where(g => g.Activo)

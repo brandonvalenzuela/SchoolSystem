@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SchoolSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class PRIMERA_MIGRACION : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,7 +24,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     EscuelaId = table.Column<int>(type: "int", nullable: false),
                     Nombre = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Color = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -38,8 +38,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,37 +57,37 @@ namespace SchoolSystem.Infrastructure.Migrations
                     EscuelaId = table.Column<int>(type: "int", nullable: false),
                     NombreInstitucion = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    NombreCorto = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    NombreCorto = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Lema = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Lema = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Mision = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Mision = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Vision = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Vision = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Valores = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Valores = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Direccion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Direccion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Ciudad = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Ciudad = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Estado = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Estado = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CodigoPostal = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    CodigoPostal = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Pais = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Pais = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Telefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    Telefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TelefonoAlternativo = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    TelefonoAlternativo = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    Email = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    SitioWeb = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
+                    SitioWeb = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    LogoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    LogoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    LogoPequenoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    LogoPequenoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ColorPrimario = table.Column<string>(type: "varchar(7)", maxLength: 7, nullable: false, defaultValue: "#1976D2")
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -96,7 +95,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ColorAcento = table.Column<string>(type: "varchar(7)", maxLength: 7, nullable: false, defaultValue: "#FF9800")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ImagenFondoLoginUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ImagenFondoLoginUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     SistemaCalificacion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, defaultValue: "Numerico")
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -134,7 +133,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     PlantillaConstanciaPredeterminadaId = table.Column<int>(type: "int", nullable: true),
                     ModuloPagosHabilitado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     PermitePagosEnLinea = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    ProveedorPagos = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    ProveedorPagos = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     MonedaPredeterminada = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false, defaultValue: "MXN")
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -151,14 +150,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                     FormatoHora = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, defaultValue: "HH:mm")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PrimerDiaSemana = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
-                    GoogleApiKey = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    GoogleApiKey = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IntegracionGoogleClassroomHabilitada = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     IntegracionMicrosoftTeamsHabilitada = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     IntegracionZoomHabilitada = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    ConfiguracionSMTP = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ConfiguracionSMTP = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ConfiguracionSMS = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ConfiguracionSMS = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TipoPlan = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, defaultValue: "Basic")
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -166,15 +165,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                     LimiteAlumnos = table.Column<int>(type: "int", nullable: true),
                     LimiteMaestros = table.Column<int>(type: "int", nullable: true),
                     LimiteAlmacenamientoGB = table.Column<int>(type: "int", nullable: true),
-                    DatosAdicionales = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    DatosAdicionales = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -208,7 +206,17 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Direccion = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Ciudad = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Estado = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CodigoPostal = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Pais = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Telefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TelefonoAlternativo = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -216,11 +224,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     LogoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PlanId = table.Column<int>(type: "int", nullable: true),
+                    TipoPlan = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaRegistro = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     FechaExpiracion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    Configuracion = table.Column<string>(type: "JSON", nullable: false)
+                    Configuracion = table.Column<string>(type: "JSON", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     MaxAlumnos = table.Column<int>(type: "int", nullable: true),
                     MaxMaestros = table.Column<int>(type: "int", nullable: true),
@@ -228,8 +237,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -251,7 +259,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Icono = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Criterios = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -260,15 +268,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Rareza = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PuntosOtorgados = table.Column<int>(type: "int", nullable: false),
-                    Requisitos = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                    Requisitos = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EsRecurrente = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -288,13 +295,13 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TipoDocumento = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ContenidoHtml = table.Column<string>(type: "LONGTEXT", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    EstilosCSS = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    EstilosCSS = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    VariablesDisponibles = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    VariablesDisponibles = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TamanioPagina = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, defaultValue: "A4")
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -305,41 +312,40 @@ namespace SchoolSystem.Infrastructure.Migrations
                     MargenIzquierdo = table.Column<int>(type: "int", nullable: false, defaultValue: 20),
                     MargenDerecho = table.Column<int>(type: "int", nullable: false, defaultValue: 20),
                     TieneEncabezado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    EncabezadoHtml = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    EncabezadoHtml = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     AlturaEncabezado = table.Column<int>(type: "int", nullable: true),
                     TienePiePagina = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    PiePaginaHtml = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    PiePaginaHtml = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     AlturaPiePagina = table.Column<int>(type: "int", nullable: true),
                     TieneMarcaAgua = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    TextoMarcaAgua = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    TextoMarcaAgua = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ImagenMarcaAguaUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ImagenMarcaAguaUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     OpacidadMarcaAgua = table.Column<int>(type: "int", nullable: true),
                     EsPlantillaPorDefecto = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     RequiereFirmaDigital = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     RequiereFolio = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    PrefijoFolio = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    PrefijoFolio = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConsecutivoFolio = table.Column<int>(type: "int", nullable: true),
                     Activa = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     Version = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, defaultValue: "1.0")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    NotasVersion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    NotasVersion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Categoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Categoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Tags = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Tags = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     VecesUsada = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     FechaUltimaGeneracion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -370,46 +376,45 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Tipo = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CategoriaId = table.Column<int>(type: "int", nullable: true),
-                    CodigoClasificacion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    CodigoClasificacion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NumeroPaginas = table.Column<int>(type: "int", nullable: true),
-                    Edicion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Edicion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Idioma = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, defaultValue: "Español")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CantidadTotal = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     CantidadDisponible = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     CantidadPrestada = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     CantidadExtraviada = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     CantidadDaniada = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    Ubicacion = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Ubicacion = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Estante = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Estante = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Estado = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, defaultValue: "Disponible")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DisponiblePrestamo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    ImagenPortadaUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ImagenPortadaUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    RecursoDigitalUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    RecursoDigitalUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CalificacionPromedio = table.Column<decimal>(type: "decimal(3,2)", nullable: true),
                     VecesPrestado = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Popularidad = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     PrecioAdquisicion = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
                     FechaAdquisicion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Proveedor = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Proveedor = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Notas = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Notas = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -441,7 +446,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Clave = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                    Descripcion = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Icono = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Color = table.Column<string>(type: "varchar(7)", maxLength: 7, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -452,25 +459,23 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NivelDificultad = table.Column<int>(type: "int", nullable: true),
                     RequiereMateriales = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    MaterialesRequeridos = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                    MaterialesRequeridos = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RequiereInstalacionesEspeciales = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    InstalacionesRequeridas = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    InstalacionesRequeridas = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Objetivos = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Objetivos = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Competencias = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Competencias = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ContenidoTematico = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ContenidoTematico = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Bibliografia = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Bibliografia = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    EscuelaId1 = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -482,11 +487,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalTable: "Escuelas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Materias_Escuelas_EscuelaId1",
-                        column: x => x.EscuelaId1,
-                        principalTable: "Escuelas",
-                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -499,23 +499,21 @@ namespace SchoolSystem.Infrastructure.Migrations
                     EscuelaId = table.Column<int>(type: "int", nullable: false),
                     Nombre = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Abreviatura = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false)
+                    Abreviatura = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Orden = table.Column<int>(type: "int", nullable: false),
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     EdadMinima = table.Column<int>(type: "int", nullable: true),
                     EdadMaxima = table.Column<int>(type: "int", nullable: true),
                     DuracionAños = table.Column<int>(type: "int", nullable: true),
-                    Color = table.Column<string>(type: "varchar(7)", maxLength: 7, nullable: false)
+                    Color = table.Column<string>(type: "varchar(7)", maxLength: 7, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    EscuelaId1 = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -531,11 +529,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalTable: "Escuelas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_NivelesEducativos_Escuelas_EscuelaId1",
-                        column: x => x.EscuelaId1,
-                        principalTable: "Escuelas",
-                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -551,7 +544,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Nombre = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Numero = table.Column<int>(type: "int", nullable: false),
-                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     FechaInicio = table.Column<DateTime>(type: "DATE", nullable: false),
@@ -567,8 +560,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -588,54 +580,53 @@ namespace SchoolSystem.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "usuarios",
+                name: "Usuarios",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    escuela_id = table.Column<int>(type: "int", nullable: false),
-                    username = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    EscuelaId = table.Column<int>(type: "int", nullable: false),
+                    Username = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    password_hash = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                    PasswordHash = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    rol = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    Rol = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    nombre = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Nombre = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    apellido_paterno = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ApellidoPaterno = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    apellido_materno = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ApellidoMaterno = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    telefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    Telefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    telefono_emergencia = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    TelefonoEmergencia = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    foto_url = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    FotoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    fecha_nacimiento = table.Column<DateTime>(type: "DATE", nullable: true),
-                    genero = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
+                    FechaNacimiento = table.Column<DateTime>(type: "DATE", nullable: true),
+                    Genero = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    ultimo_acceso = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                    token_recuperacion = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                    Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    UltimoAcceso = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                    TokenRecuperacion = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    token_expiracion = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                    intentos_fallidos = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    bloqueado_hasta = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                    created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    created_by = table.Column<int>(type: "int", nullable: true),
-                    updated_by = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    TokenExpiracion = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                    IntentosFallidos = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    BloqueadoHasta = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedBy = table.Column<int>(type: "int", nullable: true),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_usuarios", x => x.id);
+                    table.PrimaryKey("PK_Usuarios", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_usuarios_Escuelas_escuela_id",
-                        column: x => x.escuela_id,
+                        name: "FK_Usuarios_Escuelas_EscuelaId",
+                        column: x => x.EscuelaId,
                         principalTable: "Escuelas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -652,20 +643,19 @@ namespace SchoolSystem.Infrastructure.Migrations
                     NivelEducativoId = table.Column<int>(type: "int", nullable: false),
                     Nombre = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Orden = table.Column<int>(type: "int", nullable: false),
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     EdadRecomendada = table.Column<int>(type: "int", nullable: true),
                     CapacidadMaximaPorGrupo = table.Column<int>(type: "int", nullable: true),
                     HorasSemanales = table.Column<int>(type: "int", nullable: true),
-                    Requisitos = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                    Requisitos = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -690,122 +680,115 @@ namespace SchoolSystem.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "alumnos",
+                name: "Alumnos",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    escuela_id = table.Column<int>(type: "int", nullable: false),
-                    usuario_id = table.Column<int>(type: "int", nullable: true),
-                    matricula = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    EscuelaId = table.Column<int>(type: "int", nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: true),
+                    Matricula = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    curp = table.Column<string>(type: "varchar(18)", maxLength: 18, nullable: false)
+                    CURP = table.Column<string>(type: "varchar(18)", maxLength: 18, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    nombre = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Nombre = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    apellido_paterno = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ApellidoPaterno = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    apellido_materno = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ApellidoMaterno = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    fecha_nacimiento = table.Column<DateTime>(type: "DATE", nullable: false),
-                    genero = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    FechaNacimiento = table.Column<DateTime>(type: "DATE", nullable: false),
+                    Genero = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    foto_url = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    FotoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    direccion = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
+                    Direccion = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    telefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    Telefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    tipo_sangre = table.Column<string>(type: "varchar(5)", maxLength: 5, nullable: false)
+                    TipoSangre = table.Column<string>(type: "varchar(5)", maxLength: 5, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    alergias = table.Column<string>(type: "TEXT", nullable: false)
+                    Alergias = table.Column<string>(type: "TEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    condiciones_medicas = table.Column<string>(type: "TEXT", nullable: false)
+                    CondicionesMedicas = table.Column<string>(type: "TEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    medicamentos = table.Column<string>(type: "TEXT", nullable: false)
+                    Medicamentos = table.Column<string>(type: "TEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    contacto_emergencia_nombre = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ContactoEmergenciaNombre = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    contacto_emergencia_telefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    ContactoEmergenciaTelefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    contacto_emergencia_relacion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    ContactoEmergenciaRelacion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    fecha_ingreso = table.Column<DateTime>(type: "DATE", nullable: false),
-                    fecha_baja = table.Column<DateTime>(type: "DATE", nullable: true),
-                    motivo_baja = table.Column<string>(type: "TEXT", nullable: false)
+                    FechaIngreso = table.Column<DateTime>(type: "DATE", nullable: false),
+                    FechaBaja = table.Column<DateTime>(type: "DATE", nullable: true),
+                    MotivoBaja = table.Column<string>(type: "TEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    estatus = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, defaultValue: "Activo")
+                    Estatus = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, defaultValue: "Activo")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    observaciones = table.Column<string>(type: "TEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "TEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValueSql: "GETDATE()"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    created_by = table.Column<int>(type: "int", nullable: true),
-                    updated_by = table.Column<int>(type: "int", nullable: true),
-                    is_deleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    deleted_at = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                    deleted_by = table.Column<int>(type: "int", nullable: true)
+                    CreatedBy = table.Column<int>(type: "int", nullable: true),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
+                    DeletedAt = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                    DeletedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_alumnos", x => x.id);
+                    table.PrimaryKey("PK_Alumnos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_alumnos_Escuelas_escuela_id",
-                        column: x => x.escuela_id,
+                        name: "FK_Alumnos_Escuelas_EscuelaId",
+                        column: x => x.EscuelaId,
                         principalTable: "Escuelas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_alumnos_usuarios_usuario_id",
-                        column: x => x.usuario_id,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        name: "FK_Alumnos_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "dispositivos",
+                name: "Dispositivos",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    usuario_id = table.Column<int>(type: "int", nullable: false),
-                    device_id = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    DeviceId = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    device_name = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    DeviceName = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    tipo = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    Tipo = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    so = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    SO = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    navegador = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Navegador = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    token_fcm = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    TokenFCM = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ip_ultima_conexion = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: false)
+                    IpUltimaConexion = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    fecha_registro = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    ultima_actividad = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    FechaRegistro = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UltimaActividad = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_dispositivos", x => x.id);
+                    table.PrimaryKey("PK_Dispositivos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_dispositivos_usuarios_usuario_id",
-                        column: x => x.usuario_id,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        name: "FK_Dispositivos_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -822,18 +805,18 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Titulo = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Folio = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Folio = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TipoEntidad = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    TipoEntidad = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EntidadRelacionadaId = table.Column<int>(type: "int", nullable: true),
-                    NombreEntidadRelacionada = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
+                    NombreEntidadRelacionada = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ContenidoHtml = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ContenidoHtml = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ArchivoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ArchivoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    NombreArchivo = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    NombreArchivo = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TamanioArchivo = table.Column<long>(type: "bigint", nullable: true),
                     FechaGeneracion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -842,42 +825,41 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Estado = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, defaultValue: "Borrador")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaEnvio = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    CorreosEnvio = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    CorreosEnvio = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TieneFirmaDigital = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    HashFirma = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    HashFirma = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaFirma = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     FirmadoPorId = table.Column<int>(type: "int", nullable: true),
-                    CertificadoFirma = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    CertificadoFirma = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     GeneradoPorId = table.Column<int>(type: "int", nullable: false),
                     GeneradoAutomaticamente = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Tags = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Tags = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DatosAdicionales = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    DatosAdicionales = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CantidadDescargas = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     FechaUltimaDescarga = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     EsPublico = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     Archivado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaArchivado = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Documentos", x => x.Id);
                     table.CheckConstraint("CK_Documentos_CantidadDescargas", "`CantidadDescargas` >= 0");
                     table.CheckConstraint("CK_Documentos_FechaVencimiento", "`FechaVencimiento` IS NULL OR (`FechaVigencia` IS NOT NULL AND `FechaVencimiento` >= `FechaVigencia`)");
-                    table.CheckConstraint("CK_Documentos_FirmaDigital", "(`TieneFirmaDigital` = 0) OR (`TieneFirmaDigital` = 1 AND `HashFirma` IS NOT NULL AND `FirmadoPorId` IS NOT NULL)");
+                    table.CheckConstraint("CK_Documentos_FirmaDigital", "(`TieneFirmaDigital` = 0) OR (`TieneFirmaDigital` = 1 AND `HashFirma` IS NOT NULL)");
                     table.CheckConstraint("CK_Documentos_TamanioArchivo", "`TamanioArchivo` IS NULL OR `TamanioArchivo` >= 0");
                     table.ForeignKey(
                         name: "FK_Documentos_PlantillasDocumento_PlantillaDocumentoId",
@@ -886,16 +868,16 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Documentos_usuarios_FirmadoPorId",
+                        name: "FK_Documentos_Usuarios_FirmadoPorId",
                         column: x => x.FirmadoPorId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Documentos_usuarios_GeneradoPorId",
+                        name: "FK_Documentos_Usuarios_GeneradoPorId",
                         column: x => x.GeneradoPorId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -909,20 +891,20 @@ namespace SchoolSystem.Infrastructure.Migrations
                     EscuelaId = table.Column<int>(type: "int", nullable: false),
                     Titulo = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Tipo = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaInicio = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     FechaFin = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     TodoElDia = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    GruposAfectados = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    GruposAfectadosJson = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     AplicaATodos = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    Ubicacion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    Ubicacion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RecordatorioMinutos = table.Column<int>(type: "int", nullable: true),
-                    Color = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    Color = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Prioridad = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false, defaultValue: "Normal")
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -931,17 +913,16 @@ namespace SchoolSystem.Infrastructure.Migrations
                     RecordatoriosEnviados = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaEnvioRecordatorios = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     EsRecurrente = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    ConfiguracionRecurrencia = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ConfiguracionRecurrencia = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ArchivoAdjuntoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ArchivoAdjuntoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ArchivoAdjuntoNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    ArchivoAdjuntoNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -949,10 +930,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                     table.CheckConstraint("CK_Eventos_Fechas", "`FechaFin` IS NULL OR `FechaFin` >= `FechaInicio`");
                     table.CheckConstraint("CK_Eventos_RecordatorioMinutos", "`RecordatorioMinutos` IS NULL OR `RecordatorioMinutos` >= 0");
                     table.ForeignKey(
-                        name: "FK_Eventos_usuarios_CreadoPorId",
+                        name: "FK_Eventos_Usuarios_CreadoPorId",
                         column: x => x.CreadoPorId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -965,76 +946,68 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     EscuelaId = table.Column<int>(type: "int", nullable: true),
                     UsuarioId = table.Column<int>(type: "int", nullable: true),
-                    NombreUsuario = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    NombreUsuario = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    EmailUsuario = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    EmailUsuario = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TipoAccion = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaHora = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    EntidadAfectada = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    EntidadAfectada = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EntidadAfectadaId = table.Column<int>(type: "int", nullable: true),
-                    TipoEntidad = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    TipoEntidad = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ValoresAnteriores = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ValoresAnteriores = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ValoresNuevos = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ValoresNuevos = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CamposModificados = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    CamposModificados = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DireccionIP = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: false)
+                    DireccionIP = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    UserAgent = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    UserAgent = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Navegador = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Navegador = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    SistemaOperativo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    SistemaOperativo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Dispositivo = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Dispositivo = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Exitoso = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     CodigoResultado = table.Column<int>(type: "int", nullable: true),
-                    MensajeError = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    MensajeError = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    StackTrace = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    StackTrace = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DuracionMs = table.Column<int>(type: "int", nullable: true),
-                    Modulo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Modulo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Funcionalidad = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    Funcionalidad = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Controlador = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    Controlador = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Metodo = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    Metodo = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DatosAdicionales = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    DatosAdicionales = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Severidad = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Tags = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Tags = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LogsAuditoria", x => x.Id);
                     table.CheckConstraint("CK_LogsAuditoria_CodigoResultado", "`CodigoResultado` IS NULL OR (`CodigoResultado` >= 100 AND `CodigoResultado` <= 599)");
                     table.CheckConstraint("CK_LogsAuditoria_DuracionMs", "`DuracionMs` IS NULL OR `DuracionMs` >= 0");
-                    table.CheckConstraint("CK_LogsAuditoria_FechaHora", "`FechaHora` <= GETDATE()");
                     table.ForeignKey(
-                        name: "FK_LogsAuditoria_usuarios_UsuarioId",
+                        name: "FK_LogsAuditoria_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -1066,31 +1039,24 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     AñoGraduacion = table.Column<int>(type: "int", nullable: true),
                     AñosExperiencia = table.Column<int>(type: "int", nullable: true),
-                    Certificaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Certificaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Capacitaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Capacitaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Idiomas = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Idiomas = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    HorarioAtencion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    HorarioAtencion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DisponibleExtracurriculares = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    DisponibleExtracurriculares = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Maestros", x => x.Id);
-                    table.CheckConstraint("CK_Maestros_AñoGraduacion", "`AñoGraduacion` IS NULL OR (`AñoGraduacion` >= 1900 AND (`AñoGraduacion` <= 2100)");
+                    table.CheckConstraint("CK_Maestros_AñoGraduacion", "`AñoGraduacion` IS NULL OR (`AñoGraduacion` >= 1900 AND `AñoGraduacion` <= 2100)");
                     table.CheckConstraint("CK_Maestros_AñosExperiencia", "`AñosExperiencia` IS NULL OR `AñosExperiencia` >= 0");
-                    table.CheckConstraint("CK_Maestros_Fechas", "`FechaBaja` IS NULL OR `FechaIngreso` IS NULL OR (`FechaBaja` >= `FechaIngreso`");
+                    table.CheckConstraint("CK_Maestros_Fechas", "`FechaBaja` IS NULL OR `FechaIngreso` IS NULL OR (`FechaBaja` >= `FechaIngreso`)");
                     table.CheckConstraint("CK_Maestros_Salario", "`Salario` IS NULL OR `Salario` >= 0");
                     table.ForeignKey(
                         name: "FK_Maestros_Escuelas_EscuelaId",
@@ -1099,10 +1065,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Maestros_usuarios_UsuarioId",
+                        name: "FK_Maestros_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -1132,34 +1098,33 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Leida = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     Canal = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false, defaultValue: "Sistema")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Metadata = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Metadata = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Icono = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    Icono = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Color = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    Color = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ReproducirSonido = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaExpiracion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Notificaciones", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Notificaciones_usuarios_EnviadoPorId",
+                        name: "FK_Notificaciones_Usuarios_EnviadoPorId",
                         column: x => x.EnviadoPorId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Notificaciones_usuarios_UsuarioDestinatarioId",
+                        name: "FK_Notificaciones_Usuarios_UsuarioDestinatarioId",
                         column: x => x.UsuarioDestinatarioId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -1184,7 +1149,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NivelEstudios = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Carrera = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    Carrera = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EstadoCivil = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -1192,14 +1157,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     AceptaSMS = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     AceptaEmail = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    AceptaPush = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    AceptaPush = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -1211,10 +1169,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Padres_usuarios_UsuarioId",
+                        name: "FK_Padres_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -1234,17 +1192,17 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Nombre = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Categoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ValorPredeterminado = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ValorPredeterminado = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ValoresPermitidos = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ValoresPermitidos = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ValorMinimo = table.Column<decimal>(type: "decimal(18,4)", nullable: true),
                     ValorMaximo = table.Column<decimal>(type: "decimal(18,4)", nullable: true),
-                    ExpresionValidacion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ExpresionValidacion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EsGlobal = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     EsConfigurable = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
@@ -1253,29 +1211,28 @@ namespace SchoolSystem.Infrastructure.Migrations
                     RequiereReinicio = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     EsSensible = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     EstaEncriptado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    Grupo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Grupo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Orden = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    Etiquetas = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Etiquetas = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Unidad = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Unidad = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    UrlAyuda = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    UrlAyuda = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     FechaUltimoCambio = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UsuarioUltimoCambioId = table.Column<int>(type: "int", nullable: true),
-                    ValorAnterior = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ValorAnterior = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     HabilitarCache = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     TiempoCacheMinutos = table.Column<int>(type: "int", nullable: true, defaultValue: 60),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1285,10 +1242,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                     table.CheckConstraint("CK_ParametrosSistema_TiempoCache", "`TiempoCacheMinutos` IS NULL OR `TiempoCacheMinutos` > 0");
                     table.CheckConstraint("CK_ParametrosSistema_ValorMinMax", "`ValorMinimo` IS NULL OR `ValorMaximo` IS NULL OR `ValorMinimo` <= `ValorMaximo`");
                     table.ForeignKey(
-                        name: "FK_ParametrosSistema_usuarios_UsuarioUltimoCambioId",
+                        name: "FK_ParametrosSistema_Usuarios_UsuarioUltimoCambioId",
                         column: x => x.UsuarioUltimoCambioId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -1307,23 +1264,23 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Tipo = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false, defaultValue: "Personalizacion")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Nombre = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
+                    Nombre = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Categoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Categoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Grupo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Grupo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TipoDato = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, defaultValue: "String")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ValorPredeterminado = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ValorPredeterminado = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EsSincronizable = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     FechaUltimaSincronizacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    DispositivoOrigen = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    DispositivoOrigen = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    HashSincronizacion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    HashSincronizacion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Alcance = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, defaultValue: "Usuario")
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -1331,25 +1288,24 @@ namespace SchoolSystem.Infrastructure.Migrations
                     EsPrivada = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     Activa = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     FechaUltimoCambio = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ValorAnterior = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ValorAnterior = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RequiereValidacion = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    ExpresionValidacion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ExpresionValidacion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ValoresPermitidos = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ValoresPermitidos = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Etiquetas = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Etiquetas = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Orden = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    Icono = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Icono = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1359,10 +1315,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                     table.CheckConstraint("CK_PreferenciasUsuario_Orden", "`Orden` >= 0");
                     table.CheckConstraint("CK_PreferenciasUsuario_UsuarioId", "`UsuarioId` > 0");
                     table.ForeignKey(
-                        name: "FK_PreferenciasUsuario_usuarios_UsuarioId",
+                        name: "FK_PreferenciasUsuario_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -1376,38 +1332,38 @@ namespace SchoolSystem.Infrastructure.Migrations
                     EscuelaId = table.Column<int>(type: "int", nullable: false),
                     Nombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TipoReporte = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ConsultaSQL = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ConsultaSQL = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ConfiguracionJSON = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ConfiguracionJSON = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     OrigenDatos = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, defaultValue: "SQL")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    StoredProcedure = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    StoredProcedure = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ParametrosJSON = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ParametrosJSON = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RequiereParametros = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    ParametrosObligatorios = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ParametrosObligatorios = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FormatoSalida = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, defaultValue: "PDF")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    FormatosAdicionales = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    FormatosAdicionales = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PlantillaHTML = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    PlantillaHTML = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ConfiguracionColumnas = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ConfiguracionColumnas = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TieneGraficas = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    ConfiguracionGraficas = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ConfiguracionGraficas = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ProgramacionAutomatica = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     Frecuencia = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ExpresionCron = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ExpresionCron = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DiaMes = table.Column<int>(type: "int", nullable: true),
                     DiaSemana = table.Column<int>(type: "int", nullable: true),
@@ -1415,15 +1371,15 @@ namespace SchoolSystem.Infrastructure.Migrations
                     ProximaEjecucion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UltimaEjecucion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     EnvioAutomatico = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    CorreosDestinatarios = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    CorreosDestinatarios = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    AsuntoCorreo = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
+                    AsuntoCorreo = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CuerpoCorreo = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    CuerpoCorreo = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    FiltrosPredeterminados = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    FiltrosPredeterminados = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    OrdenamientoPredeterminado = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    OrdenamientoPredeterminado = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PermiteOrdenamientoDinamico = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     LimiteRegistros = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
@@ -1431,7 +1387,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     TiempoCacheMinutos = table.Column<int>(type: "int", nullable: true),
                     TimeoutSegundos = table.Column<int>(type: "int", nullable: true),
                     EsPrivado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    RolesPermitidos = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    RolesPermitidos = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RequiereAprobacion = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
@@ -1439,20 +1395,19 @@ namespace SchoolSystem.Infrastructure.Migrations
                     VecesEjecutado = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     FechaUltimaEjecucionManual = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     TiempoPromedioEjecucion = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
-                    Categoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Categoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Tags = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Tags = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Icono = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Icono = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Orden = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1466,10 +1421,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                     table.CheckConstraint("CK_ReportesPersonalizados_TimeoutSegundos", "`TimeoutSegundos` IS NULL OR `TimeoutSegundos` > 0");
                     table.CheckConstraint("CK_ReportesPersonalizados_VecesEjecutado", "`VecesEjecutado` >= 0");
                     table.ForeignKey(
-                        name: "FK_ReportesPersonalizados_usuarios_CreatedBy",
+                        name: "FK_ReportesPersonalizados_Usuarios_CreatedBy",
                         column: x => x.CreatedBy,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -1482,17 +1437,17 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     EscuelaId = table.Column<int>(type: "int", nullable: true),
                     UsuarioId = table.Column<int>(type: "int", nullable: true),
-                    NombreUsuario = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    NombreUsuario = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DispositivoId = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    NombreDispositivo = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    NombreDispositivo = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TipoDispositivo = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    SistemaOperativo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    SistemaOperativo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    VersionCliente = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    VersionCliente = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Tipo = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, defaultValue: "Manual")
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -1504,7 +1459,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     FechaFin = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DuracionMs = table.Column<int>(type: "int", nullable: true),
                     UltimaSincronizacionExitosa = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    EntidadesSincronizadas = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    EntidadesSincronizadas = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TotalEntidades = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     RegistrosCreados = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
@@ -1514,39 +1469,32 @@ namespace SchoolSystem.Infrastructure.Migrations
                     CantidadErrores = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     TamanioDatos = table.Column<long>(type: "bigint", nullable: true),
                     TuvoErrores = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    MensajeError = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    MensajeError = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DetalleErrores = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    DetalleErrores = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    StackTrace = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    StackTrace = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    HashVerificacion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    HashVerificacion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    HashCliente = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    HashCliente = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     VerificacionExitosa = table.Column<bool>(type: "tinyint(1)", nullable: true),
                     CantidadConflictos = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    DetalleConflictos = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    DetalleConflictos = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    EstrategiaResolucion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    EstrategiaResolucion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DireccionIP = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: false)
+                    DireccionIP = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DatosAdicionales = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    DatosAdicionales = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ModoSincronizacion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, defaultValue: "Incremental")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Prioridad = table.Column<int>(type: "int", nullable: false, defaultValue: 5),
-                    Reintentos = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Reintentos = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
@@ -1560,10 +1508,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                     table.CheckConstraint("CK_Sincronizaciones_TamanioDatos", "`TamanioDatos` IS NULL OR `TamanioDatos` >= 0");
                     table.CheckConstraint("CK_Sincronizaciones_TotalEntidades", "`TotalEntidades` >= 0");
                     table.ForeignKey(
-                        name: "FK_Sincronizaciones_usuarios_UsuarioId",
+                        name: "FK_Sincronizaciones_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -1577,7 +1525,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     EscuelaId = table.Column<int>(type: "int", nullable: false),
                     Nombre = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     MontoBase = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Tipo = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
@@ -1586,7 +1534,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Periodicidad = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    Codigo = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    Codigo = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     AplicaDescuentos = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     PorcentajeMaximoDescuento = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
@@ -1595,19 +1543,18 @@ namespace SchoolSystem.Infrastructure.Migrations
                     DiasGracia = table.Column<int>(type: "int", nullable: true),
                     NivelEducativoId = table.Column<int>(type: "int", nullable: true),
                     GradoId = table.Column<int>(type: "int", nullable: true),
-                    CicloEscolar = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    CicloEscolar = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CuentaContable = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    CuentaContable = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CategoriaFiscal = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    CategoriaFiscal = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Notas = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Notas = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1643,15 +1590,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     HorasSemanales = table.Column<int>(type: "int", nullable: true),
                     Orden = table.Column<int>(type: "int", nullable: true),
                     Obligatoria = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    PorcentajePeso = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
-                    GradoId1 = table.Column<int>(type: "int", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    PorcentajePeso = table.Column<decimal>(type: "decimal(5,2)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1665,11 +1604,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalTable: "Grados",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_GradoMaterias_Grados_GradoId1",
-                        column: x => x.GradoId1,
-                        principalTable: "Grados",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_GradoMaterias_Materias_MateriaId",
                         column: x => x.MateriaId,
@@ -1730,16 +1664,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                     FechaReinicioPeriodo = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     NotificacionesActivas = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     MostrarEnRankings = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    AvatarUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    AvatarUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Lema = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Lema = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    AlumnoId1 = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1751,16 +1683,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                     table.CheckConstraint("CK_AlumnoPuntos_Rachas", "`RachaAsistencia` >= 0 AND `RachaBuenaConducta` >= 0 AND `RachaTareas` >= 0");
                     table.CheckConstraint("CK_AlumnoPuntos_Rankings", "(`RankingGrupo` IS NULL OR `RankingGrupo` > 0) AND (`RankingGrado` IS NULL OR `RankingGrado` > 0) AND (`RankingEscuela` IS NULL OR `RankingEscuela` > 0)");
                     table.ForeignKey(
-                        name: "FK_AlumnoPuntos_alumnos_AlumnoId",
+                        name: "FK_AlumnoPuntos_Alumnos_AlumnoId",
                         column: x => x.AlumnoId,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AlumnoPuntos_alumnos_AlumnoId1",
-                        column: x => x.AlumnoId1,
-                        principalTable: "alumnos",
-                        principalColumn: "id");
+                        principalTable: "Alumnos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -1793,16 +1720,15 @@ namespace SchoolSystem.Infrastructure.Migrations
                     FechaUltimoPago = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     FechaActualizacion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     FechaProximoVencimiento = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RequiereAtencion = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    NotasAtencion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    NotasAtencion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1814,11 +1740,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                     table.CheckConstraint("CK_EstadosCuenta_TotalDescuentos", "`TotalDescuentos` >= 0 AND `TotalDescuentos` <= `TotalCargos`");
                     table.CheckConstraint("CK_EstadosCuenta_TotalPagos", "`TotalPagos` >= 0");
                     table.ForeignKey(
-                        name: "FK_EstadosCuenta_alumnos_AlumnoId",
+                        name: "FK_EstadosCuenta_Alumnos_AlumnoId",
                         column: x => x.AlumnoId,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Alumnos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -1835,55 +1761,54 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Peso = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
                     Estatura = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
                     IMC = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
-                    Alergias = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Alergias = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CondicionesMedicas = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    CondicionesMedicas = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MedicamentosRegulares = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    MedicamentosRegulares = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Restricciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Restricciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RequiereAtencionEspecial = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DetallesAtencionEspecial = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    DetallesAtencionEspecial = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ContactoEmergenciaNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    ContactoEmergenciaNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ContactoEmergenciaTelefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    ContactoEmergenciaTelefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ContactoEmergenciaTelefonoAlt = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    ContactoEmergenciaTelefonoAlt = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ContactoEmergenciaParentesco = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    ContactoEmergenciaParentesco = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TieneSeguro = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    SeguroNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    SeguroNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    SeguroNumeroPoliza = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    SeguroNumeroPoliza = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     SeguroVigencia = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    SeguroTelefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    SeguroTelefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MedicoNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    MedicoNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MedicoEspecialidad = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    MedicoEspecialidad = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MedicoTelefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    MedicoTelefono = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MedicoDireccion = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
+                    MedicoDireccion = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     VacunacionCompleta = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    VacunacionObservaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    VacunacionObservaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaUltimaActualizacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     FechaUltimaRevision = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ExpedienteCompleto = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1892,10 +1817,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                     table.CheckConstraint("CK_ExpedientesMedicos_IMC", "`IMC` IS NULL OR `IMC` > 0");
                     table.CheckConstraint("CK_ExpedientesMedicos_Peso", "`Peso` IS NULL OR `Peso` > 0");
                     table.ForeignKey(
-                        name: "FK_ExpedientesMedicos_alumnos_AlumnoId",
+                        name: "FK_ExpedientesMedicos_Alumnos_AlumnoId",
                         column: x => x.AlumnoId,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
+                        principalTable: "Alumnos",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -1917,12 +1842,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     FechaEnvio = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Leido = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaLectura = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ArchivoAdjuntoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ArchivoAdjuntoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ArchivoAdjuntoNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    ArchivoAdjuntoNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ArchivoAdjuntoTamano = table.Column<long>(type: "bigint", nullable: true),
-                    ArchivoAdjuntoTipo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ArchivoAdjuntoTipo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     MensajePadreId = table.Column<int>(type: "int", nullable: true),
                     EliminadoPorEmisor = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
@@ -1932,13 +1857,18 @@ namespace SchoolSystem.Infrastructure.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Mensajes", x => x.Id);
                     table.CheckConstraint("CK_Mensajes_Emisor_Receptor", "`EmisorId` <> `ReceptorId`");
+                    table.ForeignKey(
+                        name: "FK_Mensajes_Alumnos_AlumnoRelacionadoId",
+                        column: x => x.AlumnoRelacionadoId,
+                        principalTable: "Alumnos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Mensajes_Mensajes_MensajePadreId",
                         column: x => x.MensajePadreId,
@@ -1946,22 +1876,16 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Mensajes_alumnos_AlumnoRelacionadoId",
-                        column: x => x.AlumnoRelacionadoId,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_Mensajes_usuarios_EmisorId",
+                        name: "FK_Mensajes_Usuarios_EmisorId",
                         column: x => x.EmisorId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Mensajes_usuarios_ReceptorId",
+                        name: "FK_Mensajes_Usuarios_ReceptorId",
                         column: x => x.ReceptorId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -1979,42 +1903,33 @@ namespace SchoolSystem.Infrastructure.Migrations
                     EntidadId = table.Column<int>(type: "int", nullable: false),
                     NombreCampo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    NombreDescriptivo = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    NombreDescriptivo = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TipoDato = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ValorAnterior = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ValorAnterior = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ValorNuevo = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ValorNuevo = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ValorAnteriorFormateado = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ValorAnteriorFormateado = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ValorNuevoFormateado = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ValorNuevoFormateado = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UsuarioId = table.Column<int>(type: "int", nullable: true),
-                    NombreUsuario = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    NombreUsuario = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaCambio = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     EsCampoSensible = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    Categoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Categoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Etiquetas = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Etiquetas = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Notas = table.Column<string>(type: "LONGTEXT", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Notas = table.Column<string>(type: "LONGTEXT", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CambiosEntidad", x => x.Id);
-                    table.CheckConstraint("CK_CambiosEntidad_EntidadId", "`EntidadId` > 0");
-                    table.CheckConstraint("CK_CambiosEntidad_FechaCambio", "`FechaCambio` <= GETDATE()");
                     table.ForeignKey(
                         name: "FK_CambiosEntidad_LogsAuditoria_LogAuditoriaId",
                         column: x => x.LogAuditoriaId,
@@ -2022,10 +1937,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CambiosEntidad_usuarios_UsuarioId",
+                        name: "FK_CambiosEntidad_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -2042,25 +1957,23 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CicloEscolar = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CapacidadMaxima = table.Column<int>(type: "int", nullable: false, defaultValue: 30),
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     MaestroTitularId = table.Column<int>(type: "int", nullable: true),
-                    Aula = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Aula = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Turno = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     HoraInicio = table.Column<TimeSpan>(type: "time(6)", nullable: true),
                     HoraFin = table.Column<TimeSpan>(type: "time(6)", nullable: true),
-                    DiasClase = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    DiasClase = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false, defaultValue: "Lunes a Viernes")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    EscuelaId1 = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2073,11 +1986,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalTable: "Escuelas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Grupos_Escuelas_EscuelaId1",
-                        column: x => x.EscuelaId1,
-                        principalTable: "Escuelas",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Grupos_Grados_GradoId",
                         column: x => x.GradoId,
@@ -2107,31 +2015,30 @@ namespace SchoolSystem.Infrastructure.Migrations
                     FechaPrestamo = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     FechaDevolucionProgramada = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     FechaDevolucionReal = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Estado = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false, defaultValue: "Activo")
+                    Estado = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, defaultValue: "Activo")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ObservacionesDevolucion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ObservacionesDevolucion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     MontoMulta = table.Column<decimal>(type: "decimal(10,2)", nullable: false, defaultValue: 0m),
                     MultaPagada = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaPagoMulta = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DevueltoPorId = table.Column<int>(type: "int", nullable: true),
-                    CondicionDevolucion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    CondicionDevolucion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ReportadoExtraviado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaReporteExtravio = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     ReportadoDaniado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     CantidadRenovaciones = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     FechaUltimaRenovacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Folio = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Folio = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PrestamoUrgente = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2141,6 +2048,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     table.CheckConstraint("CK_Prestamos_FechaDevolucionReal", "`FechaDevolucionReal` IS NULL OR `FechaDevolucionReal` >= `FechaPrestamo`");
                     table.CheckConstraint("CK_Prestamos_MontoMulta", "`MontoMulta` >= 0");
                     table.CheckConstraint("CK_Prestamos_SolicitanteUnico", "(`AlumnoId` IS NOT NULL AND `MaestroId` IS NULL) OR (`AlumnoId` IS NULL AND `MaestroId` IS NOT NULL)");
+                    table.ForeignKey(
+                        name: "FK_Prestamos_Alumnos_AlumnoId",
+                        column: x => x.AlumnoId,
+                        principalTable: "Alumnos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Prestamos_Libros_LibroId",
                         column: x => x.LibroId,
@@ -2154,22 +2067,16 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Prestamos_alumnos_AlumnoId",
-                        column: x => x.AlumnoId,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Prestamos_usuarios_DevueltoPorId",
+                        name: "FK_Prestamos_Usuarios_DevueltoPorId",
                         column: x => x.DevueltoPorId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Prestamos_usuarios_RegistradoPorId",
+                        name: "FK_Prestamos_Usuarios_RegistradoPorId",
                         column: x => x.RegistradoPorId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -2185,32 +2092,25 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Mensaje = table.Column<string>(type: "LONGTEXT", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Proveedor = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Proveedor = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Estatus = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false, defaultValue: "Pendiente")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    SidProveedor = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    SidProveedor = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Costo = table.Column<decimal>(type: "decimal(10,4)", nullable: true),
                     Moneda = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false, defaultValue: "MXN")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaEnvio = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     FechaEntrega = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ErrorMensaje = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ErrorMensaje = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CodigoError = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    CodigoError = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NumeroIntentos = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     FechaUltimoIntento = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Metadata = table.Column<string>(type: "LONGTEXT", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Metadata = table.Column<string>(type: "LONGTEXT", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -2226,41 +2126,34 @@ namespace SchoolSystem.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "alumno_padres",
+                name: "AlumnoPadres",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    alumno_id = table.Column<int>(type: "int", nullable: false),
-                    padre_id = table.Column<int>(type: "int", nullable: false),
-                    relacion = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    AlumnoId = table.Column<int>(type: "int", nullable: false),
+                    PadreId = table.Column<int>(type: "int", nullable: false),
+                    Relacion = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    es_tutor_principal = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    autorizado_recoger = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    recibe_notificaciones = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    vive_con_alumno = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    EsTutorPrincipal = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
+                    AutorizadoRecoger = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    RecibeNotificaciones = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    ViveConAlumno = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_alumno_padres", x => x.id);
+                    table.PrimaryKey("PK_AlumnoPadres", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_alumno_padres_Padres_padre_id",
-                        column: x => x.padre_id,
-                        principalTable: "Padres",
+                        name: "FK_AlumnoPadres_Alumnos_AlumnoId",
+                        column: x => x.AlumnoId,
+                        principalTable: "Alumnos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_alumno_padres_alumnos_alumno_id",
-                        column: x => x.alumno_id,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
+                        name: "FK_AlumnoPadres_Padres_PadreId",
+                        column: x => x.PadreId,
+                        principalTable: "Padres",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -2288,23 +2181,22 @@ namespace SchoolSystem.Infrastructure.Migrations
                     FechaPagoCompleto = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Estatus = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false, defaultValue: "Pendiente")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MotivoCancelacion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    MotivoCancelacion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaCancelacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CanceladoPorId = table.Column<int>(type: "int", nullable: true),
-                    NumeroRecibo = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    NumeroRecibo = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ReferenciaExterna = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ReferenciaExterna = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     GeneradoAutomaticamente = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     MesCorrespondiente = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2317,22 +2209,22 @@ namespace SchoolSystem.Infrastructure.Migrations
                     table.CheckConstraint("CK_Cargos_Mora", "`Mora` >= 0");
                     table.CheckConstraint("CK_Cargos_SaldoPendiente", "`SaldoPendiente` >= 0");
                     table.ForeignKey(
+                        name: "FK_Cargos_Alumnos_AlumnoId",
+                        column: x => x.AlumnoId,
+                        principalTable: "Alumnos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Cargos_ConceptosPago_ConceptoPagoId",
                         column: x => x.ConceptoPagoId,
                         principalTable: "ConceptosPago",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Cargos_alumnos_AlumnoId",
-                        column: x => x.AlumnoId,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Cargos_usuarios_CanceladoPorId",
+                        name: "FK_Cargos_Usuarios_CanceladoPorId",
                         column: x => x.CanceladoPorId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -2344,35 +2236,20 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     AlumnoPuntosId = table.Column<int>(type: "int", nullable: false),
-                    AlumnoPuntosId1 = table.Column<int>(type: "int", nullable: false),
                     InsigniaId = table.Column<int>(type: "int", nullable: false),
                     FechaObtencion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Motivo = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Motivo = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EsFavorita = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    VecesObtenida = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    VecesObtenida = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AlumnosInsignias", x => x.Id);
-                    table.CheckConstraint("CK_AlumnosInsignias_FechaObtencion", "`FechaObtencion` <= GETDATE()");
                     table.CheckConstraint("CK_AlumnosInsignias_VecesObtenida", "`VecesObtenida` >= 1");
                     table.ForeignKey(
                         name: "FK_AlumnosInsignias_AlumnoPuntos_AlumnoPuntosId",
                         column: x => x.AlumnoPuntosId,
-                        principalTable: "AlumnoPuntos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AlumnosInsignias_AlumnoPuntos_AlumnoPuntosId1",
-                        column: x => x.AlumnoPuntosId1,
                         principalTable: "AlumnoPuntos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -2396,20 +2273,13 @@ namespace SchoolSystem.Infrastructure.Migrations
                     PuntosObtenidos = table.Column<int>(type: "int", nullable: false),
                     Categoria = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Descripcion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     OrigenId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TipoOrigen = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PuntosAcumulados = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    PuntosAcumulados = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -2441,33 +2311,25 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PuedeSerAnafilactica = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaDiagnostico = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    MedicoDiagnostico = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    MedicoDiagnostico = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TipoPrueba = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    TipoPrueba = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TratamientoRecomendado = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    TratamientoRecomendado = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MedicamentoEmergencia = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    MedicamentoEmergencia = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RequiereAutoinyector = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    InstruccionesEmergencia = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    InstruccionesEmergencia = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Activa = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     FechaSuperacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Alergias", x => x.Id);
-                    table.CheckConstraint("CK_Alergias_FechaDiagnostico", "`FechaDiagnostico` IS NULL OR `FechaDiagnostico` <= GETDATE()");
                     table.CheckConstraint("CK_Alergias_FechaSuperacion", "`FechaSuperacion` IS NULL OR (`FechaSuperacion` >= `FechaDiagnostico` AND `Activa` = 0)");
                     table.ForeignKey(
                         name: "FK_Alergias_ExpedientesMedicos_ExpedienteMedicoId",
@@ -2489,71 +2351,63 @@ namespace SchoolSystem.Infrastructure.Migrations
                     TipoIncidente = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaIncidente = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Sintomas = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Sintomas = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    LugarIncidente = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    LugarIncidente = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     OcurrioEnEscuela = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    Diagnostico = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Diagnostico = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Gravedad = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TratamientoAplicado = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    TratamientoAplicado = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MedicoAtencion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    MedicoAtencion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    EspecialidadMedico = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    EspecialidadMedico = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    LugarAtencion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    LugarAtencion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    InstitucionAtencion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    InstitucionAtencion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RequirioHospitalizacion = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaIngresoHospital = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     FechaAltaHospital = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DiasHospitalizado = table.Column<int>(type: "int", nullable: true),
-                    MotivoHospitalizacion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    MotivoHospitalizacion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MedicamentosRecetados = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    MedicamentosRecetados = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProcedimientosRealizados = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ProcedimientosRealizados = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RequirioCirugia = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DescripcionCirugia = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    DescripcionCirugia = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RequiereSeguimiento = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaProximaConsulta = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    IndicacionesSeguimiento = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    IndicacionesSeguimiento = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CasoCerrado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaCierreCaso = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     PadresNotificados = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaNotificacionPadres = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    PersonaQueNotifico = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    PersonaQueNotifico = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MedioNotificacion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    MedioNotificacion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DocumentosUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    DocumentosUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    RegistradoPorId = table.Column<int>(type: "int", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    RegistradoPorId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HistorialMedico", x => x.Id);
                     table.CheckConstraint("CK_HistorialMedico_DiasHospitalizado", "`DiasHospitalizado` IS NULL OR `DiasHospitalizado` >= 0");
                     table.CheckConstraint("CK_HistorialMedico_FechaAltaHospital", "`FechaAltaHospital` IS NULL OR `FechaAltaHospital` >= `FechaIngresoHospital`");
-                    table.CheckConstraint("CK_HistorialMedico_FechaIncidente", "`FechaIncidente` <= GETDATE()");
                     table.CheckConstraint("CK_HistorialMedico_Hospitalizacion", "(`RequirioHospitalizacion` = 0) OR (`RequirioHospitalizacion` = 1 AND `FechaIngresoHospital` IS NOT NULL)");
                     table.ForeignKey(
                         name: "FK_HistorialMedico_ExpedientesMedicos_ExpedienteMedicoId",
@@ -2562,10 +2416,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_HistorialMedico_usuarios_RegistradoPorId",
+                        name: "FK_HistorialMedico_Usuarios_RegistradoPorId",
                         column: x => x.RegistradoPorId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -2580,7 +2434,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     ExpedienteMedicoId = table.Column<int>(type: "int", nullable: false),
                     NombreMedicamento = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    NombreGenerico = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    NombreGenerico = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Dosis = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -2590,11 +2444,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Indicacion = table.Column<string>(type: "LONGTEXT", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MedicoPrescriptor = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    MedicoPrescriptor = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    EspecialidadMedico = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    EspecialidadMedico = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CedulaMedico = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    CedulaMedico = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaInicio = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     FechaFin = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -2602,30 +2456,23 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Estado = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, defaultValue: "Activo")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaSuspension = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    MotivoSuspension = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    MotivoSuspension = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    InstruccionesEspeciales = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    InstruccionesEspeciales = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Precauciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Precauciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    EfectosSecundarios = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    EfectosSecundarios = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     AdministrarEnEscuela = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    HorarioEscolar = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    HorarioEscolar = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RequiereSupervision = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     PuedeAutoAdministrar = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    RecetaUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    RecetaUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -2655,36 +2502,28 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaAplicacion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     FechaProximaDosis = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Lote = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Lote = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Marca = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Marca = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaCaducidad = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    InstitucionAplicacion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    InstitucionAplicacion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PersonalAplicacion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    PersonalAplicacion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    LugarAnatomico = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    LugarAnatomico = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TuvoReacciones = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DescripcionReacciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    DescripcionReacciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ComprobanteUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ComprobanteUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Vacunas", x => x.Id);
-                    table.CheckConstraint("CK_Vacunas_FechaAplicacion", "`FechaAplicacion` <= GETDATE()");
                     table.CheckConstraint("CK_Vacunas_FechaCaducidad", "`FechaCaducidad` IS NULL OR `FechaCaducidad` >= `FechaAplicacion`");
                     table.CheckConstraint("CK_Vacunas_FechaProximaDosis", "`FechaProximaDosis` IS NULL OR `FechaProximaDosis` > `FechaAplicacion`");
                     table.ForeignKey(
@@ -2712,13 +2551,13 @@ namespace SchoolSystem.Infrastructure.Migrations
                     HoraSalida = table.Column<TimeSpan>(type: "time(6)", nullable: true),
                     MinutosRetardo = table.Column<int>(type: "int", nullable: true),
                     Justificado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    Motivo = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Motivo = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    JustificanteUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    JustificanteUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaJustificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     AproboJustificanteId = table.Column<int>(type: "int", nullable: true),
-                    Observaciones = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                    Observaciones = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PadresNotificados = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaNotificacionPadres = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -2726,21 +2565,24 @@ namespace SchoolSystem.Infrastructure.Migrations
                     FechaRegistro = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     FueModificada = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaUltimaModificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    MotivoModificacion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    MotivoModificacion = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    AlumnoId1 = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Asistencias", x => x.Id);
-                    table.CheckConstraint("CK_Asistencias_Fecha", "`Fecha` <= CAST(GETDATE() AS DATE)");
                     table.CheckConstraint("CK_Asistencias_Horarios", "`HoraEntrada` IS NULL OR `HoraSalida` IS NULL OR `HoraEntrada` < `HoraSalida`");
                     table.CheckConstraint("CK_Asistencias_MinutosRetardo", "`MinutosRetardo` IS NULL OR `MinutosRetardo` >= 0");
+                    table.ForeignKey(
+                        name: "FK_Asistencias_Alumnos_AlumnoId",
+                        column: x => x.AlumnoId,
+                        principalTable: "Alumnos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Asistencias_Escuelas_EscuelaId",
                         column: x => x.EscuelaId,
@@ -2754,113 +2596,101 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Asistencias_alumnos_AlumnoId",
-                        column: x => x.AlumnoId,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Asistencias_alumnos_AlumnoId1",
-                        column: x => x.AlumnoId1,
-                        principalTable: "alumnos",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_Asistencias_usuarios_RegistradoPor",
+                        name: "FK_Asistencias_Usuarios_RegistradoPor",
                         column: x => x.RegistradoPor,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "calificaciones",
+                name: "Calificaciones",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    escuela_id = table.Column<int>(type: "int", nullable: false),
-                    alumno_id = table.Column<int>(type: "int", nullable: false),
-                    materia_id = table.Column<int>(type: "int", nullable: false),
-                    grupo_id = table.Column<int>(type: "int", nullable: false),
-                    periodo_id = table.Column<int>(type: "int", nullable: false),
-                    calificacion_numerica = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: false),
-                    calificacion_letra = table.Column<string>(type: "varchar(5)", maxLength: 5, nullable: false)
+                    EscuelaId = table.Column<int>(type: "int", nullable: false),
+                    AlumnoId = table.Column<int>(type: "int", nullable: false),
+                    MateriaId = table.Column<int>(type: "int", nullable: false),
+                    GrupoId = table.Column<int>(type: "int", nullable: false),
+                    PeriodoId = table.Column<int>(type: "int", nullable: false),
+                    CalificacionNumerica = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: false),
+                    CalificacionLetra = table.Column<string>(type: "varchar(5)", maxLength: 5, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    aprobado = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    calificacion_minima = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: true),
-                    tipo_evaluacion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Aprobado = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CalificacionMinima = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: true),
+                    TipoEvaluacion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    peso = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: true),
-                    observaciones = table.Column<string>(type: "TEXT", nullable: false)
+                    Peso = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: true),
+                    Observaciones = table.Column<string>(type: "TEXT", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    fortalezas = table.Column<string>(type: "TEXT", nullable: false)
+                    Fortalezas = table.Column<string>(type: "TEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    areas_oportunidad = table.Column<string>(type: "TEXT", nullable: false)
+                    AreasOportunidad = table.Column<string>(type: "TEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    recomendaciones = table.Column<string>(type: "TEXT", nullable: false)
+                    Recomendaciones = table.Column<string>(type: "TEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    fecha_captura = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    capturado_por = table.Column<int>(type: "int", nullable: true),
-                    fue_modificada = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    fecha_ultima_modificacion = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                    modificado_por = table.Column<int>(type: "int", nullable: true),
-                    motivo_modificacion = table.Column<string>(type: "TEXT", nullable: false)
+                    FechaCaptura = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CapturadoPor = table.Column<int>(type: "int", nullable: true),
+                    FueModificada = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
+                    FechaUltimaModificacion = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                    ModificadoPor = table.Column<int>(type: "int", nullable: true),
+                    MotivoModificacion = table.Column<string>(type: "TEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    es_recalificacion = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    calificacion_original = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: true),
-                    fecha_recalificacion = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                    tipo_recalificacion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    EsRecalificacion = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
+                    CalificacionOriginal = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: true),
+                    FechaRecalificacion = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                    TipoRecalificacion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    bloqueada = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    fecha_bloqueo = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                    visible_para_padres = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    created_by = table.Column<int>(type: "int", nullable: true),
-                    updated_by = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Bloqueada = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
+                    FechaBloqueo = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                    VisibleParaPadres = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedBy = table.Column<int>(type: "int", nullable: true),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_calificaciones", x => x.id);
-                    table.CheckConstraint("CHK_Calificacion_Rango", "calificacion_numerica >=0 AND calificacion_numerica <=10");
-                    table.CheckConstraint("CHK_Peso_Rango", "peso IS NULL OR (peso >=0 AND peso <=100)");
+                    table.PrimaryKey("PK_Calificaciones", x => x.Id);
+                    table.CheckConstraint("CHK_Calificacion_Rango", "CalificacionNumerica >=0 AND CalificacionNumerica <=10");
+                    table.CheckConstraint("CHK_Peso_Rango", "Peso IS NULL OR (Peso >=0 AND Peso <=100)");
                     table.ForeignKey(
-                        name: "FK_calificaciones_Escuelas_escuela_id",
-                        column: x => x.escuela_id,
+                        name: "FK_Calificaciones_Alumnos_AlumnoId",
+                        column: x => x.AlumnoId,
+                        principalTable: "Alumnos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Calificaciones_Escuelas_EscuelaId",
+                        column: x => x.EscuelaId,
                         principalTable: "Escuelas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_calificaciones_Grupos_grupo_id",
-                        column: x => x.grupo_id,
+                        name: "FK_Calificaciones_Grupos_GrupoId",
+                        column: x => x.GrupoId,
                         principalTable: "Grupos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_calificaciones_Maestros_capturado_por",
-                        column: x => x.capturado_por,
+                        name: "FK_Calificaciones_Maestros_CapturadoPor",
+                        column: x => x.CapturadoPor,
                         principalTable: "Maestros",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_calificaciones_Materias_materia_id",
-                        column: x => x.materia_id,
+                        name: "FK_Calificaciones_Materias_MateriaId",
+                        column: x => x.MateriaId,
                         principalTable: "Materias",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_calificaciones_PeriodosEvaluacion_periodo_id",
-                        column: x => x.periodo_id,
+                        name: "FK_Calificaciones_PeriodosEvaluacion_PeriodoId",
+                        column: x => x.PeriodoId,
                         principalTable: "PeriodosEvaluacion",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_calificaciones_alumnos_alumno_id",
-                        column: x => x.alumno_id,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -2879,12 +2709,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Destinatarios = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     GrupoId = table.Column<int>(type: "int", nullable: true),
-                    ArchivoAdjuntoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ArchivoAdjuntoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ArchivoAdjuntoNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    ArchivoAdjuntoNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ArchivoAdjuntoTamano = table.Column<long>(type: "bigint", nullable: true),
-                    ArchivoAdjuntoTipo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ArchivoAdjuntoTipo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PublicadoPorId = table.Column<int>(type: "int", nullable: false),
                     FechaPublicacion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -2893,7 +2723,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     Prioridad = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false, defaultValue: "Normal")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Categoria = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Categoria = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PermiteComentarios = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     TotalDestinatarios = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
@@ -2902,8 +2732,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2915,10 +2744,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Comunicados_usuarios_PublicadoPorId",
+                        name: "FK_Comunicados_Usuarios_PublicadoPorId",
                         column: x => x.PublicadoPorId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -2935,16 +2764,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                     MaestroId = table.Column<int>(type: "int", nullable: false),
                     CicloEscolar = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Horario = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    GrupoId1 = table.Column<int>(type: "int", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Horario = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -2955,11 +2776,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalTable: "Grupos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_GrupoMateriaMaestros_Grupos_GrupoId1",
-                        column: x => x.GrupoId1,
-                        principalTable: "Grupos",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_GrupoMateriaMaestros_Maestros_MaestroId",
                         column: x => x.MaestroId,
@@ -3003,24 +2819,23 @@ namespace SchoolSystem.Infrastructure.Migrations
                     DiasRetardo = table.Column<int>(type: "int", nullable: true),
                     PorcentajeAsistencia = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
                     FechaBaja = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    MotivoBaja = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    MotivoBaja = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     GrupoAnteriorId = table.Column<int>(type: "int", nullable: true),
                     FechaCambioGrupo = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    MotivoCambioGrupo = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    MotivoCambioGrupo = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Becado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    TipoBeca = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    TipoBeca = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PorcentajeBeca = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
                     Repetidor = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -3035,6 +2850,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     table.CheckConstraint("CK_Inscripciones_PromedioAcumulado", "`PromedioAcumulado` IS NULL OR (`PromedioAcumulado` >= 0 AND `PromedioAcumulado` <= 10)");
                     table.CheckConstraint("CK_Inscripciones_PromedioFinal", "`PromedioFinal` IS NULL OR (`PromedioFinal` >= 0 AND `PromedioFinal` <= 10)");
                     table.ForeignKey(
+                        name: "FK_Inscripciones_Alumnos_AlumnoId",
+                        column: x => x.AlumnoId,
+                        principalTable: "Alumnos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Inscripciones_Escuelas_EscuelaId",
                         column: x => x.EscuelaId,
                         principalTable: "Escuelas",
@@ -3045,12 +2866,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         column: x => x.GrupoId,
                         principalTable: "Grupos",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Inscripciones_alumnos_AlumnoId",
-                        column: x => x.AlumnoId,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -3073,28 +2888,28 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Titulo = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "varchar(2000)", maxLength: 2000, nullable: false)
+                    Descripcion = table.Column<string>(type: "varchar(2000)", maxLength: 2000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaHoraIncidente = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Lugar = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    Lugar = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Puntos = table.Column<int>(type: "int", nullable: false),
-                    Testigos = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    Testigos = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    EvidenciaUrls = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                    EvidenciaUrls = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     SancionId = table.Column<int>(type: "int", nullable: true),
-                    AccionesTomadas = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                    AccionesTomadas = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PadresNotificados = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaNotificacionPadres = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     MetodoNotificacion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    RespuestaPadres = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                    RespuestaPadres = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RequiereSeguimiento = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaSeguimiento = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    NotasSeguimiento = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                    NotasSeguimiento = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Estado = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, defaultValue: "Activo")
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -3105,14 +2920,18 @@ namespace SchoolSystem.Infrastructure.Migrations
                     UpdatedBy = table.Column<int>(type: "int", nullable: true),
                     IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    DeletedBy = table.Column<int>(type: "int", nullable: true),
-                    AlumnoId1 = table.Column<int>(type: "int", nullable: true)
+                    DeletedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RegistrosConducta", x => x.Id);
-                    table.CheckConstraint("CK_RegistrosConducta_FechaHoraIncidente", "`FechaHoraIncidente` <= GETDATE()");
                     table.CheckConstraint("CK_RegistrosConducta_FechaSeguimiento", "`FechaSeguimiento` IS NULL OR `FechaSeguimiento` >= `FechaHoraIncidente`");
+                    table.ForeignKey(
+                        name: "FK_RegistrosConducta_Alumnos_AlumnoId",
+                        column: x => x.AlumnoId,
+                        principalTable: "Alumnos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RegistrosConducta_Escuelas_EscuelaId",
                         column: x => x.EscuelaId,
@@ -3131,17 +2950,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalTable: "Maestros",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RegistrosConducta_alumnos_AlumnoId",
-                        column: x => x.AlumnoId,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RegistrosConducta_alumnos_AlumnoId1",
-                        column: x => x.AlumnoId1,
-                        principalTable: "alumnos",
-                        principalColumn: "id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -3157,7 +2965,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     MaestroId = table.Column<int>(type: "int", nullable: false),
                     Titulo = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Descripcion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaAsignacion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     FechaEntrega = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -3167,19 +2975,18 @@ namespace SchoolSystem.Infrastructure.Migrations
                     ValorPuntos = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
                     PermiteEntregaTardia = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     PenalizacionTardia = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
-                    ArchivoAdjuntoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ArchivoAdjuntoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ArchivoAdjuntoNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    ArchivoAdjuntoNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ArchivoAdjuntoTamano = table.Column<long>(type: "bigint", nullable: true),
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -3220,54 +3027,59 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Monto = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     MetodoPago = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Referencia = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Referencia = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Banco = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Banco = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    UltimosDigitosTarjeta = table.Column<string>(type: "varchar(4)", maxLength: 4, nullable: false)
+                    UltimosDigitosTarjeta = table.Column<string>(type: "varchar(4)", maxLength: 4, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaPago = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     FechaAplicacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     FolioRecibo = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    SerieRecibo = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false)
+                    SerieRecibo = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ReciboUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ReciboUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RecibidoPorId = table.Column<int>(type: "int", nullable: false),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Cancelado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaCancelacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    MotivoCancelacion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    MotivoCancelacion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CanceladoPorId = table.Column<int>(type: "int", nullable: true),
                     Facturado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    UuidFactura = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    UuidFactura = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    FacturaXmlUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    FacturaXmlUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    FacturaPdfUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    FacturaPdfUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaFacturacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ReferenciaExterna = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ReferenciaExterna = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DatosAdicionales = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    DatosAdicionales = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DireccionIp = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: false)
+                    DireccionIp = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pagos", x => x.Id);
                     table.CheckConstraint("CK_Pagos_FechaAplicacion", "`FechaAplicacion` IS NULL OR `FechaAplicacion` >= `FechaPago`");
                     table.CheckConstraint("CK_Pagos_Monto", "`Monto` > 0");
-                    table.CheckConstraint("CK_Pagos_UltimosDigitos", "`UltimosDigitosTarjeta` IS NULL OR LEN(`UltimosDigitosTarjeta`) = 4");
+                    table.CheckConstraint("CK_Pagos_UltimosDigitos", "`UltimosDigitosTarjeta` IS NULL OR CHAR_LENGTH(`UltimosDigitosTarjeta`) = 4");
+                    table.ForeignKey(
+                        name: "FK_Pagos_Alumnos_AlumnoId",
+                        column: x => x.AlumnoId,
+                        principalTable: "Alumnos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Pagos_Cargos_CargoId",
                         column: x => x.CargoId,
@@ -3275,22 +3087,16 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Pagos_alumnos_AlumnoId",
-                        column: x => x.AlumnoId,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Pagos_usuarios_CanceladoPorId",
+                        name: "FK_Pagos_Usuarios_CanceladoPorId",
                         column: x => x.CanceladoPorId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Pagos_usuarios_RecibidoPorId",
+                        name: "FK_Pagos_Usuarios_RecibidoPorId",
                         column: x => x.RecibidoPorId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -3306,15 +3112,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                     FechaLectura = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Confirmado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaConfirmacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Comentario = table.Column<string>(type: "LONGTEXT", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Comentario = table.Column<string>(type: "LONGTEXT", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -3326,10 +3125,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ComunicadoLecturas_usuarios_UsuarioId",
+                        name: "FK_ComunicadoLecturas_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -3355,14 +3154,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                     FechaAutorizacion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Cumplida = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaCumplimiento = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ObservacionesCumplimiento = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                    ObservacionesCumplimiento = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     VerificadoPor = table.Column<int>(type: "int", nullable: true),
                     Apelada = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaApelacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    MotivoApelacion = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                    MotivoApelacion = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ResultadoApelacion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    ResultadoApelacion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaResolucionApelacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     PadresNotificados = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
@@ -3371,22 +3170,26 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FirmaEnterado = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     FechaFirmaEnterado = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    DocumentoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    DocumentoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Observaciones = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sanciones", x => x.Id);
-                    table.CheckConstraint("CK_Sanciones_FechaAutorizacion", "`FechaAutorizacion` <= GETDATE()");
                     table.CheckConstraint("CK_Sanciones_FechaCumplimiento", "`FechaCumplimiento` IS NULL OR `FechaCumplimiento` >= `FechaInicio`");
                     table.CheckConstraint("CK_Sanciones_Fechas", "`FechaFin` IS NULL OR `FechaFin` >= `FechaInicio`");
+                    table.ForeignKey(
+                        name: "FK_Sanciones_Alumnos_AlumnoId",
+                        column: x => x.AlumnoId,
+                        principalTable: "Alumnos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Sanciones_Escuelas_EscuelaId",
                         column: x => x.EscuelaId,
@@ -3400,16 +3203,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Sanciones_alumnos_AlumnoId",
-                        column: x => x.AlumnoId,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Sanciones_usuarios_AutorizadoPor",
+                        name: "FK_Sanciones_Usuarios_AutorizadoPor",
                         column: x => x.AutorizadoPor,
-                        principalTable: "usuarios",
-                        principalColumn: "id",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -3424,11 +3221,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                     TareaId = table.Column<int>(type: "int", nullable: false),
                     AlumnoId = table.Column<int>(type: "int", nullable: false),
                     FechaEntrega = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ComentariosAlumno = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    ComentariosAlumno = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ArchivoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ArchivoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ArchivoNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    ArchivoNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ArchivoTamano = table.Column<long>(type: "bigint", nullable: true),
                     Estatus = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false, defaultValue: "Pendiente")
@@ -3438,19 +3235,18 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Calificacion = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
                     CalificacionOriginal = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
                     PenalizacionAplicada = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
-                    Retroalimentacion = table.Column<string>(type: "LONGTEXT", nullable: false)
+                    Retroalimentacion = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RevisadoPorId = table.Column<int>(type: "int", nullable: true),
                     FechaRevision = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ArchivoRetroalimentacionUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    ArchivoRetroalimentacionUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ArchivoRetroalimentacionNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    ArchivoRetroalimentacionNombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -3459,6 +3255,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     table.CheckConstraint("CK_TareaEntregas_CalificacionOriginal", "`CalificacionOriginal` IS NULL OR (`CalificacionOriginal` >= 0 AND `CalificacionOriginal` <= 100)");
                     table.CheckConstraint("CK_TareaEntregas_NumeroIntento", "`NumeroIntento` > 0");
                     table.CheckConstraint("CK_TareaEntregas_Penalizacion", "`PenalizacionAplicada` IS NULL OR `PenalizacionAplicada` >= 0");
+                    table.ForeignKey(
+                        name: "FK_TareaEntregas_Alumnos_AlumnoId",
+                        column: x => x.AlumnoId,
+                        principalTable: "Alumnos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TareaEntregas_Maestros_RevisadoPorId",
                         column: x => x.RevisadoPorId,
@@ -3471,12 +3273,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalTable: "Tareas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TareaEntregas_alumnos_AlumnoId",
-                        column: x => x.AlumnoId,
-                        principalTable: "alumnos",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -3521,14 +3317,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                 columns: new[] { "Tipo", "Gravedad", "Activa" });
 
             migrationBuilder.CreateIndex(
-                name: "idx_alumno_padre_padre_id",
-                table: "alumno_padres",
-                column: "padre_id");
+                name: "IX_Alumno_Padre_Padre_Id",
+                table: "AlumnoPadres",
+                column: "PadreId");
 
             migrationBuilder.CreateIndex(
-                name: "idx_alumno_padre_unique",
-                table: "alumno_padres",
-                columns: new[] { "alumno_id", "padre_id" },
+                name: "IX_Alumno_Padre_Unique",
+                table: "AlumnoPadres",
+                columns: new[] { "AlumnoId", "PadreId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -3541,11 +3337,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "IX_AlumnoPuntos_AlumnoId",
                 table: "AlumnoPuntos",
                 column: "AlumnoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AlumnoPuntos_AlumnoId1",
-                table: "AlumnoPuntos",
-                column: "AlumnoId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AlumnoPuntos_CicloEscolar",
@@ -3603,37 +3394,37 @@ namespace SchoolSystem.Infrastructure.Migrations
                 column: "RankingGrupo");
 
             migrationBuilder.CreateIndex(
-                name: "idx_alumno_curp",
-                table: "alumnos",
-                column: "curp",
+                name: "IX_Alumno_Curp",
+                table: "Alumnos",
+                column: "CURP",
                 unique: true,
                 filter: "curp IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "idx_alumno_escuela_estatus",
-                table: "alumnos",
-                columns: new[] { "escuela_id", "estatus" });
+                name: "IX_Alumno_Escuela_Estatus",
+                table: "Alumnos",
+                columns: new[] { "EscuelaId", "Estatus" });
 
             migrationBuilder.CreateIndex(
-                name: "idx_alumno_estatus",
-                table: "alumnos",
-                column: "estatus");
+                name: "IX_Alumno_Estatus",
+                table: "Alumnos",
+                column: "Estatus");
 
             migrationBuilder.CreateIndex(
-                name: "idx_alumno_is_deleted",
-                table: "alumnos",
-                column: "is_deleted");
+                name: "IX_Alumno_Is_Deleted",
+                table: "Alumnos",
+                column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
-                name: "idx_alumno_matricula",
-                table: "alumnos",
-                column: "matricula",
+                name: "IX_Alumno_Matricula",
+                table: "Alumnos",
+                column: "Matricula",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_alumnos_usuario_id",
-                table: "alumnos",
-                column: "usuario_id",
+                name: "IX_Alumnos_UsuarioId",
+                table: "Alumnos",
+                column: "UsuarioId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -3655,11 +3446,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "IX_AlumnosInsignias_AlumnoPuntosId",
                 table: "AlumnosInsignias",
                 column: "AlumnoPuntosId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AlumnosInsignias_AlumnoPuntosId1",
-                table: "AlumnosInsignias",
-                column: "AlumnoPuntosId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AlumnosInsignias_EsFavorita",
@@ -3701,11 +3487,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "IX_Asistencias_AlumnoId",
                 table: "Asistencias",
                 column: "AlumnoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Asistencias_AlumnoId1",
-                table: "Asistencias",
-                column: "AlumnoId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Asistencias_Escuela_Fecha_Estatus",
@@ -3753,50 +3534,50 @@ namespace SchoolSystem.Infrastructure.Migrations
                 column: "RegistradoPor");
 
             migrationBuilder.CreateIndex(
-                name: "idx_calificacion_alumno",
-                table: "calificaciones",
-                column: "alumno_id");
+                name: "IX_Calificacion_Alumno",
+                table: "Calificaciones",
+                column: "AlumnoId");
 
             migrationBuilder.CreateIndex(
-                name: "idx_calificacion_alumno_materia_periodo",
-                table: "calificaciones",
-                columns: new[] { "alumno_id", "materia_id", "periodo_id" },
+                name: "IX_Calificacion_Alumno_Materia_Periodo",
+                table: "Calificaciones",
+                columns: new[] { "AlumnoId", "MateriaId", "PeriodoId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "idx_calificacion_bloqueada",
-                table: "calificaciones",
-                column: "bloqueada");
+                name: "IX_Calificacion_Bloqueada",
+                table: "Calificaciones",
+                column: "Bloqueada");
 
             migrationBuilder.CreateIndex(
-                name: "idx_calificacion_grupo_periodo",
-                table: "calificaciones",
-                columns: new[] { "grupo_id", "periodo_id" });
+                name: "IX_Calificacion_Grupo_Periodo",
+                table: "Calificaciones",
+                columns: new[] { "GrupoId", "PeriodoId" });
 
             migrationBuilder.CreateIndex(
-                name: "idx_calificacion_visible_padres",
-                table: "calificaciones",
-                column: "visible_para_padres");
+                name: "IX_Calificacion_Visible_Padres",
+                table: "Calificaciones",
+                column: "VisibleParaPadres");
 
             migrationBuilder.CreateIndex(
-                name: "IX_calificaciones_capturado_por",
-                table: "calificaciones",
-                column: "capturado_por");
+                name: "IX_Calificaciones_CapturadoPor",
+                table: "Calificaciones",
+                column: "CapturadoPor");
 
             migrationBuilder.CreateIndex(
-                name: "IX_calificaciones_escuela_id",
-                table: "calificaciones",
-                column: "escuela_id");
+                name: "IX_Calificaciones_EscuelaId",
+                table: "Calificaciones",
+                column: "EscuelaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_calificaciones_materia_id",
-                table: "calificaciones",
-                column: "materia_id");
+                name: "IX_Calificaciones_MateriaId",
+                table: "Calificaciones",
+                column: "MateriaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_calificaciones_periodo_id",
-                table: "calificaciones",
-                column: "periodo_id");
+                name: "IX_Calificaciones_PeriodoId",
+                table: "Calificaciones",
+                column: "PeriodoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CambiosEntidad_Entidad_Campo_Fecha",
@@ -4046,15 +3827,15 @@ namespace SchoolSystem.Infrastructure.Migrations
                 column: "TipoPlan");
 
             migrationBuilder.CreateIndex(
-                name: "idx_dispositivo_device_id",
-                table: "dispositivos",
-                column: "device_id",
+                name: "IX_Dispositivo_Device_Id",
+                table: "Dispositivos",
+                column: "DeviceId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "idx_dispositivo_usuario_activo",
-                table: "dispositivos",
-                columns: new[] { "usuario_id", "activo" });
+                name: "IX_Dispositivo_Usuario_Activo",
+                table: "Dispositivos",
+                columns: new[] { "UsuarioId", "Activo" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Documentos_Archivado",
@@ -4301,11 +4082,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                 column: "GradoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GradoMaterias_GradoId1",
-                table: "GradoMaterias",
-                column: "GradoId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_GradoMaterias_MateriaId",
                 table: "GradoMaterias",
                 column: "MateriaId");
@@ -4389,11 +4165,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                 column: "GrupoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GrupoMateriaMaestros_GrupoId1",
-                table: "GrupoMateriaMaestros",
-                column: "GrupoId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_GrupoMateriaMaestros_Maestro_Ciclo",
                 table: "GrupoMateriaMaestros",
                 columns: new[] { "MaestroId", "CicloEscolar" });
@@ -4433,11 +4204,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "IX_Grupos_EscuelaId",
                 table: "Grupos",
                 column: "EscuelaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Grupos_EscuelaId1",
-                table: "Grupos",
-                column: "EscuelaId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Grupos_Grado_Ciclo_Activo",
@@ -4891,11 +4657,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                 column: "EscuelaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Materias_EscuelaId1",
-                table: "Materias",
-                column: "EscuelaId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Materias_Nombre",
                 table: "Materias",
                 column: "Nombre");
@@ -5010,11 +4771,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "IX_NivelesEducativos_EscuelaId",
                 table: "NivelesEducativos",
                 column: "EscuelaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_NivelesEducativos_EscuelaId1",
-                table: "NivelesEducativos",
-                column: "EscuelaId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NivelesEducativos_Nombre",
@@ -5498,11 +5254,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                 column: "AlumnoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RegistrosConducta_AlumnoId1",
-                table: "RegistrosConducta",
-                column: "AlumnoId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RegistrosConducta_Categoria",
                 table: "RegistrosConducta",
                 column: "Categoria");
@@ -5891,25 +5642,25 @@ namespace SchoolSystem.Infrastructure.Migrations
                 column: "MateriaId");
 
             migrationBuilder.CreateIndex(
-                name: "idx_usuario_activo",
-                table: "usuarios",
-                column: "activo");
+                name: "IX_Usuario_Activo",
+                table: "Usuarios",
+                column: "Activo");
 
             migrationBuilder.CreateIndex(
-                name: "idx_usuario_email",
-                table: "usuarios",
-                column: "email",
+                name: "IX_Usuario_Email",
+                table: "Usuarios",
+                column: "Email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "idx_usuario_escuela_rol",
-                table: "usuarios",
-                columns: new[] { "escuela_id", "rol" });
+                name: "IX_Usuario_Escuela_Rol",
+                table: "Usuarios",
+                columns: new[] { "EscuelaId", "Rol" });
 
             migrationBuilder.CreateIndex(
-                name: "idx_usuario_username",
-                table: "usuarios",
-                column: "username",
+                name: "IX_Usuario_Username",
+                table: "Usuarios",
+                column: "Username",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -5950,7 +5701,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "Alergias");
 
             migrationBuilder.DropTable(
-                name: "alumno_padres");
+                name: "AlumnoPadres");
 
             migrationBuilder.DropTable(
                 name: "AlumnosInsignias");
@@ -5959,7 +5710,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "Asistencias");
 
             migrationBuilder.DropTable(
-                name: "calificaciones");
+                name: "Calificaciones");
 
             migrationBuilder.DropTable(
                 name: "CambiosEntidad");
@@ -5971,7 +5722,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "ConfiguracionesEscuela");
 
             migrationBuilder.DropTable(
-                name: "dispositivos");
+                name: "Dispositivos");
 
             migrationBuilder.DropTable(
                 name: "Documentos");
@@ -6085,7 +5836,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "Materias");
 
             migrationBuilder.DropTable(
-                name: "alumnos");
+                name: "Alumnos");
 
             migrationBuilder.DropTable(
                 name: "Grados");
@@ -6097,7 +5848,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "NivelesEducativos");
 
             migrationBuilder.DropTable(
-                name: "usuarios");
+                name: "Usuarios");
 
             migrationBuilder.DropTable(
                 name: "Escuelas");

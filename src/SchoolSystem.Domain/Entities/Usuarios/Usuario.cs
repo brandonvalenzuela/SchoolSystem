@@ -1,4 +1,6 @@
-﻿using SchoolSystem.Domain.Entities.Common;
+﻿using SchoolSystem.Domain.Entities.Academico;
+using SchoolSystem.Domain.Entities.Common;
+using SchoolSystem.Domain.Entities.Escuelas;
 using SchoolSystem.Domain.Enums;
 using SchoolSystem.Domain.Enums.Academico;
 using SchoolSystem.Domain.Enums.Escuelas;
@@ -23,7 +25,7 @@ namespace SchoolSystem.Domain.Entities.Usuarios
         /// <summary>
         /// Escuela asociada (Navigation Property)
         /// </summary>
-        public virtual Escuelas.Escuela Escuela { get; set; }
+        public virtual Escuela Escuela { get; set; }
 
         #endregion
 
@@ -110,7 +112,7 @@ namespace SchoolSystem.Domain.Entities.Usuarios
         /// <summary>
         /// Token para recuperación de contraseña
         /// </summary>
-        public string TokenRecuperacion { get; set; }
+        public string? TokenRecuperacion { get; set; }
 
         /// <summary>
         /// Fecha de expiración del token de recuperación
@@ -187,17 +189,17 @@ namespace SchoolSystem.Domain.Entities.Usuarios
         /// <summary>
         /// Información adicional si el usuario es un Maestro
         /// </summary>
-        public virtual Academico.Maestro Maestro { get; set; }
+        public virtual Maestro Maestro { get; set; }
 
         /// <summary>
         /// Información adicional si el usuario es un Padre
         /// </summary>
-        public virtual Academico.Padre Padre { get; set; }
+        public virtual Padre Padre { get; set; }
 
         /// <summary>
         /// Información adicional si el usuario es un Alumno
         /// </summary>
-        public virtual Academico.Alumno Alumno { get; set; }
+        public virtual Alumno Alumno { get; set; }
 
         /// <summary>
         /// Dispositivos registrados para este usuario

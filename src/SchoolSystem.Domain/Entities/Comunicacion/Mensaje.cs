@@ -149,7 +149,7 @@ namespace SchoolSystem.Domain.Entities.Comunicacion
         /// Alumno relacionado
         /// </summary>
         [ForeignKey("AlumnoRelacionadoId")]
-        public virtual Alumno AlumnoRelacionado { get; set; }
+        public virtual Alumno? AlumnoRelacionado { get; set; }
 
         /// <summary>
         /// Mensaje padre (si es respuesta)

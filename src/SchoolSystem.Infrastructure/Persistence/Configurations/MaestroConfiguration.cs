@@ -70,19 +70,24 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Certificaciones
             builder.Property(m => m.Certificaciones)
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             builder.Property(m => m.Capacitaciones)
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             builder.Property(m => m.Idiomas)
+                .IsRequired(false)
                 .HasMaxLength(500);
 
             // Información adicional
             builder.Property(m => m.Observaciones)
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             builder.Property(m => m.HorarioAtencion)
+                .IsRequired(false)
                 .HasMaxLength(500);
 
             builder.Property(m => m.DisponibleExtracurriculares)
@@ -104,7 +109,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasForeignKey(g => g.MaestroTitularId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            builder.HasMany(m => m.AsignacionesMaterias)
+            builder.HasMany(m => m.AsignacionesDeGrupoMateria)
                 .WithOne(am => am.Maestro)
                 .HasForeignKey(am => am.MaestroId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -151,13 +156,13 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 "`Salario` IS NULL OR `Salario` >= 0");
 
             builder.HasCheckConstraint("CK_Maestros_AñoGraduacion",
-                "`AñoGraduacion` IS NULL OR (`AñoGraduacion` >= 1900 AND (`AñoGraduacion` <= 2100)");
+                "`AñoGraduacion` IS NULL OR (`AñoGraduacion` >= 1900 AND `AñoGraduacion` <= 2100)"); // <-- CORREGIDO
 
             builder.HasCheckConstraint("CK_Maestros_AñosExperiencia",
                 "`AñosExperiencia` IS NULL OR `AñosExperiencia` >= 0");
 
             builder.HasCheckConstraint("CK_Maestros_Fechas",
-                "`FechaBaja` IS NULL OR `FechaIngreso` IS NULL OR (`FechaBaja` >= `FechaIngreso`");
+                "`FechaBaja` IS NULL OR `FechaIngreso` IS NULL OR (`FechaBaja` >= `FechaIngreso`)"); // <-- CORREGIDO
         }
     }
 }

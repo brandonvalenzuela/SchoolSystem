@@ -40,16 +40,19 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Archivos adjuntos
             builder.Property(c => c.ArchivoAdjuntoUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(c => c.ArchivoAdjuntoNombre)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(c => c.ArchivoAdjuntoTamano)
                 .IsRequired(false);
 
             builder.Property(c => c.ArchivoAdjuntoTipo)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             // Publicación
             builder.Property(c => c.PublicadoPorId)
@@ -77,7 +80,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(PrioridadNotificacion.Normal);
 
             builder.Property(c => c.Categoria)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(c => c.PermiteComentarios)
                 .HasDefaultValue(false);

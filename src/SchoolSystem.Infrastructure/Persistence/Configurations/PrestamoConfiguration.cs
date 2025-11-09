@@ -48,14 +48,17 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(p => p.Estado)
                 .IsRequired()
                 .HasConversion<string>()
-                .HasMaxLength(10)
+                .HasMaxLength(20)
                 .HasDefaultValue(EstadoPrestamo.Activo);
 
+
             builder.Property(p => p.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(p => p.ObservacionesDevolucion)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Multas
             builder.Property(p => p.MontoMulta)
@@ -74,7 +77,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(p => p.CondicionDevolucion)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(p => p.ReportadoExtraviado)
                 .HasDefaultValue(false);
@@ -94,7 +98,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Metadata
             builder.Property(p => p.Folio)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(p => p.PrestamoUrgente)
                 .HasDefaultValue(false);

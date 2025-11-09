@@ -35,21 +35,24 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Descripción del incidente
             builder.Property(hm => hm.Descripcion)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             builder.Property(hm => hm.Sintomas)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(hm => hm.LugarIncidente)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(hm => hm.OcurrioEnEscuela)
                 .HasDefaultValue(false);
 
             // Diagnóstico
             builder.Property(hm => hm.Diagnostico)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(hm => hm.Gravedad)
                 .IsRequired(false)
@@ -58,19 +61,24 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Atención médica
             builder.Property(hm => hm.TratamientoAplicado)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(hm => hm.MedicoAtencion)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(hm => hm.EspecialidadMedico)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(hm => hm.LugarAtencion)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(hm => hm.InstitucionAtencion)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             // Hospitalización
             builder.Property(hm => hm.RequirioHospitalizacion)
@@ -86,20 +94,24 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(hm => hm.MotivoHospitalizacion)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Medicamentos y procedimientos
             builder.Property(hm => hm.MedicamentosRecetados)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(hm => hm.ProcedimientosRealizados)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(hm => hm.RequirioCirugia)
                 .HasDefaultValue(false);
 
             builder.Property(hm => hm.DescripcionCirugia)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Seguimiento
             builder.Property(hm => hm.RequiereSeguimiento)
@@ -109,7 +121,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(hm => hm.IndicacionesSeguimiento)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(hm => hm.CasoCerrado)
                 .HasDefaultValue(false);
@@ -125,17 +138,21 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(hm => hm.PersonaQueNotifico)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(hm => hm.MedioNotificacion)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             // Documentación
             builder.Property(hm => hm.DocumentosUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(hm => hm.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(hm => hm.RegistradoPorId)
                 .IsRequired(false);
@@ -203,9 +220,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Ignore(hm => hm.ResumenBreve);
 
             // Constraints
-            builder.HasCheckConstraint("CK_HistorialMedico_FechaIncidente",
-                "`FechaIncidente` <= GETDATE()");
-
             builder.HasCheckConstraint("CK_HistorialMedico_FechaAltaHospital",
                 "`FechaAltaHospital` IS NULL OR `FechaAltaHospital` >= `FechaIngresoHospital`");
 

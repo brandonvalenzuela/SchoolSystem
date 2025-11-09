@@ -33,7 +33,7 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         /// Descripción del concepto
         /// </summary>
         [Column(TypeName = "NVARCHAR(MAX)")]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Monto base del concepto

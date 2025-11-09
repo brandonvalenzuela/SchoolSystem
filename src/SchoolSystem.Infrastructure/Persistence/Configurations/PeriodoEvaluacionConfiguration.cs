@@ -33,10 +33,10 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired();
 
             builder.Property(pe => pe.Descripcion)
+                .IsRequired(false)
                 .HasMaxLength(500);
 
             builder.Property(pe => pe.Activo)
-                .IsRequired()
                 .HasDefaultValue(true);
 
             // Fechas

@@ -33,13 +33,16 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(te => te.ComentariosAlumno)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(te => te.ArchivoUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(te => te.ArchivoNombre)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(te => te.ArchivoTamano)
                 .IsRequired(false);
@@ -73,7 +76,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasColumnType("decimal(5,2)");
 
             builder.Property(te => te.Retroalimentacion)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(te => te.RevisadoPorId)
                 .IsRequired(false);
@@ -83,10 +87,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Archivos de retroalimentación
             builder.Property(te => te.ArchivoRetroalimentacionUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(te => te.ArchivoRetroalimentacionNombre)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(te => te.CreatedAt)
@@ -110,7 +116,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasOne(te => te.Alumno)
                 .WithMany()
                 .HasForeignKey(te => te.AlumnoId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
 
             builder.HasOne(te => te.RevisadoPor)
                 .WithMany()

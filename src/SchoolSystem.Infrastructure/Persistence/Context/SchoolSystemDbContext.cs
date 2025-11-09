@@ -3,10 +3,10 @@ using SchoolSystem.Domain.Entities.Academico;
 using SchoolSystem.Domain.Entities.Auditoria;
 using SchoolSystem.Domain.Entities.Biblioteca;
 using SchoolSystem.Domain.Entities.Calendario;
+using SchoolSystem.Domain.Entities.Common;
 using SchoolSystem.Domain.Entities.Comunicacion;
 using SchoolSystem.Domain.Entities.Conducta;
 using SchoolSystem.Domain.Entities.Configuracion;
-using SchoolSystem.Domain.Entities.Common;
 using SchoolSystem.Domain.Entities.Documentos;
 using SchoolSystem.Domain.Entities.Escuelas;
 using SchoolSystem.Domain.Entities.Evaluacion;
@@ -14,6 +14,7 @@ using SchoolSystem.Domain.Entities.Finanzas;
 using SchoolSystem.Domain.Entities.Medico;
 using SchoolSystem.Domain.Entities.Tareas;
 using SchoolSystem.Domain.Entities.Usuarios;
+using SchoolSystem.Infrastructure.Persistence.Configurations;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -503,11 +504,11 @@ namespace SchoolSystem.Infrastructure.Persistence.Context
 
                 if (entry.State == EntityState.Added)
                 {
-                    entity.CreatedAt = DateTime.Now;
+                    entity.CreatedAt = DateTime.UtcNow;
                     entity.CreatedBy = currentUserId;
                 }
 
-                entity.UpdatedAt = DateTime.Now;
+                entity.UpdatedAt = DateTime.UtcNow;
                 entity.UpdatedBy = currentUserId;
             }
 
@@ -521,7 +522,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Context
                 var entity = (ISoftDeletable)entry.Entity;
 
                 entity.IsDeleted = true;
-                entity.DeletedAt = DateTime.Now;
+                entity.DeletedAt = DateTime.UtcNow;
                 entity.DeletedBy = currentUserId;
             }
         }

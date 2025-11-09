@@ -106,13 +106,15 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Metadata
             builder.Property(ec => ec.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(ec => ec.RequiereAtencion)
                 .HasDefaultValue(false);
 
             builder.Property(ec => ec.NotasAtencion)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(ec => ec.CreatedAt)
@@ -131,7 +133,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasOne(ec => ec.Alumno)
                 .WithMany()
                 .HasForeignKey(ec => ec.AlumnoId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
 
             // Índices
             builder.HasIndex(ec => ec.EscuelaId)

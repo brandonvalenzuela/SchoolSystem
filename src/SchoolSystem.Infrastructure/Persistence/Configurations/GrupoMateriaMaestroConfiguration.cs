@@ -34,21 +34,22 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(50);
 
             builder.Property(gmm => gmm.Horario)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Relaciones
             builder.HasOne(gmm => gmm.Grupo)
-                .WithMany()
+                .WithMany(g => g.GrupoMateriaMaestros)
                 .HasForeignKey(gmm => gmm.GrupoId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(gmm => gmm.Materia)
-                .WithMany()
+                .WithMany(m => m.AsignacionesGrupos)
                 .HasForeignKey(gmm => gmm.MateriaId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(gmm => gmm.Maestro)
-                .WithMany()
+                .WithMany(m => m.AsignacionesDeGrupoMateria)
                 .HasForeignKey(gmm => gmm.MaestroId)
                 .OnDelete(DeleteBehavior.Restrict);
 

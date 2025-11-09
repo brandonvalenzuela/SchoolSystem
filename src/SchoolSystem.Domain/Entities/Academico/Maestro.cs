@@ -1,4 +1,6 @@
 ﻿using SchoolSystem.Domain.Entities.Common;
+using SchoolSystem.Domain.Entities.Escuelas;
+using SchoolSystem.Domain.Entities.Usuarios;
 using SchoolSystem.Domain.Enums.Academico;
 using System;
 using System.Collections.Generic;
@@ -22,7 +24,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Escuela asociada (Navigation Property)
         /// </summary>
-        public virtual Escuelas.Escuela Escuela { get; set; }
+        public virtual Escuela Escuela { get; set; }
 
         #endregion
 
@@ -37,7 +39,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// Usuario asociado (Navigation Property)
         /// Contiene los datos personales, contacto y credenciales
         /// </summary>
-        public virtual Usuarios.Usuario Usuario { get; set; }
+        public virtual Usuario Usuario { get; set; }
 
         #endregion
 
@@ -66,7 +68,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Estatus laboral del maestro
         /// </summary>
-        public EstatusLaboral Estatus { get; set; }
+        public EstatusLaboral? Estatus { get; set; }
 
         /// <summary>
         /// Salario mensual del maestro
@@ -155,9 +157,10 @@ namespace SchoolSystem.Domain.Entities.Academico
         public virtual ICollection<Grupo> GruposTitular { get; set; }
 
         /// <summary>
-        /// Asignaciones de materias que imparte
+        /// Asignaciones de materias que imparte.
+        /// CORRECCIÓN: Nombre ajustado a 'AsignacionesDeGrupoMateria' para coincidir con la configuración de EF Core.
         /// </summary>
-        public virtual ICollection<GrupoMateriaMaestro> AsignacionesMaterias { get; set; }
+        public virtual ICollection<GrupoMateriaMaestro> AsignacionesDeGrupoMateria { get; set; }
 
         #endregion
 
@@ -171,7 +174,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Cantidad de materias que imparte
         /// </summary>
-        public int CantidadMaterias => AsignacionesMaterias?.Count ?? 0;
+        public int CantidadMaterias => AsignacionesDeGrupoMateria?.Count ?? 0;
 
         /// <summary>
         /// Antigüedad en años en la institución
@@ -207,7 +210,7 @@ namespace SchoolSystem.Domain.Entities.Academico
 
             // Inicializar colecciones
             GruposTitular = new HashSet<Grupo>();
-            AsignacionesMaterias = new HashSet<GrupoMateriaMaestro>();
+            AsignacionesDeGrupoMateria = new HashSet<GrupoMateriaMaestro>(); // CORREGIDO
         }
 
         #endregion
@@ -287,7 +290,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// </summary>
         public bool ImparteAlgunaMateria()
         {
-            return AsignacionesMaterias != null && AsignacionesMaterias.Any();
+            return AsignacionesDeGrupoMateria != null && AsignacionesDeGrupoMateria.Any(); // CORREGIDO
         }
 
         /// <summary>
@@ -295,10 +298,10 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// </summary>
         public IEnumerable<Materia> ObtenerMateriasPorGrupo(int grupoId)
         {
-            if (AsignacionesMaterias == null)
+            if (AsignacionesDeGrupoMateria == null) // CORREGIDO
                 return Enumerable.Empty<Materia>();
 
-            return AsignacionesMaterias
+            return AsignacionesDeGrupoMateria // CORREGIDO
                 .Where(am => am.GrupoId == grupoId)
                 .Select(am => am.Materia)
                 .Where(m => m != null);
@@ -309,10 +312,10 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// </summary>
         public IEnumerable<Grupo> ObtenerGruposDondeImparte()
         {
-            if (AsignacionesMaterias == null)
+            if (AsignacionesDeGrupoMateria == null) // CORREGIDO
                 return Enumerable.Empty<Grupo>();
 
-            return AsignacionesMaterias
+            return AsignacionesDeGrupoMateria // CORREGIDO
                 .Select(am => am.Grupo)
                 .Where(g => g != null)
                 .Distinct();

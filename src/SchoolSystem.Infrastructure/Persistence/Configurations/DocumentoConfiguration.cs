@@ -35,27 +35,33 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(300);
 
             builder.Property(d => d.Folio)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             // Entidad relacionada
             builder.Property(d => d.TipoEntidad)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(d => d.EntidadRelacionadaId)
                 .IsRequired(false);
 
             builder.Property(d => d.NombreEntidadRelacionada)
-                .HasMaxLength(300);
+                .HasMaxLength(300)
+                .IsRequired(false);
 
             // Contenido
             builder.Property(d => d.ContenidoHtml)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(d => d.ArchivoUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(d => d.NombreArchivo)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(d => d.TamanioArchivo)
                 .IsRequired(false);
@@ -81,14 +87,16 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(d => d.CorreosEnvio)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Firma digital
             builder.Property(d => d.TieneFirmaDigital)
                 .HasDefaultValue(false);
 
             builder.Property(d => d.HashFirma)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(d => d.FechaFirma)
                 .IsRequired(false);
@@ -97,7 +105,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(d => d.CertificadoFirma)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Usuario generador
             builder.Property(d => d.GeneradoPorId)
@@ -108,13 +117,16 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Metadata
             builder.Property(d => d.Descripcion)
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             builder.Property(d => d.Tags)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(d => d.DatosAdicionales)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(d => d.CantidadDescargas)
                 .HasDefaultValue(0);
@@ -133,7 +145,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(d => d.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(d => d.CreatedAt)
@@ -234,7 +247,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 "`CantidadDescargas` >= 0");
 
             builder.HasCheckConstraint("CK_Documentos_FirmaDigital",
-                "(`TieneFirmaDigital` = 0) OR (`TieneFirmaDigital` = 1 AND `HashFirma` IS NOT NULL AND `FirmadoPorId` IS NOT NULL)");
+                "(`TieneFirmaDigital` = 0) OR (`TieneFirmaDigital` = 1 AND `HashFirma` IS NOT NULL)");
         }
     }
 }

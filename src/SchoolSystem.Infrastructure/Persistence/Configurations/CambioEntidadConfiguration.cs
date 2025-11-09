@@ -37,7 +37,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(100);
 
             builder.Property(ce => ce.NombreDescriptivo)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(ce => ce.TipoDato)
                 .IsRequired()
@@ -45,23 +46,28 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Valores
             builder.Property(ce => ce.ValorAnterior)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(ce => ce.ValorNuevo)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(ce => ce.ValorAnteriorFormateado)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(ce => ce.ValorNuevoFormateado)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Usuario y fecha
             builder.Property(ce => ce.UsuarioId)
                 .IsRequired(false);
 
             builder.Property(ce => ce.NombreUsuario)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(ce => ce.FechaCambio)
                 .IsRequired();
@@ -71,13 +77,16 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             builder.Property(ce => ce.Categoria)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(ce => ce.Etiquetas)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(ce => ce.Notas)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Relaciones
             builder.HasOne(ce => ce.LogAuditoria)
@@ -137,12 +146,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Ignore(ce => ce.DescripcionCambio);
             builder.Ignore(ce => ce.DiasDesdeElCambio);
 
-            // Constraints
-            builder.HasCheckConstraint("CK_CambiosEntidad_EntidadId",
-                "`EntidadId` > 0");
-
-            builder.HasCheckConstraint("CK_CambiosEntidad_FechaCambio",
-                "`FechaCambio` <= GETDATE()");
         }
     }
 }

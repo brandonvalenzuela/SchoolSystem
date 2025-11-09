@@ -27,6 +27,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(200);
 
             builder.Property(rp => rp.Descripcion)
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             builder.Property(rp => rp.TipoReporte)
@@ -36,10 +37,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Configuración de consulta
             builder.Property(rp => rp.ConsultaSQL)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(rp => rp.ConfiguracionJSON)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(rp => rp.OrigenDatos)
                 .IsRequired()
@@ -47,17 +50,20 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue("SQL");
 
             builder.Property(rp => rp.StoredProcedure)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             // Parámetros
             builder.Property(rp => rp.ParametrosJSON)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(rp => rp.RequiereParametros)
                 .HasDefaultValue(false);
 
             builder.Property(rp => rp.ParametrosObligatorios)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Formato y presentación
             builder.Property(rp => rp.FormatoSalida)
@@ -67,19 +73,23 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(FormatoReporte.PDF);
 
             builder.Property(rp => rp.FormatosAdicionales)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(rp => rp.PlantillaHTML)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(rp => rp.ConfiguracionColumnas)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(rp => rp.TieneGraficas)
                 .HasDefaultValue(false);
 
             builder.Property(rp => rp.ConfiguracionGraficas)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Programación automática
             builder.Property(rp => rp.ProgramacionAutomatica)
@@ -91,7 +101,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(20);
 
             builder.Property(rp => rp.ExpresionCron)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(rp => rp.DiaMes)
                 .IsRequired(false);
@@ -113,20 +124,25 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             builder.Property(rp => rp.CorreosDestinatarios)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(rp => rp.AsuntoCorreo)
-                .HasMaxLength(300);
+                .HasMaxLength(300)
+                .IsRequired(false);
 
             builder.Property(rp => rp.CuerpoCorreo)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Filtros y ordenamiento
             builder.Property(rp => rp.FiltrosPredeterminados)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(rp => rp.OrdenamientoPredeterminado)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(rp => rp.PermiteOrdenamientoDinamico)
                 .HasDefaultValue(true);
@@ -149,7 +165,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             builder.Property(rp => rp.RolesPermitidos)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(rp => rp.RequiereAprobacion)
                 .HasDefaultValue(false);
@@ -174,19 +191,23 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Metadata
             builder.Property(rp => rp.Categoria)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(rp => rp.Tags)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(rp => rp.Icono)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(rp => rp.Orden)
                 .HasDefaultValue(0);
 
             builder.Property(rp => rp.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(rp => rp.CreatedAt)

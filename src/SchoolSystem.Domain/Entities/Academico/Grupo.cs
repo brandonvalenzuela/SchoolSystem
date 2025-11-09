@@ -58,7 +58,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Descripción del grupo (opcional)
         /// </summary>
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Capacidad máxima de alumnos
@@ -88,7 +88,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// Aula asignada al grupo
         /// Ejemplo: "Aula 101", "Salón A-2"
         /// </summary>
-        public string Aula { get; set; }
+        public string? Aula { get; set; }
 
         /// <summary>
         /// Turno del grupo
@@ -149,9 +149,10 @@ namespace SchoolSystem.Domain.Entities.Academico
         public virtual ICollection<Inscripcion> Inscripciones { get; set; }
 
         /// <summary>
-        /// Asignaciones de materias y maestros para este grupo
+        /// Asignaciones de materias y maestros para este grupo. 
+        /// CORRECCIÓN: Nombre ajustado a 'GrupoMateriaMaestros' para coincidir con la configuración de EF Core.
         /// </summary>
-        public virtual ICollection<GrupoMateriaMaestro> AsignacionesMaterias { get; set; }
+        public virtual ICollection<GrupoMateriaMaestro> GrupoMateriaMaestros { get; set; }
 
         /// <summary>
         /// Asistencias registradas en este grupo
@@ -212,7 +213,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Cantidad de materias asignadas
         /// </summary>
-        public int CantidadMaterias => AsignacionesMaterias?.Count ?? 0;
+        public int CantidadMaterias => GrupoMateriaMaestros?.Count ?? 0;
 
         #endregion
 
@@ -230,7 +231,7 @@ namespace SchoolSystem.Domain.Entities.Academico
 
             // Inicializar colecciones
             Inscripciones = new HashSet<Inscripcion>();
-            AsignacionesMaterias = new HashSet<GrupoMateriaMaestro>();
+            GrupoMateriaMaestros = new HashSet<GrupoMateriaMaestro>(); // CORREGIDO
             Asistencias = new HashSet<Evaluacion.Asistencia>();
             Calificaciones = new HashSet<Evaluacion.Calificacion>();
         }
@@ -327,10 +328,10 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// </summary>
         public IEnumerable<Materia> ObtenerMaterias()
         {
-            if (AsignacionesMaterias == null)
+            if (GrupoMateriaMaestros == null) // CORREGIDO
                 return Enumerable.Empty<Materia>();
 
-            return AsignacionesMaterias
+            return GrupoMateriaMaestros // CORREGIDO
                 .Select(am => am.Materia)
                 .Where(m => m != null)
                 .Distinct();
@@ -348,10 +349,10 @@ namespace SchoolSystem.Domain.Entities.Academico
                 maestros.Add(MaestroTitular);
 
             // Agregar maestros de materias
-            if (AsignacionesMaterias != null)
+            if (GrupoMateriaMaestros != null) // CORREGIDO
             {
                 maestros.AddRange(
-                    AsignacionesMaterias
+                    GrupoMateriaMaestros // CORREGIDO
                         .Select(am => am.Maestro)
                         .Where(m => m != null && !m.Id.Equals(MaestroTitularId))
                 );
@@ -369,8 +370,8 @@ namespace SchoolSystem.Domain.Entities.Academico
             if (MaestroTitularId.HasValue && MaestroTitularId.Value.ToString() == maestroId.ToString())
                 return true;
 
-            return AsignacionesMaterias != null &&
-                   AsignacionesMaterias.Any(am => am.MaestroId == maestroId);
+            return GrupoMateriaMaestros != null && // CORREGIDO
+                   GrupoMateriaMaestros.Any(am => am.MaestroId == maestroId);
         }
 
         /// <summary>
@@ -378,14 +379,14 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// </summary>
         public bool TieneMateria(int materiaId)
         {
-            return AsignacionesMaterias != null &&
-                   AsignacionesMaterias.Any(am => am.MateriaId == materiaId);
+            return GrupoMateriaMaestros != null && // CORREGIDO
+                   GrupoMateriaMaestros.Any(am => am.MateriaId == materiaId);
         }
 
         /// <summary>
         /// Obtiene el maestro que imparte una materia específica
         /// </summary>
-        public Maestro? ObtenerMaestroDe(int materiaId) => AsignacionesMaterias?
+        public Maestro? ObtenerMaestroDe(int materiaId) => GrupoMateriaMaestros? // CORREGIDO
                 .FirstOrDefault(am => am.MateriaId == materiaId)?
                 .Maestro;
 

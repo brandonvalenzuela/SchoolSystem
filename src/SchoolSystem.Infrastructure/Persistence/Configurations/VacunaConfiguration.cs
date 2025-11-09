@@ -40,37 +40,45 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Detalles del producto
             builder.Property(v => v.Lote)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(v => v.Marca)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(v => v.FechaCaducidad)
                 .IsRequired(false);
 
             // Lugar de aplicación
             builder.Property(v => v.InstitucionAplicacion)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(v => v.PersonalAplicacion)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(v => v.LugarAnatomico)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             // Reacciones
             builder.Property(v => v.TuvoReacciones)
                 .HasDefaultValue(false);
 
             builder.Property(v => v.DescripcionReacciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Documentación
             builder.Property(v => v.ComprobanteUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(v => v.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Relaciones
             builder.HasOne(v => v.ExpedienteMedico)
@@ -107,9 +115,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Ignore(v => v.LoteCaducado);
 
             // Constraints
-            builder.HasCheckConstraint("CK_Vacunas_FechaAplicacion",
-                "`FechaAplicacion` <= GETDATE()");
-
             builder.HasCheckConstraint("CK_Vacunas_FechaProximaDosis",
                 "`FechaProximaDosis` IS NULL OR `FechaProximaDosis` > `FechaAplicacion`");
 

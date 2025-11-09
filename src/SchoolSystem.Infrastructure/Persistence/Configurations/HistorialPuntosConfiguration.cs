@@ -11,6 +11,11 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<HistorialPuntos> builder)
         {
+            // Aplicar un filtro que siga la cadena de relaciones hasta Alumno.
+            // Si el Alumno de un AlumnoPuntos es "soft-deleted", entonces el historial
+            // de esos puntos también se debe ocultar de las consultas.
+            builder.HasQueryFilter(hp => !hp.AlumnoPuntos.Alumno.IsDeleted);
+
             // Nombre de tabla
             builder.ToTable("HistorialPuntos");
 
@@ -33,7 +38,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(50);
 
             builder.Property(hp => hp.Descripcion)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(500);
 
             builder.Property(hp => hp.OrigenId)
@@ -49,6 +54,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasOne(hp => hp.AlumnoPuntos)
                 .WithMany(ap => ap.HistorialPuntos)
                 .HasForeignKey(hp => hp.AlumnoPuntosId)
+                .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Índices

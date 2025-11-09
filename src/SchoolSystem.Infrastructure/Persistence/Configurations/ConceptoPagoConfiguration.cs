@@ -27,6 +27,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(100);
 
             builder.Property(cp => cp.Descripcion)
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             builder.Property(cp => cp.MontoBase)
@@ -54,7 +55,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(true);
 
             builder.Property(cp => cp.Codigo)
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .IsRequired(false);
 
             builder.Property(cp => cp.AplicaDescuentos)
                 .HasDefaultValue(true);
@@ -81,17 +83,21 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(cp => cp.CicloEscolar)
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .IsRequired(false);
 
             // Metadata
             builder.Property(cp => cp.CuentaContable)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(cp => cp.CategoriaFiscal)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(cp => cp.Notas)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(cp => cp.CreatedAt)

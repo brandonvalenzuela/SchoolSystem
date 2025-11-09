@@ -34,7 +34,7 @@ namespace SchoolSystem.Domain.Entities.Calendario
         /// Descripción del evento
         /// </summary>
         [Column(TypeName = "NVARCHAR(MAX)")]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Tipo de evento

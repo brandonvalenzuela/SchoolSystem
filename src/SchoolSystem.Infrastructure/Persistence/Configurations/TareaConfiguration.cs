@@ -36,7 +36,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(200);
 
             builder.Property(t => t.Descripcion)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             builder.Property(t => t.FechaAsignacion)
@@ -65,10 +65,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Archivos adjuntos
             builder.Property(t => t.ArchivoAdjuntoUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(t => t.ArchivoAdjuntoNombre)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(t => t.ArchivoAdjuntoTamano)
                 .IsRequired(false);
@@ -79,7 +81,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(true);
 
             builder.Property(t => t.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(t => t.CreatedAt)

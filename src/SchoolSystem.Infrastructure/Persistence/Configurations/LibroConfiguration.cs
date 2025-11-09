@@ -48,20 +48,23 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(l => l.CodigoClasificacion)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             // Detalles físicos
             builder.Property(l => l.NumeroPaginas)
                 .IsRequired(false);
 
             builder.Property(l => l.Edicion)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(l => l.Idioma)
                 .HasMaxLength(50)
                 .HasDefaultValue("Español");
 
             builder.Property(l => l.Descripcion)
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             // Inventario
@@ -85,10 +88,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Ubicación y estado
             builder.Property(l => l.Ubicacion)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(l => l.Estante)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(l => l.Estado)
                 .IsRequired()
@@ -102,10 +107,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Multimedia
             builder.Property(l => l.ImagenPortadaUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(l => l.RecursoDigitalUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Valoración
             builder.Property(l => l.CalificacionPromedio)
@@ -127,10 +134,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(l => l.Proveedor)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(l => l.Notas)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(l => l.Activo)
                 .IsRequired()

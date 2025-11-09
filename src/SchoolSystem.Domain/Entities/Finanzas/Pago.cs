@@ -33,7 +33,7 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         /// Alumno que realiza el pago
         /// </summary>
         [Required]
-        public int AlumnoId { get; set; }
+        public int? AlumnoId { get; set; }
 
         /// <summary>
         /// Monto del pago
@@ -218,7 +218,7 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         /// Alumno que pagó
         /// </summary>
         [ForeignKey("AlumnoId")]
-        public virtual Alumno Alumno { get; set; }
+        public virtual Alumno? Alumno { get; set; }
 
         /// <summary>
         /// Usuario que recibió el pago

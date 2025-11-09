@@ -41,6 +41,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(300);
 
             builder.Property(ps => ps.Descripcion)
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             builder.Property(ps => ps.Categoria)
@@ -49,10 +50,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Configuración
             builder.Property(ps => ps.ValorPredeterminado)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(ps => ps.ValoresPermitidos)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(ps => ps.ValorMinimo)
                 .IsRequired(false)
@@ -63,7 +66,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasColumnType("decimal(18,4)");
 
             builder.Property(ps => ps.ExpresionValidacion)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Comportamiento
             builder.Property(ps => ps.EsGlobal)
@@ -89,19 +93,23 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Metadata
             builder.Property(ps => ps.Grupo)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(ps => ps.Orden)
                 .HasDefaultValue(0);
 
             builder.Property(ps => ps.Etiquetas)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(ps => ps.Unidad)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(ps => ps.UrlAyuda)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Estado
             builder.Property(ps => ps.Activo)
@@ -115,7 +123,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(ps => ps.ValorAnterior)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Cache
             builder.Property(ps => ps.HabilitarCache)
@@ -127,7 +136,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Observaciones
             builder.Property(ps => ps.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(ps => ps.CreatedAt)

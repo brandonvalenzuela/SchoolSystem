@@ -26,6 +26,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(100);
 
             builder.Property(cr => cr.Descripcion)
+                .IsRequired(false)
                 .HasColumnType("LONGTEXT");
 
             // Configuración

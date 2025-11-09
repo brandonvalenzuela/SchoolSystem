@@ -18,7 +18,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
         {
             #region Tabla
 
-            builder.ToTable("usuarios");
+            builder.ToTable("Usuarios");
 
             #endregion
 
@@ -27,7 +27,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasKey(u => u.Id);
 
             builder.Property(u => u.Id)
-                .HasColumnName("id")
                 .ValueGeneratedOnAdd();
 
             #endregion
@@ -36,7 +35,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Escuela ID (Multi-tenant)
             builder.Property(u => u.EscuelaId)
-                .HasColumnName("escuela_id")
                 .IsRequired();
 
             #endregion
@@ -45,25 +43,21 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Username
             builder.Property(u => u.Username)
-                .HasColumnName("username")
                 .HasMaxLength(50)
                 .IsRequired();
 
             // Email
             builder.Property(u => u.Email)
-                .HasColumnName("email")
                 .HasMaxLength(100)
                 .IsRequired();
 
             // Password Hash
             builder.Property(u => u.PasswordHash)
-                .HasColumnName("password_hash")
                 .HasMaxLength(255)
                 .IsRequired();
 
             // Rol
             builder.Property(u => u.Rol)
-                .HasColumnName("rol")
                 .HasConversion<string>()
                 .HasMaxLength(20)
                 .IsRequired();
@@ -74,44 +68,37 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Nombre
             builder.Property(u => u.Nombre)
-                .HasColumnName("nombre")
                 .HasMaxLength(100)
                 .IsRequired();
 
             // Apellido Paterno
             builder.Property(u => u.ApellidoPaterno)
-                .HasColumnName("apellido_paterno")
                 .HasMaxLength(100)
                 .IsRequired();
 
             // Apellido Materno
             builder.Property(u => u.ApellidoMaterno)
-                .HasColumnName("apellido_materno")
                 .HasMaxLength(100);
 
             // Teléfono
             builder.Property(u => u.Telefono)
-                .HasColumnName("telefono")
                 .HasMaxLength(20);
 
             // Teléfono Emergencia
             builder.Property(u => u.TelefonoEmergencia)
-                .HasColumnName("telefono_emergencia")
                 .HasMaxLength(20);
 
             // Foto URL
             builder.Property(u => u.FotoUrl)
-                .HasColumnName("foto_url")
+                .IsRequired(false) // <-- Le dices que SÍ puede ser nula
                 .HasMaxLength(500);
 
             // Fecha Nacimiento
             builder.Property(u => u.FechaNacimiento)
-                .HasColumnName("fecha_nacimiento")
                 .HasColumnType("DATE");
 
             // Género
             builder.Property(u => u.Genero)
-                .HasColumnName("genero")
                 .HasConversion<string>()
                 .HasMaxLength(20);
 
@@ -121,34 +108,30 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Activo
             builder.Property(u => u.Activo)
-                .HasColumnName("activo")
                 .HasDefaultValue(true)
                 .IsRequired();
 
             // Último Acceso
             builder.Property(u => u.UltimoAcceso)
-                .HasColumnName("ultimo_acceso")
                 .HasColumnType("DATETIME");
 
             // Token Recuperación
             builder.Property(u => u.TokenRecuperacion)
-                .HasColumnName("token_recuperacion")
-                .HasMaxLength(255);
+                .HasMaxLength(255)
+                .IsRequired(false);
 
             // Token Expiración
             builder.Property(u => u.TokenExpiracion)
-                .HasColumnName("token_expiracion")
-                .HasColumnType("DATETIME");
+                .HasColumnType("DATETIME")
+                .IsRequired(false);
 
             // Intentos Fallidos
             builder.Property(u => u.IntentosFallidos)
-                .HasColumnName("intentos_fallidos")
                 .HasDefaultValue(0)
                 .IsRequired();
 
             // Bloqueado Hasta
             builder.Property(u => u.BloqueadoHasta)
-                .HasColumnName("bloqueado_hasta")
                 .HasColumnType("DATETIME");
 
             #endregion
@@ -156,18 +139,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             #region Auditoría
 
             builder.Property(u => u.CreatedAt)
-                .HasColumnName("created_at")
-                                .IsRequired();
+                .IsRequired();
 
             builder.Property(u => u.UpdatedAt)
-                .HasColumnName("updated_at")
-                                .IsRequired();
+                .IsRequired();
 
-            builder.Property(u => u.CreatedBy)
-                .HasColumnName("created_by");
+            builder.Property(u => u.CreatedBy);
 
-            builder.Property(u => u.UpdatedBy)
-                .HasColumnName("updated_by");
+            builder.Property(u => u.UpdatedBy);
 
             #endregion
 
@@ -185,21 +164,21 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Índice único en Username
             builder.HasIndex(u => u.Username)
-                .HasDatabaseName("idx_usuario_username")
+                .HasDatabaseName("IX_Usuario_Username")
                 .IsUnique();
 
             // Índice único en Email
             builder.HasIndex(u => u.Email)
-                .HasDatabaseName("idx_usuario_email")
+                .HasDatabaseName("IX_Usuario_Email")
                 .IsUnique();
 
             // Índice compuesto en EscuelaId y Rol (búsquedas frecuentes)
             builder.HasIndex(u => new { u.EscuelaId, u.Rol })
-                .HasDatabaseName("idx_usuario_escuela_rol");
+                .HasDatabaseName("IX_Usuario_Escuela_Rol");
 
             // Índice en Activo
             builder.HasIndex(u => u.Activo)
-                .HasDatabaseName("idx_usuario_activo");
+                .HasDatabaseName("IX_Usuario_Activo");
 
             #endregion
 

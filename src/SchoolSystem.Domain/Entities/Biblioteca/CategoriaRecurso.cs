@@ -31,7 +31,7 @@ namespace SchoolSystem.Domain.Entities.Biblioteca
         /// Descripción de la categoría
         /// </summary>
         [Column(TypeName = "NVARCHAR(MAX)")]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         #endregion
 

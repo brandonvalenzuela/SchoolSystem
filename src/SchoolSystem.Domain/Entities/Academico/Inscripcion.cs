@@ -1,4 +1,5 @@
 ﻿using SchoolSystem.Domain.Entities.Common;
+using SchoolSystem.Domain.Entities.Escuelas;
 using SchoolSystem.Domain.Enums;
 using SchoolSystem.Domain.Enums.Academico;
 using System;
@@ -21,7 +22,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Escuela asociada (Navigation Property)
         /// </summary>
-        public virtual Escuelas.Escuela Escuela { get; set; }
+        public virtual Escuela Escuela { get; set; }
 
         #endregion
 
@@ -80,7 +81,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Estatus de la inscripción
         /// </summary>
-        public EstatusInscripcion Estatus { get; set; }
+        public EstatusInscripcion? Estatus { get; set; }
 
         #endregion
 

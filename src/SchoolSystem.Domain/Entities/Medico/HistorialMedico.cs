@@ -49,7 +49,7 @@ namespace SchoolSystem.Domain.Entities.Medico
         /// </summary>
         [Required]
         [Column(TypeName = "NVARCHAR(MAX)")]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Síntomas presentados

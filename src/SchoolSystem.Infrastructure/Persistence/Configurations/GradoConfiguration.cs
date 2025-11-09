@@ -29,6 +29,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(50);
 
             builder.Property(g => g.Descripcion)
+                .IsRequired(false)
                 .HasMaxLength(500);
 
             builder.Property(g => g.Orden)
@@ -49,7 +50,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(g => g.Requisitos)
-                .HasMaxLength(1000);
+                .HasMaxLength(1000)
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(g => g.CreatedAt)

@@ -190,7 +190,7 @@ namespace SchoolSystem.Domain.Entities.Documentos
         /// Descripción o notas del documento
         /// </summary>
         [Column(TypeName = "NVARCHAR(MAX)")]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Tags o etiquetas

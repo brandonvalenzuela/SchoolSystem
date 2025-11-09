@@ -181,7 +181,7 @@ namespace SchoolSystem.Domain.Entities.Biblioteca
         /// Alumno relacionado
         /// </summary>
         [ForeignKey("AlumnoId")]
-        public virtual Alumno Alumno { get; set; }
+        public virtual Alumno? Alumno { get; set; }
 
         /// <summary>
         /// Maestro relacionado

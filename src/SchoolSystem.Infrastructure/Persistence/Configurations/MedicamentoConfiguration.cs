@@ -30,7 +30,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(200);
 
             builder.Property(m => m.NombreGenerico)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             // Prescripción
             builder.Property(m => m.Dosis)
@@ -52,13 +53,16 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Médico prescriptor
             builder.Property(m => m.MedicoPrescriptor)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(m => m.EspecialidadMedico)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(m => m.CedulaMedico)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             // Vigencia
             builder.Property(m => m.FechaInicio)
@@ -81,24 +85,29 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(m => m.MotivoSuspension)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Instrucciones
             builder.Property(m => m.InstruccionesEspeciales)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(m => m.Precauciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(m => m.EfectosSecundarios)
-                .HasColumnType( "LONGTEXT");
+                .HasColumnType( "LONGTEXT")
+                .IsRequired(false);
 
             // Control escolar
             builder.Property(m => m.AdministrarEnEscuela)
                 .HasDefaultValue(false);
 
             builder.Property(m => m.HorarioEscolar)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(m => m.RequiereSupervision)
                 .HasDefaultValue(false);
@@ -108,10 +117,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Documentación
             builder.Property(m => m.RecetaUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(m => m.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Relaciones
             builder.HasOne(m => m.ExpedienteMedico)

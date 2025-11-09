@@ -11,7 +11,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Context
             {
                 // La cadena de conexión es solo para que la herramienta de migración 
                 // pueda construir el modelo, no necesita ser la cadena de producción.
-                const string connectionString = "Server=localhost;Port=3306;Database=schoolsystem;User=root;Password=12345;";
+                const string connectionString = "Server=localhost;Port=3306;Database=SchoolSystem;User=root;Password=12345;";
 
                 var optionsBuilder = new DbContextOptionsBuilder<SchoolSystemDbContext>();
 

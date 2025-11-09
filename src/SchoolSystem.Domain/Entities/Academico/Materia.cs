@@ -1,4 +1,7 @@
 ﻿using SchoolSystem.Domain.Entities.Common;
+using SchoolSystem.Domain.Entities.Escuelas;
+using SchoolSystem.Domain.Entities.Evaluacion;
+using SchoolSystem.Domain.Enums.Academico;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +24,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Escuela asociada (Navigation Property)
         /// </summary>
-        public virtual Escuelas.Escuela Escuela { get; set; }
+        public virtual Escuela Escuela { get; set; }
 
         #endregion
 
@@ -42,7 +45,13 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Descripción de la materia
         /// </summary>
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
+
+        /// <summary>
+        /// Icono representativo de la materia (Material Icons o Font Awesome)
+        /// Ejemplo: "calculate", "book", "science", "sports_soccer"
+        /// </summary>
+        public IconoMateria? Icono { get; set; }
 
         /// <summary>
         /// Color representativo de la materia (código hexadecimal para UI)
@@ -63,13 +72,13 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// Área o departamento al que pertenece
         /// Ejemplo: "Ciencias", "Humanidades", "Artes"
         /// </summary>
-        public string Area { get; set; }
+        public AreaAcademica Area { get; set; }
 
         /// <summary>
         /// Tipo de materia
         /// Ejemplo: "Teórica", "Práctica", "Taller", "Laboratorio"
         /// </summary>
-        public string Tipo { get; set; }
+        public TipoMateria Tipo { get; set; }
 
         /// <summary>
         /// Nivel de dificultad (1-5)
@@ -84,7 +93,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Lista de materiales requeridos
         /// </summary>
-        public string MaterialesRequeridos { get; set; }
+        public string? MaterialesRequeridos { get; set; }
 
         /// <summary>
         /// Indica si requiere instalaciones especiales (laboratorio, taller, etc.)
@@ -94,7 +103,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Instalaciones requeridas
         /// </summary>
-        public string InstalacionesRequeridas { get; set; }
+        public string? InstalacionesRequeridas { get; set; }
 
         #endregion
 
@@ -103,22 +112,22 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Objetivos generales de la materia
         /// </summary>
-        public string Objetivos { get; set; }
+        public string? Objetivos { get; set; }
 
         /// <summary>
         /// Competencias que desarrolla la materia
         /// </summary>
-        public string Competencias { get; set; }
+        public string? Competencias { get; set; }
 
         /// <summary>
         /// Contenido temático general
         /// </summary>
-        public string ContenidoTematico { get; set; }
+        public string? ContenidoTematico { get; set; }
 
         /// <summary>
         /// Bibliografía recomendada
         /// </summary>
-        public string Bibliografia { get; set; }
+        public string? Bibliografia { get; set; }
 
         #endregion
 
@@ -191,6 +200,10 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// </summary>
         public Materia()
         {
+            Area = AreaAcademica.Ciencias;
+            Color = "#FFFFFF";
+            Tipo = TipoMateria.Teorica;
+            Icono = IconoMateria.Book;
             Activo = true;
             RequiereMateriales = false;
             RequiereInstalacionesEspeciales = false;
@@ -200,7 +213,7 @@ namespace SchoolSystem.Domain.Entities.Academico
             // Inicializar colecciones
             GradoMaterias = new HashSet<GradoMateria>();
             AsignacionesGrupos = new HashSet<GrupoMateriaMaestro>();
-            Calificaciones = new HashSet<Evaluacion.Calificacion>();
+            Calificaciones = new HashSet<Calificacion>();
         }
 
         #endregion

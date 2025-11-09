@@ -11,6 +11,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<AlumnoInsignia> builder)
         {
+            builder.HasQueryFilter(ai => !ai.AlumnoPuntos.Alumno.IsDeleted);
+
             // Nombre de tabla
             builder.ToTable("AlumnosInsignias");
 
@@ -18,17 +20,18 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasKey(ai => ai.Id);
 
             // Propiedades requeridas
-            builder.Property(ai => ai.AlumnoPuntosId)
+            builder.Property(ai => ai.AlumnoPuntosId) // FK a AlumnoPuntos
                 .IsRequired();
 
-            builder.Property(ai => ai.InsigniaId)
+            builder.Property(ai => ai.InsigniaId) // FK a Insignia
                 .IsRequired();
 
             builder.Property(ai => ai.FechaObtencion)
                 .IsRequired();
 
             builder.Property(ai => ai.Motivo)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(ai => ai.EsFavorita)
                 .HasDefaultValue(false);
@@ -77,9 +80,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             // Constraints
             builder.HasCheckConstraint("CK_AlumnosInsignias_VecesObtenida",
                 "`VecesObtenida` >= 1");
-
-            builder.HasCheckConstraint("CK_AlumnosInsignias_FechaObtencion",
-                "`FechaObtencion` <= GETDATE()");
         }
     }
 }

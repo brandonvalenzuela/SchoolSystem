@@ -67,7 +67,7 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// </summary>
         [Required]
         [MaxLength(2000)]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Fecha y hora del incidente
@@ -123,8 +123,7 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// <summary>
         /// Método de notificación usado
         /// </summary>
-        [MaxLength(50)]
-        public string MetodoNotificacion { get; set; }
+        public TipoNotificacion MetodoNotificacion { get; set; }
 
         /// <summary>
         /// Respuesta o comentarios de los padres
@@ -237,6 +236,7 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// </summary>
         public RegistroConducta()
         {
+            MetodoNotificacion = TipoNotificacion.Ninguna;
             Estado = EstadoRegistroConducta.Activo;
             FechaHoraIncidente = DateTime.Now;
             PadresNotificados = false;
@@ -291,7 +291,7 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// Marca que los padres han sido notificados y registra el método usado
         /// </summary>
         /// <param name="metodo">Método de notificación (ej. "Teléfono", "Email").</param>
-        public void MarcarPadresNotificados(string metodo)
+        public void MarcarPadresNotificados(TipoNotificacion metodo)
         {
             PadresNotificados = true;
             FechaNotificacionPadres = DateTime.Now;

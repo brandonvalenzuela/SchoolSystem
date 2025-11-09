@@ -26,7 +26,7 @@ namespace SchoolSystem.Domain.Entities.Medico
         /// Alumno relacionado
         /// </summary>
         [Required]
-        public int AlumnoId { get; set; }
+        public int? AlumnoId { get; set; }
 
         #endregion
 
@@ -236,7 +236,7 @@ namespace SchoolSystem.Domain.Entities.Medico
         /// Alumno relacionado
         /// </summary>
         [ForeignKey("AlumnoId")]
-        public virtual Alumno Alumno { get; set; }
+        public virtual Alumno? Alumno { get; set; }
 
         /// <summary>
         /// Vacunas aplicadas

@@ -1,4 +1,5 @@
-﻿using SchoolSystem.Domain.Entities.Common;
+﻿using SchoolSystem.Domain.Entities.Academico;
+using SchoolSystem.Domain.Entities.Common;
 using System;
 
 namespace SchoolSystem.Domain.Entities.Evaluacion
@@ -28,12 +29,12 @@ namespace SchoolSystem.Domain.Entities.Evaluacion
         /// <summary>
         /// ID del alumno evaluado
         /// </summary>
-        public int AlumnoId { get; set; }
+        public int? AlumnoId { get; set; }
 
         /// <summary>
         /// Alumno (Navigation Property)
         /// </summary>
-        public virtual Academico.Alumno Alumno { get; set; }
+        public virtual Alumno? Alumno { get; set; }
 
         /// <summary>
         /// ID de la materia evaluada
@@ -53,7 +54,7 @@ namespace SchoolSystem.Domain.Entities.Evaluacion
         /// <summary>
         /// Grupo (Navigation Property)
         /// </summary>
-        public virtual Academico.Grupo Grupo { get; set; }
+        public virtual Grupo Grupo { get; set; }
 
         /// <summary>
         /// ID del período de evaluación
@@ -144,7 +145,7 @@ namespace SchoolSystem.Domain.Entities.Evaluacion
         /// <summary>
         /// Maestro que capturó (Navigation Property)
         /// </summary>
-        public virtual Academico.Maestro MaestroCaptura { get; set; }
+        public virtual Maestro MaestroCaptura { get; set; }
 
         /// <summary>
         /// Indica si la calificación fue modificada después de la captura inicial

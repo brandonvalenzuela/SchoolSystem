@@ -13,22 +13,22 @@ namespace SchoolSystem.Domain.Entities.Conducta
     public class AlumnoInsignia : BaseEntity
     {
         /// <summary>
-        /// ID del registro de puntos asociado
+        /// ID del registro de puntos asociado (NO DEBE SER ANULABLE)
         /// </summary>
         public int AlumnoPuntosId { get; set; }
 
         /// <summary>
-        /// Referencia a AlumnoPuntos (Navigation Property)
+        /// Referencia a AlumnoPuntos (NO DEBE SER ANULABLE)
         /// </summary>
         public virtual AlumnoPuntos AlumnoPuntos { get; set; }
 
         /// <summary>
-        /// ID de la insignia
+        /// ID de la insignia (NO DEBE SER ANULABLE)
         /// </summary>
         public int InsigniaId { get; set; }
 
         /// <summary>
-        /// Insignia (Navigation Property)
+        /// Insignia (NO DEBE SER ANULABLE)
         /// </summary>
         public virtual Insignia Insignia { get; set; }
 
@@ -40,7 +40,7 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// <summary>
         /// Motivo por el cual se otorgó
         /// </summary>
-        public string Motivo { get; set; }
+        public string? Motivo { get; set; }
 
         /// <summary>
         /// Indica si la insignia está marcada como favorita

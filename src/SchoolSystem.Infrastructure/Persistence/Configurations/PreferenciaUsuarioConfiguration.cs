@@ -40,25 +40,29 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Descripción
             builder.Property(pu => pu.Nombre)
-                .HasMaxLength(300);
+                .HasMaxLength(300)
+                .IsRequired(false);
 
             builder.Property(pu => pu.Descripcion)
+                .IsRequired(false)
                 .HasMaxLength(500);
 
             builder.Property(pu => pu.Categoria)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(100);
 
             // Configuración
             builder.Property(pu => pu.Grupo)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(pu => pu.TipoDato)
                 .HasMaxLength(50)
                 .HasDefaultValue("String");
 
             builder.Property(pu => pu.ValorPredeterminado)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Sincronización
             builder.Property(pu => pu.EsSincronizable)
@@ -68,10 +72,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(pu => pu.DispositivoOrigen)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(pu => pu.HashSincronizacion)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Alcance
             builder.Property(pu => pu.Alcance)
@@ -95,30 +101,36 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(pu => pu.ValorAnterior)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Validación
             builder.Property(pu => pu.RequiereValidacion)
                 .HasDefaultValue(false);
 
             builder.Property(pu => pu.ExpresionValidacion)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(pu => pu.ValoresPermitidos)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Metadata
             builder.Property(pu => pu.Etiquetas)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(pu => pu.Orden)
                 .HasDefaultValue(0);
 
             builder.Property(pu => pu.Icono)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             builder.Property(pu => pu.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(pu => pu.CreatedAt)

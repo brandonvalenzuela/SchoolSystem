@@ -17,7 +17,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
         {
             #region Tabla
 
-            builder.ToTable("calificaciones");
+            builder.ToTable("Calificaciones");
 
             #endregion
 
@@ -26,7 +26,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Id)
-                .HasColumnName("id")
                 .ValueGeneratedOnAdd();
 
             #endregion
@@ -35,27 +34,22 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Escuela ID (Multi-tenant)
             builder.Property(c => c.EscuelaId)
-                .HasColumnName("escuela_id")
                 .IsRequired();
 
             // Alumno ID
             builder.Property(c => c.AlumnoId)
-                .HasColumnName("alumno_id")
                 .IsRequired();
 
             // Materia ID
             builder.Property(c => c.MateriaId)
-                .HasColumnName("materia_id")
                 .IsRequired();
 
             // Grupo ID
             builder.Property(c => c.GrupoId)
-                .HasColumnName("grupo_id")
                 .IsRequired();
 
             // Periodo ID
             builder.Property(c => c.PeriodoId)
-                .HasColumnName("periodo_id")
                 .IsRequired();
 
             #endregion
@@ -64,23 +58,19 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Calificación Numérica
             builder.Property(c => c.CalificacionNumerica)
-                .HasColumnName("calificacion_numerica")
                 .HasColumnType("DECIMAL(5,2)")
                 .IsRequired();
 
             // Calificación Letra
             builder.Property(c => c.CalificacionLetra)
-                .HasColumnName("calificacion_letra")
                 .HasMaxLength(5);
 
             // Aprobado
             builder.Property(c => c.Aprobado)
-                .HasColumnName("aprobado")
                 .IsRequired();
 
             // Calificación Mínima
             builder.Property(c => c.CalificacionMinima)
-                .HasColumnName("calificacion_minima")
                 .HasColumnType("DECIMAL(5,2)");
 
             #endregion
@@ -89,33 +79,31 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Tipo Evaluación
             builder.Property(c => c.TipoEvaluacion)
-                .HasColumnName("tipo_evaluacion")
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             // Peso
             builder.Property(c => c.Peso)
-                .HasColumnName("peso")
                 .HasColumnType("DECIMAL(5,2)");
 
             // Observaciones
             builder.Property(c => c.Observaciones)
-                .HasColumnName("observaciones")
                 .HasColumnType("TEXT");
 
             // Fortalezas
             builder.Property(c => c.Fortalezas)
-                .HasColumnName("fortalezas")
-                .HasColumnType("TEXT");
+                .HasColumnType("TEXT")
+                .IsRequired(false);
 
             // Áreas Oportunidad
             builder.Property(c => c.AreasOportunidad)
-                .HasColumnName("areas_oportunidad")
-                .HasColumnType("TEXT");
+                .HasColumnType("TEXT")
+                .IsRequired(false);
 
             // Recomendaciones
             builder.Property(c => c.Recomendaciones)
-                .HasColumnName("recomendaciones")
-                .HasColumnType("TEXT");
+                .HasColumnType("TEXT")
+                .IsRequired(false);
 
             #endregion
 
@@ -123,32 +111,27 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Fecha Captura
             builder.Property(c => c.FechaCaptura)
-                .HasColumnName("fecha_captura")
-                                .IsRequired();
+                .IsRequired();
 
             // Capturado Por
-            builder.Property(c => c.CapturadoPor)
-                .HasColumnName("capturado_por");
+            builder.Property(c => c.CapturadoPor);
 
             // Fue Modificada
             builder.Property(c => c.FueModificada)
-                .HasColumnName("fue_modificada")
                 .HasDefaultValue(false)
                 .IsRequired();
 
             // Fecha Última Modificación
             builder.Property(c => c.FechaUltimaModificacion)
-                .HasColumnName("fecha_ultima_modificacion")
                 .HasColumnType("DATETIME");
 
             // Modificado Por
-            builder.Property(c => c.ModificadoPor)
-                .HasColumnName("modificado_por");
+            builder.Property(c => c.ModificadoPor);
 
             // Motivo Modificación
             builder.Property(c => c.MotivoModificacion)
-                .HasColumnName("motivo_modificacion")
-                .HasColumnType("TEXT");
+                .HasColumnType("TEXT")
+                .IsRequired(false);
 
             #endregion
 
@@ -156,24 +139,21 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Es Recalificación
             builder.Property(c => c.EsRecalificacion)
-                .HasColumnName("es_recalificacion")
                 .HasDefaultValue(false)
                 .IsRequired();
 
             // Calificación Original
             builder.Property(c => c.CalificacionOriginal)
-                .HasColumnName("calificacion_original")
                 .HasColumnType("DECIMAL(5,2)");
 
             // Fecha Recalificación
             builder.Property(c => c.FechaRecalificacion)
-                .HasColumnName("fecha_recalificacion")
                 .HasColumnType("DATETIME");
 
             // Tipo Recalificación
             builder.Property(c => c.TipoRecalificacion)
-                .HasColumnName("tipo_recalificacion")
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             #endregion
 
@@ -181,18 +161,15 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Bloqueada
             builder.Property(c => c.Bloqueada)
-                .HasColumnName("bloqueada")
                 .HasDefaultValue(false)
                 .IsRequired();
 
             // Fecha Bloqueo
             builder.Property(c => c.FechaBloqueo)
-                .HasColumnName("fecha_bloqueo")
                 .HasColumnType("DATETIME");
 
             // Visible Para Padres
             builder.Property(c => c.VisibleParaPadres)
-                .HasColumnName("visible_para_padres")
                 .HasDefaultValue(true)
                 .IsRequired();
 
@@ -201,18 +178,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             #region Auditoría
 
             builder.Property(c => c.CreatedAt)
-                .HasColumnName("created_at")
-                                .IsRequired();
+                .IsRequired();
 
             builder.Property(c => c.UpdatedAt)
-                .HasColumnName("updated_at")
-                                .IsRequired();
+                .IsRequired();
 
-            builder.Property(c => c.CreatedBy)
-                .HasColumnName("created_by");
+            builder.Property(c => c.CreatedBy);
 
-            builder.Property(c => c.UpdatedBy)
-                .HasColumnName("updated_by");
+            builder.Property(c => c.UpdatedBy);
 
             #endregion
 
@@ -228,24 +201,24 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Índice único compuesto: Un alumno solo puede tener una calificación por materia-período
             builder.HasIndex(c => new { c.AlumnoId, c.MateriaId, c.PeriodoId })
-                .HasDatabaseName("idx_calificacion_alumno_materia_periodo")
+                .HasDatabaseName("IX_Calificacion_Alumno_Materia_Periodo")
                 .IsUnique();
 
             // Índice compuesto en Grupo y Período (para consultas de maestros)
             builder.HasIndex(c => new { c.GrupoId, c.PeriodoId })
-                .HasDatabaseName("idx_calificacion_grupo_periodo");
+                .HasDatabaseName("IX_Calificacion_Grupo_Periodo");
 
             // Índice en AlumnoId
             builder.HasIndex(c => c.AlumnoId)
-                .HasDatabaseName("idx_calificacion_alumno");
+                .HasDatabaseName("IX_Calificacion_Alumno");
 
             // Índice en Bloqueada (para filtrar calificaciones editables)
             builder.HasIndex(c => c.Bloqueada)
-                .HasDatabaseName("idx_calificacion_bloqueada");
+                .HasDatabaseName("IX_Calificacion_Bloqueada");
 
             // Índice en VisibleParaPadres
             builder.HasIndex(c => c.VisibleParaPadres)
-                .HasDatabaseName("idx_calificacion_visible_padres");
+                .HasDatabaseName("IX_Calificacion_Visible_Padres");
 
             #endregion
 
@@ -261,7 +234,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasOne(c => c.Alumno)
                 .WithMany(a => a.Calificaciones)
                 .HasForeignKey(c => c.AlumnoId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
 
             // Relación con Materia
             builder.HasOne(c => c.Materia)
@@ -294,13 +268,13 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             // Constraint: La calificación debe estar entre0 y10
             builder.HasCheckConstraint(
                 "CHK_Calificacion_Rango",
-                "calificacion_numerica >=0 AND calificacion_numerica <=10"
+                "CalificacionNumerica >=0 AND CalificacionNumerica <=10"
             );
 
             // Constraint: El peso debe estar entre0 y100 si existe
             builder.HasCheckConstraint(
                 "CHK_Peso_Rango",
-                "peso IS NULL OR (peso >=0 AND peso <=100)"
+                "Peso IS NULL OR (Peso >=0 AND Peso <=100)"
             );
 
             #endregion

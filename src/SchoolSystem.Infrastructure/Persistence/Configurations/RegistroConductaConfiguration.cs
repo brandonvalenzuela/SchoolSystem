@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SchoolSystem.Domain.Entities.Conducta;
+using SchoolSystem.Domain.Enums.Conducta;
 
 namespace SchoolSystem.Infrastructure.Persistence.Configurations
 {
@@ -11,6 +12,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<RegistroConducta> builder)
         {
+            builder.HasQueryFilter(rc => !rc.Alumno.IsDeleted);
+
             // Nombre de tabla
             builder.ToTable("RegistrosConducta");
 
@@ -50,41 +53,49 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(200);
 
             builder.Property(rc => rc.Descripcion)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(2000);
 
             builder.Property(rc => rc.FechaHoraIncidente)
                 .IsRequired();
 
             builder.Property(rc => rc.Lugar)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(rc => rc.Puntos)
                 .IsRequired();
 
             builder.Property(rc => rc.Testigos)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(rc => rc.EvidenciaUrls)
-                .HasMaxLength(1000);
+                .HasMaxLength(1000)
+                .IsRequired(false);
 
             builder.Property(rc => rc.SancionId)
                 .IsRequired(false);
 
             builder.Property(rc => rc.AccionesTomadas)
-                .HasMaxLength(1000);
+                .HasMaxLength(1000)
+                .IsRequired(false);
 
             builder.Property(rc => rc.PadresNotificados)
+                .IsRequired()
                 .HasDefaultValue(false);
 
             builder.Property(rc => rc.FechaNotificacionPadres)
                 .IsRequired(false);
 
             builder.Property(rc => rc.MetodoNotificacion)
+                .IsRequired()
+                .HasConversion<string>()
                 .HasMaxLength(50);
 
             builder.Property(rc => rc.RespuestaPadres)
-                .HasMaxLength(1000);
+                .HasMaxLength(1000)
+                .IsRequired(false);
 
             builder.Property(rc => rc.RequiereSeguimiento)
                 .HasDefaultValue(false);
@@ -93,13 +104,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(rc => rc.NotasSeguimiento)
-                .HasMaxLength(1000);
+                .HasMaxLength(1000)
+                .IsRequired(false);
 
             builder.Property(rc => rc.Estado)
                 .IsRequired()
                 .HasConversion<string>()
                 .HasMaxLength(20)
-                .HasDefaultValue(SchoolSystem.Domain.Enums.Conducta.EstadoRegistroConducta.Activo);
+                .HasDefaultValue(EstadoRegistroConducta.Activo);
 
             builder.Property(rc => rc.PeriodoId)
                 .IsRequired(false);
@@ -134,9 +146,10 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(rc => rc.Alumno)
-                .WithMany()
+                .WithMany(a => a.RegistrosConducta)
                 .HasForeignKey(rc => rc.AlumnoId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(rc => rc.Maestro)
                 .WithMany()
@@ -227,9 +240,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Ignore(rc => rc.EstaPendienteSeguimiento);
 
             // Constraints
-            builder.HasCheckConstraint("CK_RegistrosConducta_FechaHoraIncidente",
-                "`FechaHoraIncidente` <= GETDATE()");
-
             builder.HasCheckConstraint("CK_RegistrosConducta_FechaSeguimiento",
                 "`FechaSeguimiento` IS NULL OR `FechaSeguimiento` >= `FechaHoraIncidente`");
         }

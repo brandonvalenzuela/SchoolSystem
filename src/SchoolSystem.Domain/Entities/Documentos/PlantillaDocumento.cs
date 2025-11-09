@@ -38,7 +38,7 @@ namespace SchoolSystem.Domain.Entities.Documentos
         /// Descripción de la plantilla
         /// </summary>
         [Column(TypeName = "NVARCHAR(MAX)")]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         #endregion
 
@@ -318,7 +318,8 @@ namespace SchoolSystem.Domain.Entities.Documentos
         {
             get
             {
-                if (!FechaUltimaGeneracion.HasValue) return null;
+                if (!FechaUltimaGeneracion.HasValue)
+                    return null;
                 return (DateTime.Now.Date - FechaUltimaGeneracion.Value.Date).Days;
             }
         }

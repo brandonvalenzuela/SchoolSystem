@@ -55,7 +55,7 @@ namespace SchoolSystem.Domain.Entities.Configuracion
         /// Descripción del parámetro
         /// </summary>
         [Column(TypeName = "NVARCHAR(MAX)")]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Categoría o módulo del parámetro

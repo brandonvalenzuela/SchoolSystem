@@ -11,8 +11,8 @@ using SchoolSystem.Infrastructure.Persistence.Context;
 namespace SchoolSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(SchoolSystemDbContext))]
-    [Migration("20251030230212_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251109101934_PRIMERA_MIGRACION")]
+    partial class PRIMERA_MIGRACION
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,23 +36,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("OrigenId")
                         .IsRequired()
@@ -69,13 +58,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -113,275 +95,210 @@ namespace SchoolSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     b.Property<string>("Alergias")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("alergias");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ApellidoMaterno")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("apellido_materno");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("ApellidoPaterno")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("apellido_paterno");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("CURP")
                         .IsRequired()
                         .HasMaxLength(18)
-                        .HasColumnType("varchar(18)")
-                        .HasColumnName("curp");
+                        .HasColumnType("varchar(18)");
 
                     b.Property<string>("CondicionesMedicas")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("condiciones_medicas");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ContactoEmergenciaNombre")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("contacto_emergencia_nombre");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("ContactoEmergenciaRelacion")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("contacto_emergencia_relacion");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("ContactoEmergenciaTelefono")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("contacto_emergencia_telefono");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("CreatedBy")
-                        .HasColumnType("int")
-                        .HasColumnName("created_by");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("deleted_at");
+                        .HasColumnType("DATETIME");
 
                     b.Property<int?>("DeletedBy")
-                        .HasColumnType("int")
-                        .HasColumnName("deleted_by");
+                        .HasColumnType("int");
 
                     b.Property<string>("Direccion")
                         .IsRequired()
                         .HasMaxLength(300)
-                        .HasColumnType("varchar(300)")
-                        .HasColumnName("direccion");
+                        .HasColumnType("varchar(300)");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("email");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("EscuelaId")
-                        .HasColumnType("int")
-                        .HasColumnName("escuela_id");
+                        .HasColumnType("int");
 
                     b.Property<string>("Estatus")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)")
-                        .HasDefaultValue("Activo")
-                        .HasColumnName("estatus");
+                        .HasDefaultValue("Activo");
 
                     b.Property<DateTime?>("FechaBaja")
-                        .HasColumnType("DATE")
-                        .HasColumnName("fecha_baja");
+                        .HasColumnType("DATE");
 
                     b.Property<DateTime>("FechaIngreso")
-                        .HasColumnType("DATE")
-                        .HasColumnName("fecha_ingreso");
+                        .HasColumnType("DATE");
 
                     b.Property<DateTime>("FechaNacimiento")
-                        .HasColumnType("DATE")
-                        .HasColumnName("fecha_nacimiento");
+                        .HasColumnType("DATE");
 
                     b.Property<string>("FotoUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("varchar(500)")
-                        .HasColumnName("foto_url");
+                        .HasColumnType("varchar(500)");
 
                     b.Property<string>("Genero")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("genero");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false)
-                        .HasColumnName("is_deleted");
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Matricula")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("matricula");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Medicamentos")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("medicamentos");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("MotivoBaja")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("motivo_baja");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("nombre");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("observaciones");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Telefono")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("telefono");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("TipoSangre")
                         .IsRequired()
                         .HasMaxLength(5)
-                        .HasColumnType("varchar(5)")
-                        .HasColumnName("tipo_sangre");
+                        .HasColumnType("varchar(5)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int")
-                        .HasColumnName("updated_by");
+                        .HasColumnType("int");
 
                     b.Property<int?>("UsuarioId")
-                        .HasColumnType("int")
-                        .HasColumnName("usuario_id");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CURP")
                         .IsUnique()
-                        .HasDatabaseName("idx_alumno_curp")
+                        .HasDatabaseName("IX_Alumno_Curp")
                         .HasFilter("curp IS NOT NULL");
 
                     b.HasIndex("Estatus")
-                        .HasDatabaseName("idx_alumno_estatus");
+                        .HasDatabaseName("IX_Alumno_Estatus");
 
                     b.HasIndex("IsDeleted")
-                        .HasDatabaseName("idx_alumno_is_deleted");
+                        .HasDatabaseName("IX_Alumno_Is_Deleted");
 
                     b.HasIndex("Matricula")
                         .IsUnique()
-                        .HasDatabaseName("idx_alumno_matricula");
+                        .HasDatabaseName("IX_Alumno_Matricula");
 
                     b.HasIndex("UsuarioId")
                         .IsUnique();
 
                     b.HasIndex("EscuelaId", "Estatus")
-                        .HasDatabaseName("idx_alumno_escuela_estatus");
+                        .HasDatabaseName("IX_Alumno_Escuela_Estatus");
 
-                    b.ToTable("alumnos", (string)null);
+                    b.ToTable("Alumnos", (string)null);
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Academico.AlumnoPadre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     b.Property<int>("AlumnoId")
-                        .HasColumnType("int")
-                        .HasColumnName("alumno_id");
+                        .HasColumnType("int");
 
                     b.Property<bool>("AutorizadoRecoger")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true)
-                        .HasColumnName("autorizado_recoger");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("EsTutorPrincipal")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false)
-                        .HasColumnName("es_tutor_principal");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
+                        .HasDefaultValue(false);
 
                     b.Property<int>("PadreId")
-                        .HasColumnType("int")
-                        .HasColumnName("padre_id");
+                        .HasColumnType("int");
 
                     b.Property<bool>("RecibeNotificaciones")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true)
-                        .HasColumnName("recibe_notificaciones");
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Relacion")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("relacion");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<bool>("ViveConAlumno")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true)
-                        .HasColumnName("vive_con_alumno");
+                        .HasDefaultValue(true);
 
                     b.HasKey("Id");
 
                     b.HasIndex("PadreId")
-                        .HasDatabaseName("idx_alumno_padre_padre_id");
+                        .HasDatabaseName("IX_Alumno_Padre_Padre_Id");
 
                     b.HasIndex("AlumnoId", "PadreId")
                         .IsUnique()
-                        .HasDatabaseName("idx_alumno_padre_unique");
+                        .HasDatabaseName("IX_Alumno_Padre_Unique");
 
-                    b.ToTable("alumno_padres", (string)null);
+                    b.ToTable("AlumnoPadres", (string)null);
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Academico.Grado", b =>
@@ -405,7 +322,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -417,9 +333,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.Property<int?>("HorasSemanales")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("NivelEducativoId")
                         .HasColumnType("int");
@@ -433,7 +346,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Requisitos")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
@@ -492,27 +404,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<int>("EscuelaId")
                         .HasColumnType("int");
 
                     b.Property<int>("GradoId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GradoId1")
-                        .HasColumnType("int");
-
                     b.Property<int?>("HorasSemanales")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("MateriaId")
                         .HasColumnType("int");
@@ -528,13 +427,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<decimal?>("PorcentajePeso")
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EscuelaId")
@@ -542,8 +434,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.HasIndex("GradoId")
                         .HasDatabaseName("IX_GradoMaterias_GradoId");
-
-                    b.HasIndex("GradoId1");
 
                     b.HasIndex("MateriaId")
                         .HasDatabaseName("IX_GradoMaterias_MateriaId");
@@ -580,7 +470,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("Aula")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -601,19 +490,17 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("DiasClase")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("varchar(100)")
+                        .HasDefaultValue("Lunes a Viernes");
 
                     b.Property<int>("EscuelaId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EscuelaId1")
                         .HasColumnType("int");
 
                     b.Property<int>("GradoId")
@@ -624,9 +511,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.Property<TimeSpan?>("HoraInicio")
                         .HasColumnType("time(6)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<int?>("MaestroTitularId")
                         .HasColumnType("int");
@@ -656,8 +540,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.HasIndex("EscuelaId")
                         .HasDatabaseName("IX_Grupos_EscuelaId");
-
-                    b.HasIndex("EscuelaId1");
 
                     b.HasIndex("GradoId")
                         .HasDatabaseName("IX_Grupos_GradoId");
@@ -697,42 +579,21 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<int>("EscuelaId")
                         .HasColumnType("int");
 
                     b.Property<int>("GrupoId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GrupoId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("Horario")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("MaestroId")
                         .HasColumnType("int");
 
                     b.Property<int>("MateriaId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -744,8 +605,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.HasIndex("GrupoId")
                         .HasDatabaseName("IX_GrupoMateriaMaestros_GrupoId");
-
-                    b.HasIndex("GrupoId1");
 
                     b.HasIndex("MaestroId")
                         .HasDatabaseName("IX_GrupoMateriaMaestros_MaestroId");
@@ -834,9 +693,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int>("GrupoId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<int?>("LugarEnGrupo")
                         .HasColumnType("int");
 
@@ -844,12 +700,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("MotivoBaja")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("MotivoCambioGrupo")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -857,7 +711,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<decimal?>("PorcentajeAsistencia")
@@ -878,7 +731,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("TipoBeca")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -965,7 +817,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Capacitaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("CedulaProfesional")
@@ -974,15 +825,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Certificaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<bool>("DisponibleExtracurriculares")
                         .ValueGeneratedOnAdd()
@@ -1011,17 +854,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("HorarioAtencion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("Idiomas")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("NumeroEmpleado")
                         .IsRequired()
@@ -1029,7 +867,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<decimal?>("Salario")
@@ -1048,13 +885,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
@@ -1093,11 +923,11 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.ToTable("Maestros", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Maestros_AñoGraduacion", "`AñoGraduacion` IS NULL OR (`AñoGraduacion` >= 1900 AND (`AñoGraduacion` <= 2100)");
+                            t.HasCheckConstraint("CK_Maestros_AñoGraduacion", "`AñoGraduacion` IS NULL OR (`AñoGraduacion` >= 1900 AND `AñoGraduacion` <= 2100)");
 
                             t.HasCheckConstraint("CK_Maestros_AñosExperiencia", "`AñosExperiencia` IS NULL OR `AñosExperiencia` >= 0");
 
-                            t.HasCheckConstraint("CK_Maestros_Fechas", "`FechaBaja` IS NULL OR `FechaIngreso` IS NULL OR (`FechaBaja` >= `FechaIngreso`");
+                            t.HasCheckConstraint("CK_Maestros_Fechas", "`FechaBaja` IS NULL OR `FechaIngreso` IS NULL OR (`FechaBaja` >= `FechaIngreso`)");
 
                             t.HasCheckConstraint("CK_Maestros_Salario", "`Salario` IS NULL OR `Salario` >= 0");
                         });
@@ -1120,7 +950,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Bibliografia")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Clave")
@@ -1134,11 +963,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(7)");
 
                     b.Property<string>("Competencias")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ContenidoTematico")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1148,26 +975,21 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
                     b.Property<int>("EscuelaId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EscuelaId1")
-                        .HasColumnType("int");
+                    b.Property<string>("Icono")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("InstalacionesRequeridas")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("MaterialesRequeridos")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
@@ -1180,7 +1002,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("Objetivos")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<bool>("RequiereInstalacionesEspeciales")
@@ -1218,8 +1039,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("EscuelaId")
                         .HasDatabaseName("IX_Materias_EscuelaId");
 
-                    b.HasIndex("EscuelaId1");
-
                     b.HasIndex("Nombre")
                         .HasDatabaseName("IX_Materias_Nombre");
 
@@ -1249,7 +1068,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Abreviatura")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("varchar(10)");
 
@@ -1259,7 +1077,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("Color")
-                        .IsRequired()
                         .HasMaxLength(7)
                         .HasColumnType("varchar(7)");
 
@@ -1270,7 +1087,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -1285,12 +1101,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.Property<int>("EscuelaId")
                         .HasColumnType("int");
-
-                    b.Property<int?>("EscuelaId1")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -1313,8 +1123,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.HasIndex("EscuelaId")
                         .HasDatabaseName("IX_NivelesEducativos_EscuelaId");
-
-                    b.HasIndex("EscuelaId1");
 
                     b.HasIndex("Nombre")
                         .HasDatabaseName("IX_NivelesEducativos_Nombre");
@@ -1365,16 +1173,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("Carrera")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("DireccionTrabajo")
                         .IsRequired()
@@ -1388,9 +1188,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("LugarTrabajo")
                         .IsRequired()
@@ -1420,13 +1217,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
@@ -1469,16 +1259,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Categoria")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<int>("EntidadId")
                         .HasColumnType("int");
@@ -1492,15 +1274,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Etiquetas")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<DateTime>("FechaCambio")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<int?>("LogAuditoriaId")
                         .HasColumnType("int");
@@ -1511,7 +1289,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("NombreDescriptivo")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -1521,12 +1298,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("NombreUsuario")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("Notas")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("TipoDato")
@@ -1534,31 +1309,20 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<int?>("UsuarioId")
                         .HasColumnType("int");
 
                     b.Property<string>("ValorAnterior")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ValorAnteriorFormateado")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("ValorNuevo")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ValorNuevoFormateado")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -1597,12 +1361,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("NombreEntidad", "NombreCampo", "FechaCambio")
                         .HasDatabaseName("IX_CambiosEntidad_Entidad_Campo_Fecha");
 
-                    b.ToTable("CambiosEntidad", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_CambiosEntidad_EntidadId", "`EntidadId` > 0");
-
-                            t.HasCheckConstraint("CK_CambiosEntidad_FechaCambio", "`FechaCambio` <= GETDATE()");
-                        });
+                    b.ToTable("CambiosEntidad", (string)null);
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Auditoria.LogAuditoria", b =>
@@ -1612,7 +1371,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CamposModificados")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -1620,32 +1378,20 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Controlador")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("DatosAdicionales")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("DireccionIP")
-                        .IsRequired()
                         .HasMaxLength(45)
                         .HasColumnType("varchar(45)");
 
                     b.Property<string>("Dispositivo")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -1653,12 +1399,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("EmailUsuario")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("EntidadAfectada")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -1677,34 +1421,25 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Funcionalidad")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("MensajeError")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Metodo")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("Modulo")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Navegador")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("NombreUsuario")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -1713,16 +1448,13 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("SistemaOperativo")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("StackTrace")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Tags")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -1732,19 +1464,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(30)");
 
                     b.Property<string>("TipoEntidad")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("UserAgent")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -1752,11 +1475,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ValoresAnteriores")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ValoresNuevos")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.HasKey("Id");
@@ -1811,8 +1532,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                             t.HasCheckConstraint("CK_LogsAuditoria_CodigoResultado", "`CodigoResultado` IS NULL OR (`CodigoResultado` >= 100 AND `CodigoResultado` <= 599)");
 
                             t.HasCheckConstraint("CK_LogsAuditoria_DuracionMs", "`DuracionMs` IS NULL OR `DuracionMs` >= 0");
-
-                            t.HasCheckConstraint("CK_LogsAuditoria_FechaHora", "`FechaHora` <= GETDATE()");
                         });
                 });
 
@@ -1832,23 +1551,13 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("DatosAdicionales")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("DetalleConflictos")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("DetalleErrores")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Direccion")
@@ -1859,7 +1568,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("Bidireccional");
 
                     b.Property<string>("DireccionIP")
-                        .IsRequired()
                         .HasMaxLength(45)
                         .HasColumnType("varchar(45)");
 
@@ -1872,7 +1580,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("EntidadesSincronizadas")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int?>("EscuelaId")
@@ -1886,7 +1593,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("Pendiente");
 
                     b.Property<string>("EstrategiaResolucion")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -1897,20 +1603,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("HashCliente")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("HashVerificacion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("MensajeError")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ModoSincronizacion")
@@ -1921,17 +1621,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("Incremental");
 
                     b.Property<string>("NombreDispositivo")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("NombreUsuario")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int>("Prioridad")
@@ -1965,12 +1662,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(0);
 
                     b.Property<string>("SistemaOperativo")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("StackTrace")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<long?>("TamanioDatos")
@@ -2001,13 +1696,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("UltimaSincronizacionExitosa")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<int?>("UsuarioId")
                         .HasColumnType("int");
 
@@ -2015,7 +1703,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("VersionCliente")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -2116,7 +1803,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int>("EscuelaId")
@@ -2126,9 +1812,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -2222,7 +1905,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CodigoClasificacion")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -2233,7 +1915,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<bool>("DisponiblePrestamo")
@@ -2242,7 +1923,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("Edicion")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -2262,7 +1942,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("Disponible");
 
                     b.Property<string>("Estante")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -2282,15 +1961,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("Español");
 
                     b.Property<string>("ImagenPortadaUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Notas")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int?>("NumeroPaginas")
@@ -2305,12 +1979,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<string>("Proveedor")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("RecursoDigitalUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -2325,7 +1997,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("Ubicacion")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -2405,7 +2076,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(0);
 
                     b.Property<string>("CondicionDevolucion")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -2424,8 +2094,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<string>("Estado")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)")
                         .HasDefaultValue("Activo");
 
                     b.Property<DateTime>("FechaDevolucionProgramada")
@@ -2447,12 +2117,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Folio")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("LibroId")
                         .HasColumnType("int");
@@ -2471,11 +2137,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ObservacionesDevolucion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<bool>("PrestamoUrgente")
@@ -2575,22 +2239,18 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("ArchivoAdjuntoNombre")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("ArchivoAdjuntoUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("Color")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("ConfiguracionRecurrencia")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int>("CreadoPorId")
@@ -2603,7 +2263,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<bool>("EsRecurrente")
@@ -2624,12 +2283,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("GruposAfectadosJson")
-                        .IsRequired()
-                        .HasColumnType("LONGTEXT")
-                        .HasColumnName("GruposAfectados");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Prioridad")
                         .IsRequired()
@@ -2662,7 +2316,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("Ubicacion")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -2718,7 +2371,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("ArchivoAdjuntoNombre")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -2726,17 +2378,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("ArchivoAdjuntoTipo")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("ArchivoAdjuntoUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("Categoria")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -2766,9 +2415,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.Property<int?>("GrupoId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("PermiteComentarios")
                         .ValueGeneratedOnAdd()
@@ -2848,7 +2494,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Comentario")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int>("ComunicadoId")
@@ -2859,28 +2504,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false);
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime?>("FechaConfirmacion")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("FechaLectura")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
@@ -2918,7 +2546,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("ArchivoAdjuntoNombre")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -2926,12 +2553,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("ArchivoAdjuntoTipo")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("ArchivoAdjuntoUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -2976,9 +2601,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false);
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("Leido")
                         .ValueGeneratedOnAdd()
@@ -3040,7 +2662,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("Sistema");
 
                     b.Property<string>("Color")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
@@ -3069,12 +2690,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Icono")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("Leida")
                         .ValueGeneratedOnAdd()
@@ -3086,7 +2703,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Metadata")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Prioridad")
@@ -3160,22 +2776,13 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CodigoError")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
                     b.Property<decimal?>("Costo")
                         .HasColumnType("decimal(10,4)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("ErrorMensaje")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Estatus")
@@ -3194,15 +2801,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("FechaUltimoIntento")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Mensaje")
                         .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Metadata")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Moneda")
@@ -3221,12 +2824,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(0);
 
                     b.Property<string>("Proveedor")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("SidProveedor")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -3234,13 +2835,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -3274,16 +2868,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int>("AlumnoPuntosId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AlumnoPuntosId1")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<bool>("EsFavorita")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
@@ -3295,20 +2879,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int>("InsigniaId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Motivo")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<int>("VecesObtenida")
                         .ValueGeneratedOnAdd()
@@ -3319,8 +2892,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.HasIndex("AlumnoPuntosId")
                         .HasDatabaseName("IX_AlumnosInsignias_AlumnoPuntosId");
-
-                    b.HasIndex("AlumnoPuntosId1");
 
                     b.HasIndex("EsFavorita")
                         .HasDatabaseName("IX_AlumnosInsignias_EsFavorita");
@@ -3345,8 +2916,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.ToTable("AlumnosInsignias", null, t =>
                         {
-                            t.HasCheckConstraint("CK_AlumnosInsignias_FechaObtencion", "`FechaObtencion` <= GETDATE()");
-
                             t.HasCheckConstraint("CK_AlumnosInsignias_VecesObtenida", "`VecesObtenida` >= 1");
                         });
                 });
@@ -3360,11 +2929,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int>("AlumnoId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AlumnoId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("AvatarUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -3413,11 +2978,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("FechaUltimoNivel")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Lema")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -3575,8 +3136,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("AlumnoId")
                         .HasDatabaseName("IX_AlumnoPuntos_AlumnoId");
 
-                    b.HasIndex("AlumnoId1");
-
                     b.HasIndex("CicloEscolar")
                         .HasDatabaseName("IX_AlumnoPuntos_CicloEscolar");
 
@@ -3653,7 +3212,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(1000)");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -3670,9 +3228,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -3687,7 +3242,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Requisitos")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
@@ -3748,14 +3302,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("AccionesTomadas")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
                     b.Property<int>("AlumnoId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AlumnoId1")
                         .HasColumnType("int");
 
                     b.Property<string>("Categoria")
@@ -3776,7 +3326,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("varchar(2000)");
 
@@ -3791,7 +3340,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("Activo");
 
                     b.Property<string>("EvidenciaUrls")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
@@ -3817,7 +3365,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("Lugar")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -3830,7 +3377,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("NotasSeguimiento")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
@@ -3851,7 +3397,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("RespuestaPadres")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
@@ -3859,7 +3404,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Testigos")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -3883,8 +3427,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.HasIndex("AlumnoId")
                         .HasDatabaseName("IX_RegistrosConducta_AlumnoId");
-
-                    b.HasIndex("AlumnoId1");
 
                     b.HasIndex("Categoria")
                         .HasDatabaseName("IX_RegistrosConducta_Categoria");
@@ -3949,8 +3491,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.ToTable("RegistrosConducta", null, t =>
                         {
-                            t.HasCheckConstraint("CK_RegistrosConducta_FechaHoraIncidente", "`FechaHoraIncidente` <= GETDATE()");
-
                             t.HasCheckConstraint("CK_RegistrosConducta_FechaSeguimiento", "`FechaSeguimiento` IS NULL OR `FechaSeguimiento` >= `FechaHoraIncidente`");
                         });
                 });
@@ -3961,7 +3501,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("AlumnoId")
+                    b.Property<int?>("AlumnoId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<bool>("Apelada")
@@ -3992,7 +3533,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(1000)");
 
                     b.Property<string>("DocumentoUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -4028,9 +3568,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false);
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("MedioNotificacion")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -4042,16 +3579,13 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(1000)");
 
                     b.Property<string>("MotivoApelacion")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ObservacionesCumplimiento")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
@@ -4061,7 +3595,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("ResultadoApelacion")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -4135,8 +3668,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.ToTable("Sanciones", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Sanciones_FechaAutorizacion", "`FechaAutorizacion` <= GETDATE()");
-
                             t.HasCheckConstraint("CK_Sanciones_FechaCumplimiento", "`FechaCumplimiento` IS NULL OR `FechaCumplimiento` >= `FechaInicio`");
 
                             t.HasCheckConstraint("CK_Sanciones_Fechas", "`FechaFin` IS NULL OR `FechaFin` >= `FechaInicio`");
@@ -4165,12 +3696,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(6.0m);
 
                     b.Property<string>("Ciudad")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("CodigoPostal")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
@@ -4196,11 +3725,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("#424242");
 
                     b.Property<string>("ConfiguracionSMS")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ConfiguracionSMTP")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -4210,7 +3737,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DatosAdicionales")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int>("DecimalesCalificacion")
@@ -4229,7 +3755,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(90);
 
                     b.Property<string>("Direccion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -4244,7 +3769,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(20);
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -4252,7 +3776,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Estado")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -4281,7 +3804,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("PDF");
 
                     b.Property<string>("GoogleApiKey")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -4293,7 +3815,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("es-MX");
 
                     b.Property<string>("ImagenFondoLoginUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -4327,11 +3848,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(5);
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Lema")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -4345,12 +3862,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LogoPequenoUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("LogoUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -4368,7 +3883,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(15);
 
                     b.Property<string>("Mision")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<bool>("ModuloPagosHabilitado")
@@ -4384,7 +3898,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("MXN");
 
                     b.Property<string>("NombreCorto")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -4429,11 +3942,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Pais")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -4472,7 +3983,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(1);
 
                     b.Property<string>("ProveedorPagos")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -4511,17 +4021,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("Numerico");
 
                     b.Property<string>("SitioWeb")
-                        .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
                     b.Property<string>("Telefono")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("TelefonoAlternativo")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
@@ -4544,11 +4051,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Valores")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Vision")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ZonaHoraria")
@@ -4625,7 +4130,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<bool>("EsConfigurable")
@@ -4662,12 +4166,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("Etiquetas")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("ExpresionValidacion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -4675,7 +4177,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Grupo")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -4684,16 +4185,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(true);
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int>("Orden")
@@ -4719,7 +4216,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("String");
 
                     b.Property<string>("Unidad")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -4730,7 +4226,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UrlAyuda")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -4742,7 +4237,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ValorAnterior")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<decimal?>("ValorMaximo")
@@ -4752,11 +4246,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("ValorPredeterminado")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ValoresPermitidos")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.HasKey("Id");
@@ -4825,7 +4317,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("Usuario");
 
                     b.Property<string>("Categoria")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -4841,12 +4332,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("DispositivoOrigen")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -4869,12 +4358,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Etiquetas")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("ExpresionValidacion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -4885,30 +4372,22 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Grupo")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("HashSincronizacion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("Icono")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Nombre")
-                        .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int>("Orden")
@@ -4949,15 +4428,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ValorAnterior")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ValorPredeterminado")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ValoresPermitidos")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.HasKey("Id");
@@ -5026,7 +4502,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("ArchivoUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -5036,16 +4511,13 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(0);
 
                     b.Property<string>("CertificadoFirma")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("ContenidoHtml")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("CorreosEnvio")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -5056,11 +4528,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DatosAdicionales")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int?>("EntidadRelacionadaId")
@@ -5106,7 +4576,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Folio")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -5119,32 +4588,24 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("HashFirma")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("NombreArchivo")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("NombreEntidadRelacionada")
-                        .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int?>("PlantillaDocumentoId")
                         .HasColumnType("int");
 
                     b.Property<string>("Tags")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -5162,7 +4623,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(30)");
 
                     b.Property<string>("TipoEntidad")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -5229,7 +4689,7 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                             t.HasCheckConstraint("CK_Documentos_FechaVencimiento", "`FechaVencimiento` IS NULL OR (`FechaVigencia` IS NOT NULL AND `FechaVencimiento` >= `FechaVigencia`)");
 
-                            t.HasCheckConstraint("CK_Documentos_FirmaDigital", "(`TieneFirmaDigital` = 0) OR (`TieneFirmaDigital` = 1 AND `HashFirma` IS NOT NULL AND `FirmadoPorId` IS NOT NULL)");
+                            t.HasCheckConstraint("CK_Documentos_FirmaDigital", "(`TieneFirmaDigital` = 0) OR (`TieneFirmaDigital` = 1 AND `HashFirma` IS NOT NULL)");
 
                             t.HasCheckConstraint("CK_Documentos_TamanioArchivo", "`TamanioArchivo` IS NULL OR `TamanioArchivo` >= 0");
                         });
@@ -5253,7 +4713,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Categoria")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -5271,11 +4730,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("EncabezadoHtml")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<bool>("EsPlantillaPorDefecto")
@@ -5287,19 +4744,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("EstilosCSS")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<DateTime?>("FechaUltimaGeneracion")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ImagenMarcaAguaUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("MargenDerecho")
                         .ValueGeneratedOnAdd()
@@ -5327,7 +4779,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("NotasVersion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int?>("OpacidadMarcaAgua")
@@ -5341,11 +4792,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("Vertical");
 
                     b.Property<string>("PiePaginaHtml")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("PrefijoFolio")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
@@ -5360,7 +4809,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("Tags")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -5372,7 +4820,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("A4");
 
                     b.Property<string>("TextoMarcaAgua")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -5403,7 +4850,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("VariablesDisponibles")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int>("VecesUsada")
@@ -5468,33 +4914,26 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("AsuntoCorreo")
-                        .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
                     b.Property<string>("Categoria")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("ConfiguracionColumnas")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ConfiguracionGraficas")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ConfiguracionJSON")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ConsultaSQL")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("CorreosDestinatarios")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -5504,11 +4943,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CuerpoCorreo")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int?>("DiaMes")
@@ -5536,7 +4973,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ExpresionCron")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -5544,7 +4980,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("FiltrosPredeterminados")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("FormatoSalida")
@@ -5555,7 +4990,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("PDF");
 
                     b.Property<string>("FormatosAdicionales")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -5572,12 +5006,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Icono")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("LimiteRegistros")
                         .ValueGeneratedOnAdd()
@@ -5590,7 +5020,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int>("Orden")
@@ -5599,7 +5028,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(0);
 
                     b.Property<string>("OrdenamientoPredeterminado")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -5611,11 +5039,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue("SQL");
 
                     b.Property<string>("ParametrosJSON")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ParametrosObligatorios")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -5625,7 +5051,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("PlantillaHTML")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<bool>("ProgramacionAutomatica")
@@ -5647,17 +5072,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("RolesPermitidos")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("StoredProcedure")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("Tags")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -5763,13 +5185,22 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(true);
 
+                    b.Property<string>("Ciudad")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
                     b.Property<string>("Codigo")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<string>("Configuracion")
+                    b.Property<string>("CodigoPostal")
                         .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Configuracion")
                         .HasColumnType("JSON");
 
                     b.Property<DateTime>("CreatedAt")
@@ -5791,14 +5222,16 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int?>("EspacioAlmacenamiento")
                         .HasColumnType("int");
 
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
                     b.Property<DateTime?>("FechaExpiracion")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("FechaRegistro")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("LogoUrl")
                         .IsRequired()
@@ -5816,8 +5249,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
-                    b.Property<int?>("PlanId")
-                        .HasColumnType("int");
+                    b.Property<string>("Pais")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("RFC")
                         .IsRequired()
@@ -5836,6 +5271,15 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.Property<string>("Telefono")
                         .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("TelefonoAlternativo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("TipoPlan")
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
@@ -5877,9 +5321,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("AlumnoId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AlumnoId1")
                         .HasColumnType("int");
 
                     b.Property<int?>("AproboJustificanteId")
@@ -5928,16 +5369,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<TimeSpan?>("HoraSalida")
                         .HasColumnType("time(6)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<bool>("Justificado")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false);
 
                     b.Property<string>("JustificanteUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -5945,17 +5382,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Motivo")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("MotivoModificacion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
@@ -5977,8 +5411,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.HasIndex("AlumnoId")
                         .HasDatabaseName("IX_Asistencias_AlumnoId");
-
-                    b.HasIndex("AlumnoId1");
 
                     b.HasIndex("EscuelaId")
                         .HasDatabaseName("IX_Asistencias_EscuelaId");
@@ -6019,8 +5451,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.ToTable("Asistencias", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Asistencias_Fecha", "`Fecha` <= CAST(GETDATE() AS DATE)");
-
                             t.HasCheckConstraint("CK_Asistencias_Horarios", "`HoraEntrada` IS NULL OR `HoraSalida` IS NULL OR `HoraEntrada` < `HoraSalida`");
 
                             t.HasCheckConstraint("CK_Asistencias_MinutosRetardo", "`MinutosRetardo` IS NULL OR `MinutosRetardo` >= 0");
@@ -6031,166 +5461,125 @@ namespace SchoolSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
-                    b.Property<int>("AlumnoId")
-                        .HasColumnType("int")
-                        .HasColumnName("alumno_id");
+                    b.Property<int?>("AlumnoId")
+                        .IsRequired()
+                        .HasColumnType("int");
 
                     b.Property<bool>("Aprobado")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("aprobado");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("AreasOportunidad")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("areas_oportunidad");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Bloqueada")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false)
-                        .HasColumnName("bloqueada");
+                        .HasDefaultValue(false);
 
                     b.Property<string>("CalificacionLetra")
                         .IsRequired()
                         .HasMaxLength(5)
-                        .HasColumnType("varchar(5)")
-                        .HasColumnName("calificacion_letra");
+                        .HasColumnType("varchar(5)");
 
                     b.Property<decimal?>("CalificacionMinima")
-                        .HasColumnType("DECIMAL(5,2)")
-                        .HasColumnName("calificacion_minima");
+                        .HasColumnType("DECIMAL(5,2)");
 
                     b.Property<decimal>("CalificacionNumerica")
-                        .HasColumnType("DECIMAL(5,2)")
-                        .HasColumnName("calificacion_numerica");
+                        .HasColumnType("DECIMAL(5,2)");
 
                     b.Property<decimal?>("CalificacionOriginal")
-                        .HasColumnType("DECIMAL(5,2)")
-                        .HasColumnName("calificacion_original");
+                        .HasColumnType("DECIMAL(5,2)");
 
                     b.Property<int?>("CapturadoPor")
-                        .HasColumnType("int")
-                        .HasColumnName("capturado_por");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("created_at");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("CreatedBy")
-                        .HasColumnType("int")
-                        .HasColumnName("created_by");
+                        .HasColumnType("int");
 
                     b.Property<bool>("EsRecalificacion")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false)
-                        .HasColumnName("es_recalificacion");
+                        .HasDefaultValue(false);
 
                     b.Property<int>("EscuelaId")
-                        .HasColumnType("int")
-                        .HasColumnName("escuela_id");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("FechaBloqueo")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("fecha_bloqueo");
+                        .HasColumnType("DATETIME");
 
                     b.Property<DateTime>("FechaCaptura")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("fecha_captura");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("FechaRecalificacion")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("fecha_recalificacion");
+                        .HasColumnType("DATETIME");
 
                     b.Property<DateTime?>("FechaUltimaModificacion")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("fecha_ultima_modificacion");
+                        .HasColumnType("DATETIME");
 
                     b.Property<string>("Fortalezas")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("fortalezas");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("FueModificada")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false)
-                        .HasColumnName("fue_modificada");
+                        .HasDefaultValue(false);
 
                     b.Property<int>("GrupoId")
-                        .HasColumnType("int")
-                        .HasColumnName("grupo_id");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("int");
 
                     b.Property<int>("MateriaId")
-                        .HasColumnType("int")
-                        .HasColumnName("materia_id");
+                        .HasColumnType("int");
 
                     b.Property<int?>("ModificadoPor")
-                        .HasColumnType("int")
-                        .HasColumnName("modificado_por");
+                        .HasColumnType("int");
 
                     b.Property<string>("MotivoModificacion")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("motivo_modificacion");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Observaciones")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("observaciones");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("PeriodoId")
-                        .HasColumnType("int")
-                        .HasColumnName("periodo_id");
+                        .HasColumnType("int");
 
                     b.Property<decimal?>("Peso")
-                        .HasColumnType("DECIMAL(5,2)")
-                        .HasColumnName("peso");
+                        .HasColumnType("DECIMAL(5,2)");
 
                     b.Property<string>("Recomendaciones")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("recomendaciones");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TipoEvaluacion")
-                        .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("tipo_evaluacion");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("TipoRecalificacion")
-                        .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("tipo_recalificacion");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("updated_at");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int")
-                        .HasColumnName("updated_by");
+                        .HasColumnType("int");
 
                     b.Property<bool>("VisibleParaPadres")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true)
-                        .HasColumnName("visible_para_padres");
+                        .HasDefaultValue(true);
 
                     b.HasKey("Id");
 
                     b.HasIndex("AlumnoId")
-                        .HasDatabaseName("idx_calificacion_alumno");
+                        .HasDatabaseName("IX_Calificacion_Alumno");
 
                     b.HasIndex("Bloqueada")
-                        .HasDatabaseName("idx_calificacion_bloqueada");
+                        .HasDatabaseName("IX_Calificacion_Bloqueada");
 
                     b.HasIndex("CapturadoPor");
 
@@ -6201,20 +5590,20 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("PeriodoId");
 
                     b.HasIndex("VisibleParaPadres")
-                        .HasDatabaseName("idx_calificacion_visible_padres");
+                        .HasDatabaseName("IX_Calificacion_Visible_Padres");
 
                     b.HasIndex("GrupoId", "PeriodoId")
-                        .HasDatabaseName("idx_calificacion_grupo_periodo");
+                        .HasDatabaseName("IX_Calificacion_Grupo_Periodo");
 
                     b.HasIndex("AlumnoId", "MateriaId", "PeriodoId")
                         .IsUnique()
-                        .HasDatabaseName("idx_calificacion_alumno_materia_periodo");
+                        .HasDatabaseName("IX_Calificacion_Alumno_Materia_Periodo");
 
-                    b.ToTable("calificaciones", null, t =>
+                    b.ToTable("Calificaciones", null, t =>
                         {
-                            t.HasCheckConstraint("CHK_Calificacion_Rango", "calificacion_numerica >=0 AND calificacion_numerica <=10");
+                            t.HasCheckConstraint("CHK_Calificacion_Rango", "CalificacionNumerica >=0 AND CalificacionNumerica <=10");
 
-                            t.HasCheckConstraint("CHK_Peso_Rango", "peso IS NULL OR (peso >=0 AND peso <=100)");
+                            t.HasCheckConstraint("CHK_Peso_Rango", "Peso IS NULL OR (Peso >=0 AND Peso <=100)");
                         });
                 });
 
@@ -6246,7 +5635,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -6267,9 +5655,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.Property<DateTime?>("FechaPublicacion")
                         .HasColumnType("DATE");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -6351,7 +5736,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("AlumnoId")
+                    b.Property<int?>("AlumnoId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("CanceladoPorId")
@@ -6403,9 +5789,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false);
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<int?>("MesCorrespondiente")
                         .HasColumnType("int");
 
@@ -6426,23 +5809,19 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(0m);
 
                     b.Property<string>("MotivoCancelacion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("NumeroRecibo")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<decimal?>("PorcentajeDescuento")
                         .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("ReferenciaExterna")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -6523,17 +5902,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("CategoriaFiscal")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("CicloEscolar")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("Codigo")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
@@ -6544,12 +5920,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CuentaContable")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int?>("DiasGracia")
@@ -6560,9 +5934,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.Property<int?>("GradoId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<decimal>("MontoBase")
                         .HasColumnType("decimal(10,2)");
@@ -6576,7 +5947,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Notas")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Periodicidad")
@@ -6659,7 +6029,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(true);
 
-                    b.Property<int>("AlumnoId")
+                    b.Property<int?>("AlumnoId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("CargosPagados")
@@ -6708,15 +6079,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("FechaUltimoPago")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("NotasAtencion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<bool>("RequiereAtencion")
@@ -6832,11 +6198,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("AlumnoId")
+                    b.Property<int?>("AlumnoId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Banco")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -6858,11 +6224,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DatosAdicionales")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("DireccionIp")
-                        .IsRequired()
                         .HasMaxLength(45)
                         .HasColumnType("varchar(45)");
 
@@ -6870,12 +6234,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FacturaPdfUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("FacturaXmlUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -6901,9 +6263,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("MetodoPago")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -6913,38 +6272,31 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<string>("MotivoCancelacion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int>("RecibidoPorId")
                         .HasColumnType("int");
 
                     b.Property<string>("ReciboUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
                     b.Property<string>("Referencia")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("ReferenciaExterna")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("SerieRecibo")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("varchar(10)");
 
                     b.Property<string>("UltimosDigitosTarjeta")
-                        .IsRequired()
                         .HasMaxLength(4)
                         .HasColumnType("varchar(4)");
 
@@ -6955,7 +6307,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UuidFactura")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -7005,7 +6356,7 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                             t.HasCheckConstraint("CK_Pagos_Monto", "`Monto` > 0");
 
-                            t.HasCheckConstraint("CK_Pagos_UltimosDigitos", "`UltimosDigitosTarjeta` IS NULL OR LEN(`UltimosDigitosTarjeta`) = 4");
+                            t.HasCheckConstraint("CK_Pagos_UltimosDigitos", "`UltimosDigitosTarjeta` IS NULL OR CHAR_LENGTH(`UltimosDigitosTarjeta`) = 4");
                         });
                 });
 
@@ -7019,13 +6370,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(true);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<int>("EscuelaId")
                         .HasColumnType("int");
@@ -7045,19 +6389,13 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("InstruccionesEmergencia")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("MedicamentoEmergencia")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("MedicoDiagnostico")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -7067,7 +6405,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<bool>("PuedeSerAnafilactica")
@@ -7090,20 +6427,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(30)");
 
                     b.Property<string>("TipoPrueba")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("TratamientoRecomendado")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -7133,8 +6461,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.ToTable("Alergias", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Alergias_FechaDiagnostico", "`FechaDiagnostico` IS NULL OR `FechaDiagnostico` <= GETDATE()");
-
                             t.HasCheckConstraint("CK_Alergias_FechaSuperacion", "`FechaSuperacion` IS NULL OR (`FechaSuperacion` >= `FechaDiagnostico` AND `Activa` = 0)");
                         });
                 });
@@ -7151,33 +6477,28 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("Alergias")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
-                    b.Property<int>("AlumnoId")
+                    b.Property<int?>("AlumnoId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("CondicionesMedicas")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("ContactoEmergenciaNombre")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("ContactoEmergenciaParentesco")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("ContactoEmergenciaTelefono")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("ContactoEmergenciaTelefonoAlt")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
@@ -7188,7 +6509,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DetallesAtencionEspecial")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int>("EscuelaId")
@@ -7211,35 +6531,26 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<decimal?>("IMC")
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("MedicamentosRegulares")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("MedicoDireccion")
-                        .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
                     b.Property<string>("MedicoEspecialidad")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("MedicoNombre")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("MedicoTelefono")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<decimal?>("Peso")
@@ -7251,21 +6562,17 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("Restricciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("SeguroNombre")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("SeguroNumeroPoliza")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("SeguroTelefono")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
@@ -7293,7 +6600,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("VacunacionObservaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.HasKey("Id");
@@ -7344,30 +6650,19 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false);
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("DescripcionCirugia")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Diagnostico")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int?>("DiasHospitalizado")
                         .HasColumnType("int");
 
                     b.Property<string>("DocumentosUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -7375,7 +6670,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("EspecialidadMedico")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -7405,47 +6699,35 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("IndicacionesSeguimiento")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("InstitucionAtencion")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("LugarAtencion")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("LugarIncidente")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("MedicamentosRecetados")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("MedicoAtencion")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("MedioNotificacion")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("MotivoHospitalizacion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<bool>("OcurrioEnEscuela")
@@ -7459,12 +6741,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("PersonaQueNotifico")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("ProcedimientosRealizados")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int?>("RegistradoPorId")
@@ -7486,7 +6766,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("Sintomas")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("TipoIncidente")
@@ -7495,15 +6774,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(30)");
 
                     b.Property<string>("TratamientoAplicado")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -7551,8 +6822,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                             t.HasCheckConstraint("CK_HistorialMedico_FechaAltaHospital", "`FechaAltaHospital` IS NULL OR `FechaAltaHospital` >= `FechaIngresoHospital`");
 
-                            t.HasCheckConstraint("CK_HistorialMedico_FechaIncidente", "`FechaIncidente` <= GETDATE()");
-
                             t.HasCheckConstraint("CK_HistorialMedico_Hospitalizacion", "(`RequirioHospitalizacion` = 0) OR (`RequirioHospitalizacion` = 1 AND `FechaIngresoHospital` IS NOT NULL)");
                         });
                 });
@@ -7569,16 +6838,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("CedulaMedico")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Dosis")
                         .IsRequired()
@@ -7586,14 +6847,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("EfectosSecundarios")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int>("EscuelaId")
                         .HasColumnType("int");
 
                     b.Property<string>("EspecialidadMedico")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -7622,7 +6881,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("HorarioEscolar")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -7631,23 +6889,16 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("InstruccionesEspeciales")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("MedicoPrescriptor")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("MotivoSuspension")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("NombreGenerico")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -7657,11 +6908,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Precauciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<bool>("PuedeAutoAdministrar")
@@ -7670,7 +6919,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("RecetaUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -7683,13 +6931,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false);
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Via")
                         .IsRequired()
@@ -7743,19 +6984,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ComprobanteUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("DescripcionReacciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Dosis")
@@ -7779,25 +7011,18 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("InstitucionAplicacion")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Lote")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("LugarAnatomico")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Marca")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -7807,11 +7032,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("PersonalAplicacion")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -7819,13 +7042,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false);
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -7849,8 +7065,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.ToTable("Vacunas", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Vacunas_FechaAplicacion", "`FechaAplicacion` <= GETDATE()");
-
                             t.HasCheckConstraint("CK_Vacunas_FechaCaducidad", "`FechaCaducidad` IS NULL OR `FechaCaducidad` >= `FechaAplicacion`");
 
                             t.HasCheckConstraint("CK_Vacunas_FechaProximaDosis", "`FechaProximaDosis` IS NULL OR `FechaProximaDosis` > `FechaAplicacion`");
@@ -7869,7 +7083,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("ArchivoAdjuntoNombre")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -7877,7 +7090,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("ArchivoAdjuntoUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -7888,7 +7100,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int>("EscuelaId")
@@ -7906,9 +7117,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int>("GrupoId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<int>("MaestroId")
                         .HasColumnType("int");
 
@@ -7916,7 +7124,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<decimal?>("PenalizacionTardia")
@@ -7982,21 +7189,19 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("AlumnoId")
+                    b.Property<int?>("AlumnoId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("ArchivoNombre")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("ArchivoRetroalimentacionNombre")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("ArchivoRetroalimentacionUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -8004,7 +7209,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("ArchivoUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -8015,7 +7219,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("ComentariosAlumno")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -8045,9 +7248,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("FechaRevision")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<int>("NumeroIntento")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -8057,7 +7257,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("Retroalimentacion")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<int?>("RevisadoPorId")
@@ -8117,244 +7316,180 @@ namespace SchoolSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     b.Property<bool>("Activo")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true)
-                        .HasColumnName("activo");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasDefaultValue(true);
 
                     b.Property<string>("DeviceId")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("device_id");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("DeviceName")
-                        .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("varchar(200)")
-                        .HasColumnName("device_name");
+                        .HasColumnType("varchar(200)");
 
                     b.Property<DateTime>("FechaRegistro")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("fecha_registro");
-
-                    b.Property<string>("IpUltimaConexion")
-                        .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("varchar(45)")
-                        .HasColumnName("ip_ultima_conexion");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Navegador")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("navegador");
-
-                    b.Property<string>("SO")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("so");
-
-                    b.Property<string>("Tipo")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("tipo");
-
-                    b.Property<string>("TokenFCM")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)")
-                        .HasColumnName("token_fcm");
-
-                    b.Property<DateTime>("UltimaActividad")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("ultima_actividad");
-
-                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<string>("IpUltimaConexion")
+                        .HasMaxLength(45)
+                        .HasColumnType("varchar(45)");
+
+                    b.Property<string>("Navegador")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("SO")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Tipo")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("TokenFCM")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<DateTime>("UltimaActividad")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("UsuarioId")
-                        .HasColumnType("int")
-                        .HasColumnName("usuario_id");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DeviceId")
                         .IsUnique()
-                        .HasDatabaseName("idx_dispositivo_device_id");
+                        .HasDatabaseName("IX_Dispositivo_Device_Id");
 
                     b.HasIndex("UsuarioId", "Activo")
-                        .HasDatabaseName("idx_dispositivo_usuario_activo");
+                        .HasDatabaseName("IX_Dispositivo_Usuario_Activo");
 
-                    b.ToTable("dispositivos", (string)null);
+                    b.ToTable("Dispositivos", (string)null);
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Usuarios.Usuario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     b.Property<bool>("Activo")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true)
-                        .HasColumnName("activo");
+                        .HasDefaultValue(true);
 
                     b.Property<string>("ApellidoMaterno")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("apellido_materno");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("ApellidoPaterno")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("apellido_paterno");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("BloqueadoHasta")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("bloqueado_hasta");
+                        .HasColumnType("DATETIME");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("created_at");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("CreatedBy")
-                        .HasColumnType("int")
-                        .HasColumnName("created_by");
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("email");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("EscuelaId")
-                        .HasColumnType("int")
-                        .HasColumnName("escuela_id");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("FechaNacimiento")
-                        .HasColumnType("DATE")
-                        .HasColumnName("fecha_nacimiento");
+                        .HasColumnType("DATE");
 
                     b.Property<string>("FotoUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("varchar(500)")
-                        .HasColumnName("foto_url");
+                        .HasColumnType("varchar(500)");
 
                     b.Property<string>("Genero")
                         .HasMaxLength(20)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("genero");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<int>("IntentosFallidos")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(0)
-                        .HasColumnName("intentos_fallidos");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("nombre");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("password_hash");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Rol")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("rol");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("Telefono")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("telefono");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("TelefonoEmergencia")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("telefono_emergencia");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<DateTime?>("TokenExpiracion")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("token_expiracion");
+                        .HasColumnType("DATETIME");
 
                     b.Property<string>("TokenRecuperacion")
-                        .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("token_recuperacion");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime?>("UltimoAcceso")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("ultimo_acceso");
+                        .HasColumnType("DATETIME");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("updated_at");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int")
-                        .HasColumnName("updated_by");
+                        .HasColumnType("int");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("username");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Activo")
-                        .HasDatabaseName("idx_usuario_activo");
+                        .HasDatabaseName("IX_Usuario_Activo");
 
                     b.HasIndex("Email")
                         .IsUnique()
-                        .HasDatabaseName("idx_usuario_email");
+                        .HasDatabaseName("IX_Usuario_Email");
 
                     b.HasIndex("Username")
                         .IsUnique()
-                        .HasDatabaseName("idx_usuario_username");
+                        .HasDatabaseName("IX_Usuario_Username");
 
                     b.HasIndex("EscuelaId", "Rol")
-                        .HasDatabaseName("idx_usuario_escuela_rol");
+                        .HasDatabaseName("IX_Usuario_Escuela_Rol");
 
-                    b.ToTable("usuarios", (string)null);
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("HistorialPuntos", b =>
@@ -8427,14 +7562,10 @@ namespace SchoolSystem.Infrastructure.Migrations
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Academico.GradoMateria", b =>
                 {
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Grado", "Grado")
-                        .WithMany()
+                        .WithMany("GradoMaterias")
                         .HasForeignKey("GradoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("SchoolSystem.Domain.Entities.Academico.Grado", null)
-                        .WithMany("GradoMaterias")
-                        .HasForeignKey("GradoId1");
 
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Materia", "Materia")
                         .WithMany("GradoMaterias")
@@ -8450,14 +7581,10 @@ namespace SchoolSystem.Infrastructure.Migrations
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Academico.Grupo", b =>
                 {
                     b.HasOne("SchoolSystem.Domain.Entities.Escuelas.Escuela", "Escuela")
-                        .WithMany()
+                        .WithMany("Grupos")
                         .HasForeignKey("EscuelaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("SchoolSystem.Domain.Entities.Escuelas.Escuela", null)
-                        .WithMany("Grupos")
-                        .HasForeignKey("EscuelaId1");
 
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Grado", "Grado")
                         .WithMany("Grupos")
@@ -8480,17 +7607,13 @@ namespace SchoolSystem.Infrastructure.Migrations
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Academico.GrupoMateriaMaestro", b =>
                 {
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Grupo", "Grupo")
-                        .WithMany()
+                        .WithMany("GrupoMateriaMaestros")
                         .HasForeignKey("GrupoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SchoolSystem.Domain.Entities.Academico.Grupo", null)
-                        .WithMany("AsignacionesMaterias")
-                        .HasForeignKey("GrupoId1");
-
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Maestro", "Maestro")
-                        .WithMany("AsignacionesMaterias")
+                        .WithMany("AsignacionesDeGrupoMateria")
                         .HasForeignKey("MaestroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -8513,7 +7636,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", "Alumno")
                         .WithMany("Inscripciones")
                         .HasForeignKey("AlumnoId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SchoolSystem.Domain.Entities.Escuelas.Escuela", "Escuela")
@@ -8557,14 +7680,10 @@ namespace SchoolSystem.Infrastructure.Migrations
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Academico.Materia", b =>
                 {
                     b.HasOne("SchoolSystem.Domain.Entities.Escuelas.Escuela", "Escuela")
-                        .WithMany()
+                        .WithMany("Materias")
                         .HasForeignKey("EscuelaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("SchoolSystem.Domain.Entities.Escuelas.Escuela", null)
-                        .WithMany("Materias")
-                        .HasForeignKey("EscuelaId1");
 
                     b.Navigation("Escuela");
                 });
@@ -8572,14 +7691,10 @@ namespace SchoolSystem.Infrastructure.Migrations
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Academico.NivelEducativo", b =>
                 {
                     b.HasOne("SchoolSystem.Domain.Entities.Escuelas.Escuela", "Escuela")
-                        .WithMany()
+                        .WithMany("NivelesEducativos")
                         .HasForeignKey("EscuelaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("SchoolSystem.Domain.Entities.Escuelas.Escuela", null)
-                        .WithMany("NivelesEducativos")
-                        .HasForeignKey("EscuelaId1");
 
                     b.Navigation("Escuela");
                 });
@@ -8802,15 +7917,9 @@ namespace SchoolSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Conducta.AlumnoInsignia", b =>
                 {
-                    b.HasOne("SchoolSystem.Domain.Entities.Conducta.AlumnoPuntos", null)
+                    b.HasOne("SchoolSystem.Domain.Entities.Conducta.AlumnoPuntos", "AlumnoPuntos")
                         .WithMany("InsigniasGanadas")
                         .HasForeignKey("AlumnoPuntosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SchoolSystem.Domain.Entities.Conducta.AlumnoPuntos", "AlumnoPuntos")
-                        .WithMany()
-                        .HasForeignKey("AlumnoPuntosId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -8828,14 +7937,10 @@ namespace SchoolSystem.Infrastructure.Migrations
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Conducta.AlumnoPuntos", b =>
                 {
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", "Alumno")
-                        .WithMany()
-                        .HasForeignKey("AlumnoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", null)
                         .WithMany("Puntos")
-                        .HasForeignKey("AlumnoId1");
+                        .HasForeignKey("AlumnoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Alumno");
                 });
@@ -8843,14 +7948,10 @@ namespace SchoolSystem.Infrastructure.Migrations
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Conducta.RegistroConducta", b =>
                 {
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", "Alumno")
-                        .WithMany()
-                        .HasForeignKey("AlumnoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", null)
                         .WithMany("RegistrosConducta")
-                        .HasForeignKey("AlumnoId1");
+                        .HasForeignKey("AlumnoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SchoolSystem.Domain.Entities.Escuelas.Escuela", "Escuela")
                         .WithMany()
@@ -8883,8 +7984,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", "Alumno")
                         .WithMany()
                         .HasForeignKey("AlumnoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SchoolSystem.Domain.Entities.Usuarios.Usuario", "UsuarioAutorizo")
                         .WithMany()
@@ -8971,14 +8071,10 @@ namespace SchoolSystem.Infrastructure.Migrations
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Evaluacion.Asistencia", b =>
                 {
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", "Alumno")
-                        .WithMany()
-                        .HasForeignKey("AlumnoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", null)
                         .WithMany("Asistencias")
-                        .HasForeignKey("AlumnoId1");
+                        .HasForeignKey("AlumnoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SchoolSystem.Domain.Entities.Escuelas.Escuela", "Escuela")
                         .WithMany()
@@ -9011,8 +8107,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", "Alumno")
                         .WithMany("Calificaciones")
                         .HasForeignKey("AlumnoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Maestro", "MaestroCaptura")
                         .WithMany()
@@ -9072,8 +8167,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", "Alumno")
                         .WithMany()
                         .HasForeignKey("AlumnoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SchoolSystem.Domain.Entities.Usuarios.Usuario", "CanceladoPor")
                         .WithMany()
@@ -9115,8 +8209,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", "Alumno")
                         .WithMany()
                         .HasForeignKey("AlumnoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Alumno");
                 });
@@ -9126,8 +8219,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", "Alumno")
                         .WithMany()
                         .HasForeignKey("AlumnoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SchoolSystem.Domain.Entities.Usuarios.Usuario", "CanceladoPor")
                         .WithMany()
@@ -9171,8 +8263,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", "Alumno")
                         .WithMany()
                         .HasForeignKey("AlumnoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Alumno");
                 });
@@ -9249,8 +8340,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Alumno", "Alumno")
                         .WithMany()
                         .HasForeignKey("AlumnoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Maestro", "RevisadoPor")
                         .WithMany()
@@ -9316,18 +8406,18 @@ namespace SchoolSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Academico.Grupo", b =>
                 {
-                    b.Navigation("AsignacionesMaterias");
-
                     b.Navigation("Asistencias");
 
                     b.Navigation("Calificaciones");
+
+                    b.Navigation("GrupoMateriaMaestros");
 
                     b.Navigation("Inscripciones");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Academico.Maestro", b =>
                 {
-                    b.Navigation("AsignacionesMaterias");
+                    b.Navigation("AsignacionesDeGrupoMateria");
 
                     b.Navigation("GruposTitular");
                 });

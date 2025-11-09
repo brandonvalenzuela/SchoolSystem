@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Newtonsoft.Json;
 using SchoolSystem.Domain.Entities.Conducta;
 
 namespace SchoolSystem.Infrastructure.Persistence.Configurations
@@ -63,7 +64,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(s => s.ObservacionesCumplimiento)
-                .HasMaxLength(1000);
+                .HasMaxLength(1000)
+                .IsRequired(false);
 
             builder.Property(s => s.VerificadoPor)
                 .IsRequired(false);
@@ -77,10 +79,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(s => s.MotivoApelacion)
-                .HasMaxLength(1000);
+                .HasMaxLength(1000)
+                .IsRequired(false);
 
             builder.Property(s => s.ResultadoApelacion)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(s => s.FechaResolucionApelacion)
                 .IsRequired(false);
@@ -94,6 +98,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(s => s.MedioNotificacion)
+                .IsRequired()
+                .HasConversion<string>()
                 .HasMaxLength(100);
 
             builder.Property(s => s.FirmaEnterado)
@@ -105,10 +111,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Documentación
             builder.Property(s => s.DocumentoUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(s => s.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(s => s.CreatedAt)
@@ -132,7 +140,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasOne(s => s.Alumno)
                 .WithMany()
                 .HasForeignKey(s => s.AlumnoId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
 
             builder.HasOne(s => s.Conducta)
                 .WithOne(rc => rc.Sancion)
@@ -206,9 +215,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             // Constraints
             builder.HasCheckConstraint("CK_Sanciones_Fechas",
                 "`FechaFin` IS NULL OR `FechaFin` >= `FechaInicio`");
-
-            builder.HasCheckConstraint("CK_Sanciones_FechaAutorizacion",
-                "`FechaAutorizacion` <= GETDATE()");
 
             builder.HasCheckConstraint("CK_Sanciones_FechaCumplimiento",
                 "`FechaCumplimiento` IS NULL OR `FechaCumplimiento` >= `FechaInicio`");

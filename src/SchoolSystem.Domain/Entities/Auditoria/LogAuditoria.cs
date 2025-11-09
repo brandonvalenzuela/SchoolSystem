@@ -54,7 +54,7 @@ namespace SchoolSystem.Domain.Entities.Auditoria
         /// </summary>
         [Required]
         [Column(TypeName = "NVARCHAR(MAX)")]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Fecha y hora de la acción

@@ -97,7 +97,7 @@ namespace SchoolSystem.Domain.Entities.Biblioteca
         /// Descripción del libro
         /// </summary>
         [Column(TypeName = "NVARCHAR(MAX)")]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         #endregion
 
@@ -151,7 +151,7 @@ namespace SchoolSystem.Domain.Entities.Biblioteca
         /// Estado general del recurso
         /// </summary>
         [Required]
-        public EstadoRecurso Estado { get; set; }
+        public EstadoRecurso? Estado { get; set; }
 
         /// <summary>
         /// Indica si está disponible para préstamo

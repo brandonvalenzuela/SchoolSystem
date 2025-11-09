@@ -26,7 +26,6 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// <summary>
         /// Identificador único del alumno
         /// </summary>
-        [Required]
         public int AlumnoId { get; set; }
 
         /// <summary>
@@ -271,13 +270,13 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// Avatar o imagen de perfil del jugador
         /// </summary>
         [StringLength(500)]
-        public string AvatarUrl { get; set; }
+        public string? AvatarUrl { get; set; }
 
         /// <summary>
         /// Lema o frase motivacional personalizada
         /// </summary>
         [StringLength(100)]
-        public string Lema { get; set; }
+        public string? Lema { get; set; }
 
         #endregion
 
@@ -291,7 +290,7 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// <summary>
         /// Insignias ganadas por el alumno (Navigation Property)
         /// </summary>
-        public virtual ICollection<AlumnoInsignia> InsigniasGanadas { get; set; }
+        public virtual ICollection<AlumnoInsignia> InsigniasGanadas { get; set; } // Relación con AlumnoInsignia
 
         #endregion
 

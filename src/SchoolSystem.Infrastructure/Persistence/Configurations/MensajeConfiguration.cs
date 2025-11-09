@@ -50,16 +50,19 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Archivos adjuntos
             builder.Property(m => m.ArchivoAdjuntoUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(m => m.ArchivoAdjuntoNombre)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(m => m.ArchivoAdjuntoTamano)
                 .IsRequired(false);
 
             builder.Property(m => m.ArchivoAdjuntoTipo)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             // Control de mensajes
             builder.Property(m => m.MensajePadreId)

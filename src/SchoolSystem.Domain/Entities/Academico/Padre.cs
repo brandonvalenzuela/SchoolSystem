@@ -1,4 +1,5 @@
 ﻿using SchoolSystem.Domain.Entities.Common;
+using SchoolSystem.Domain.Entities.Usuarios;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// Usuario asociado (Navigation Property)
         /// Contiene los datos personales, contacto y credenciales
         /// </summary>
-        public virtual Usuarios.Usuario Usuario { get; set; }
+        public virtual Usuario Usuario { get; set; }
 
         #endregion
 
@@ -134,7 +135,8 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Lista de IDs de los alumnos asociados
         /// </summary>
-        public IEnumerable<int> AlumnosIds => AlumnoPadres?.Select(ap => ap.AlumnoId) ?? Enumerable.Empty<int>();
+        public IEnumerable<int> AlumnosIds => 
+            AlumnoPadres?.Select(ap => ap.AlumnoId).ToList() ?? Enumerable.Empty<int>();
 
         #endregion
 

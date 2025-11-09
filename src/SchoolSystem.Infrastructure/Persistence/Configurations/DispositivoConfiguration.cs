@@ -22,7 +22,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
         {
             #region Tabla
 
-            builder.ToTable("dispositivos");
+            builder.ToTable("Dispositivos");
 
             #endregion
 
@@ -31,7 +31,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasKey(d => d.Id);
 
             builder.Property(d => d.Id)
-                .HasColumnName("id")
                 .ValueGeneratedOnAdd();
 
             #endregion
@@ -40,58 +39,53 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Usuario ID
             builder.Property(d => d.UsuarioId)
-                .HasColumnName("usuario_id")
                 .IsRequired();
 
             // Device ID
             builder.Property(d => d.DeviceId)
-                .HasColumnName("device_id")
                 .HasMaxLength(100)
                 .IsRequired();
 
             // Device Name
             builder.Property(d => d.DeviceName)
-                .HasColumnName("device_name")
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             // Tipo
             builder.Property(d => d.Tipo)
-                .HasColumnName("tipo")
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .IsRequired(false);
 
             // SO
             builder.Property(d => d.SO)
-                .HasColumnName("so")
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             // Navegador
             builder.Property(d => d.Navegador)
-                .HasColumnName("navegador")
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
 
             // Token FCM
             builder.Property(d => d.TokenFCM)
-                .HasColumnName("token_fcm")
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // IP Última Conexión
             builder.Property(d => d.IpUltimaConexion)
-                .HasColumnName("ip_ultima_conexion")
-                .HasMaxLength(45);
+                .HasMaxLength(45)
+                .IsRequired(false);
 
             // Fecha Registro
             builder.Property(d => d.FechaRegistro)
-                .HasColumnName("fecha_registro")
-                                .IsRequired();
+                .IsRequired();
 
             // Última Actividad
             builder.Property(d => d.UltimaActividad)
-                .HasColumnName("ultima_actividad")
-                                .IsRequired();
+                .IsRequired();
 
             // Activo
             builder.Property(d => d.Activo)
-                .HasColumnName("activo")
                 .HasDefaultValue(true)
                 .IsRequired();
 
@@ -101,12 +95,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Índice único en DeviceId
             builder.HasIndex(d => d.DeviceId)
-                .HasDatabaseName("idx_dispositivo_device_id")
+                .HasDatabaseName("IX_Dispositivo_Device_Id")
                 .IsUnique();
 
             // Índice compuesto en UsuarioId y Activo
             builder.HasIndex(d => new { d.UsuarioId, d.Activo })
-                .HasDatabaseName("idx_dispositivo_usuario_activo");
+                .HasDatabaseName("IX_Dispositivo_Usuario_Activo");
 
             #endregion
 

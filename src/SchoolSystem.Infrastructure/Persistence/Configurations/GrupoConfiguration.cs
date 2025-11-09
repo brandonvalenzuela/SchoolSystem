@@ -33,6 +33,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(20);
 
             builder.Property(g => g.Descripcion)
+                .IsRequired(false)
                 .HasMaxLength(500);
 
             builder.Property(g => g.CapacidadMaxima)
@@ -48,6 +49,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(g => g.Aula)
+                .IsRequired(false)
                 .HasMaxLength(50);
 
             builder.Property(g => g.Turno)
@@ -62,7 +64,9 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(g => g.DiasClase)
-                .HasMaxLength(100);
+                .IsRequired() // Mantenlo como requerido
+                .HasMaxLength(100) // Asegúrate de que tenga suficiente longitud
+                .HasDefaultValue("Lunes a Viernes"); // <-- AÑADE ESTA LÍNEA con el valor que desees
 
             // Auditoría
             builder.Property(g => g.CreatedAt)
@@ -79,7 +83,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Relaciones
             builder.HasOne(g => g.Escuela)
-                .WithMany()
+                .WithMany(e => e.Grupos)
                 .HasForeignKey(g => g.EscuelaId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -98,7 +102,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasForeignKey(i => i.GrupoId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(g => g.AsignacionesMaterias)
+            builder.HasMany(g => g.GrupoMateriaMaestros)
                 .WithOne(am => am.Grupo)
                 .HasForeignKey(am => am.GrupoId)
                 .OnDelete(DeleteBehavior.Cascade);

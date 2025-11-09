@@ -39,12 +39,38 @@ namespace SchoolSystem.Domain.Entities.Escuelas
         /// Dirección física de la escuela
         /// </summary>
         public string Direccion { get; set; }
-        
+
+        /// <summary>
+        /// Ciudad donde se encuentra ubicada la escuela
+        /// </summary>
+        public string Ciudad { get; set; }
+
+        /// <summary>
+        /// Estado o entidad federativa donde se ubica la escuela
+        /// </summary>
+        public string Estado { get; set; }
+
+        /// <summary>
+        /// Código postal de la ubicación de la escuela
+        /// </summary>
+        public string CodigoPostal { get; set; }
+
+        /// <summary>
+        /// País donde se encuentra la escuela
+        /// </summary>
+        public string Pais { get; set; }
+
         /// <summary>
         /// Teléfono de contacto principal
         /// </summary>
         public string Telefono { get; set; }
-        
+
+        /// <summary>
+        /// Teléfono alternativo o secundario de contacto
+        /// </summary>
+        public string TelefonoAlternativo { get; set; }
+
+
         /// <summary>
         /// Correo electrónico institucional
         /// </summary>
@@ -59,15 +85,15 @@ namespace SchoolSystem.Domain.Entities.Escuelas
         /// URL del logo de la escuela
         /// </summary>
         public string LogoUrl { get; set; }
-        
+
         #endregion
-        
+
         #region Suscripción y Plan
-        
+
         /// <summary>
         /// ID del plan de suscripción (1=Básico, 2=Profesional, 3=Enterprise)
         /// </summary>
-        public int? PlanId { get; set; }
+        public TipoPlan? TipoPlan { get; set; }
         
         /// <summary>
         /// Fecha de registro en el sistema
@@ -175,7 +201,9 @@ namespace SchoolSystem.Domain.Entities.Escuelas
             Activo = true;
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
-            
+            TipoPlan = Enums.Escuelas.TipoPlan.Prueba;
+
+
             // Inicializar colecciones
             Usuarios = new HashSet<Usuarios.Usuario>();
             Alumnos = new HashSet<Academico.Alumno>();

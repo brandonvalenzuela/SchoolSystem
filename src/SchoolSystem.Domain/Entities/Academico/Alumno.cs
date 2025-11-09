@@ -82,7 +82,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// URL de la foto del alumno
         /// </summary>
-        public string FotoUrl { get; set; }
+        public string? FotoUrl { get; set; }
 
         #endregion
 
@@ -115,17 +115,17 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Alergias conocidas
         /// </summary>
-        public string Alergias { get; set; }
+        public string? Alergias { get; set; }
 
         /// <summary>
         /// Condiciones médicas relevantes
         /// </summary>
-        public string CondicionesMedicas { get; set; }
+        public string? CondicionesMedicas { get; set; }
 
         /// <summary>
         /// Medicamentos que toma regularmente
         /// </summary>
-        public string Medicamentos { get; set; }
+        public string? Medicamentos { get; set; }
 
         #endregion
 
@@ -163,17 +163,17 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Motivo de baja (si aplica)
         /// </summary>
-        public string MotivoBaja { get; set; }
+        public string? MotivoBaja { get; set; }
 
         /// <summary>
         /// Estatus actual del alumno
         /// </summary>
-        public EstatusAlumno Estatus { get; set; }
+        public EstatusAlumno? Estatus { get; set; }
 
         /// <summary>
         /// Observaciones generales sobre el alumno
         /// </summary>
-        public string Observaciones { get; set; }
+        public string? Observaciones { get; set; }
 
         #endregion
 

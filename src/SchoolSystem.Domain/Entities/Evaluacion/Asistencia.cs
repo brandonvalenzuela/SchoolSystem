@@ -1,4 +1,6 @@
-﻿using SchoolSystem.Domain.Entities.Common;
+﻿using SchoolSystem.Domain.Entities.Academico;
+using SchoolSystem.Domain.Entities.Common;
+using SchoolSystem.Domain.Entities.Escuelas;
 using SchoolSystem.Domain.Enums;
 using SchoolSystem.Domain.Enums.Asistencia;
 using System;
@@ -20,7 +22,7 @@ namespace SchoolSystem.Domain.Entities.Evaluacion
         /// <summary>
         /// Escuela asociada (Navigation Property)
         /// </summary>
-        public virtual Escuelas.Escuela Escuela { get; set; }
+        public virtual Escuela Escuela { get; set; }
 
         #endregion
 
@@ -34,7 +36,7 @@ namespace SchoolSystem.Domain.Entities.Evaluacion
         /// <summary>
         /// Alumno (Navigation Property)
         /// </summary>
-        public virtual Academico.Alumno Alumno { get; set; }
+        public virtual Alumno Alumno { get; set; }
 
         /// <summary>
         /// ID del grupo al que pertenece el alumno

@@ -39,13 +39,16 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(20);
 
             builder.Property(p => p.Referencia)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(p => p.Banco)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(p => p.UltimosDigitosTarjeta)
-                .HasMaxLength(4);
+                .HasMaxLength(4)
+                .IsRequired(false);
 
             // Fechas
             builder.Property(p => p.FechaPago)
@@ -60,17 +63,20 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(50);
 
             builder.Property(p => p.SerieRecibo)
-                .HasMaxLength(10);
+                .HasMaxLength(10)
+                .IsRequired(false);
 
             builder.Property(p => p.ReciboUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Control
             builder.Property(p => p.RecibidoPorId)
                 .IsRequired();
 
             builder.Property(p => p.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Cancelación
             builder.Property(p => p.Cancelado)
@@ -81,7 +87,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(p => p.MotivoCancelacion)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(p => p.CanceladoPorId)
                 .IsRequired(false);
@@ -91,26 +98,32 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             builder.Property(p => p.UuidFactura)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(p => p.FacturaXmlUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(p => p.FacturaPdfUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             builder.Property(p => p.FechaFacturacion)
                 .IsRequired(false);
 
             // Metadata
             builder.Property(p => p.ReferenciaExterna)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(p => p.DatosAdicionales)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(p => p.DireccionIp)
-                .HasMaxLength(45);
+                .HasMaxLength(45)
+                .IsRequired(false);
 
             // Auditoría
             builder.Property(p => p.CreatedAt)
@@ -134,7 +147,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasOne(p => p.Alumno)
                 .WithMany()
                 .HasForeignKey(p => p.AlumnoId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
 
             builder.HasOne(p => p.RecibidoPor)
                 .WithMany()
@@ -199,7 +213,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 "`FechaAplicacion` IS NULL OR `FechaAplicacion` >= `FechaPago`");
 
             builder.HasCheckConstraint("CK_Pagos_UltimosDigitos",
-                "`UltimosDigitosTarjeta` IS NULL OR LEN(`UltimosDigitosTarjeta`) = 4");
+                "`UltimosDigitosTarjeta` IS NULL OR CHAR_LENGTH(`UltimosDigitosTarjeta`) = 4");
         }
     }
 }

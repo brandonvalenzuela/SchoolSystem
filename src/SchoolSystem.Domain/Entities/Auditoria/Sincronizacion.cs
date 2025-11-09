@@ -76,19 +76,19 @@ namespace SchoolSystem.Domain.Entities.Auditoria
         /// Tipo de sincronización
         /// </summary>
         [Required]
-        public TipoSincronizacion Tipo { get; set; }
+        public TipoSincronizacion? Tipo { get; set; }
 
         /// <summary>
         /// Dirección de la sincronización
         /// </summary>
         [Required]
-        public DireccionSincronizacion Direccion { get; set; }
+        public DireccionSincronizacion? Direccion { get; set; }
 
         /// <summary>
         /// Estado de la sincronización
         /// </summary>
         [Required]
-        public EstadoSincronizacion Estado { get; set; }
+        public EstadoSincronizacion? Estado { get; set; }
 
         #endregion
 

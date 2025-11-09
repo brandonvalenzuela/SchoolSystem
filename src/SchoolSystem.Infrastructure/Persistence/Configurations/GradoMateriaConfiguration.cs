@@ -43,10 +43,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasColumnType("decimal(5,2)");
 
             // Relaciones
+            /*
             builder.HasOne(gm => gm.Grado)
                 .WithMany()
                 .HasForeignKey(gm => gm.GradoId)
                 .OnDelete(DeleteBehavior.Restrict);
+            */
 
             builder.HasOne(gm => gm.Materia)
                 .WithMany()

@@ -1,4 +1,5 @@
-﻿using SchoolSystem.Domain.Entities.Common;
+﻿using SchoolSystem.Domain.Entities.Academico;
+using SchoolSystem.Domain.Entities.Common;
 using SchoolSystem.Domain.Enums.Conducta;
 using System;
 
@@ -28,12 +29,12 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// <summary>
         /// ID del alumno sancionado
         /// </summary>
-        public int AlumnoId { get; set; }
+        public int? AlumnoId { get; set; }
 
         /// <summary>
         /// Alumno (Navigation Property)
         /// </summary>
-        public virtual Academico.Alumno Alumno { get; set; }
+        public virtual Alumno? Alumno { get; set; }
 
         /// <summary>
         /// ID del registro de conducta que originó la sanción (opcional)
@@ -67,7 +68,7 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// <summary>
         /// Descripción detallada de la sanción
         /// </summary>
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Motivo o justificación de la sanción
@@ -134,13 +135,13 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// <summary>
         /// Motivo de la apelación
         /// </summary>
-        public string MotivoApelacion { get; set; }
+        public string? MotivoApelacion { get; set; }
 
         /// <summary>
         /// Resultado de la apelación
         /// Ejemplo: "Aceptada", "Rechazada", "Modificada"
         /// </summary>
-        public string ResultadoApelacion { get; set; }
+        public string? ResultadoApelacion { get; set; }
 
         /// <summary>
         /// Fecha de resolución de la apelación
@@ -164,7 +165,7 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// <summary>
         /// Medio de notificación
         /// </summary>
-        public string MedioNotificacion { get; set; }
+        public TipoNotificacion MedioNotificacion { get; set; }
 
         /// <summary>
         /// Indica si los padres firmaron el enterado
@@ -290,6 +291,7 @@ namespace SchoolSystem.Domain.Entities.Conducta
             FirmaEnterado = false;
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
+            MedioNotificacion = TipoNotificacion.Ninguna;
         }
 
         #endregion
@@ -311,7 +313,7 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// <summary>
         /// Registra la notificación a los padres
         /// </summary>
-        public void NotificarPadres(string medio, int usuarioId)
+        public void NotificarPadres(TipoNotificacion medio, int usuarioId)
         {
             PadresNotificados = true;
             FechaNotificacionPadres = DateTime.Now;

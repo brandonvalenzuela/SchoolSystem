@@ -47,7 +47,7 @@ namespace SchoolSystem.Domain.Entities.Evaluacion
         /// <summary>
         /// Descripción del período (opcional)
         /// </summary>
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         /// <summary>
         /// Indica si el período está activo

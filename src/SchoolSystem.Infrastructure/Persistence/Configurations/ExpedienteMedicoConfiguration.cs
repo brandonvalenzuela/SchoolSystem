@@ -45,85 +45,75 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Condiciones médicas
             builder.Property(em => em.Alergias)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(em => em.CondicionesMedicas)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(em => em.MedicamentosRegulares)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(em => em.Restricciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(em => em.RequiereAtencionEspecial)
                 .HasDefaultValue(false);
 
             builder.Property(em => em.DetallesAtencionEspecial)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Contacto de emergencia
             builder.Property(em => em.ContactoEmergenciaNombre)
-                .HasMaxLength(200);
-
+                .HasMaxLength(200).IsRequired(false);
             builder.Property(em => em.ContactoEmergenciaTelefono)
-                .HasMaxLength(20);
-
+                .HasMaxLength(20).IsRequired(false);
             builder.Property(em => em.ContactoEmergenciaTelefonoAlt)
-                .HasMaxLength(20);
-
+                .HasMaxLength(20).IsRequired(false);
             builder.Property(em => em.ContactoEmergenciaParentesco)
-                .HasMaxLength(50);
+                .HasMaxLength(50).IsRequired(false);
 
             // Seguro médico
+            builder.Property(em => em.SeguroNombre)
+                .HasMaxLength(200).IsRequired(false);
+            builder.Property(em => em.SeguroNumeroPoliza)
+                .HasMaxLength(100).IsRequired(false);
             builder.Property(em => em.TieneSeguro)
                 .HasDefaultValue(false);
-
-            builder.Property(em => em.SeguroNombre)
-                .HasMaxLength(200);
-
-            builder.Property(em => em.SeguroNumeroPoliza)
-                .HasMaxLength(100);
-
             builder.Property(em => em.SeguroVigencia)
                 .IsRequired(false);
-
             builder.Property(em => em.SeguroTelefono)
-                .HasMaxLength(20);
+                .HasMaxLength(20).IsRequired(false);
 
             // Médico particular
             builder.Property(em => em.MedicoNombre)
-                .HasMaxLength(200);
-
+                .HasMaxLength(200).IsRequired(false);
             builder.Property(em => em.MedicoEspecialidad)
-                .HasMaxLength(100);
-
+                .HasMaxLength(100).IsRequired(false);
             builder.Property(em => em.MedicoTelefono)
-                .HasMaxLength(20);
-
+                .HasMaxLength(20).IsRequired(false);
             builder.Property(em => em.MedicoDireccion)
-                .HasMaxLength(300);
+                .HasMaxLength(300).IsRequired(false);
 
             // Vacunación
             builder.Property(em => em.VacunacionCompleta)
                 .HasDefaultValue(false);
-
             builder.Property(em => em.VacunacionObservaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT").IsRequired(false);
 
             // Control y auditoría
             builder.Property(em => em.FechaUltimaActualizacion)
                 .IsRequired(false);
-
             builder.Property(em => em.FechaUltimaRevision)
                 .IsRequired(false);
-
             builder.Property(em => em.Observaciones)
-                .HasColumnType("LONGTEXT");
-
+                .HasColumnType("LONGTEXT").IsRequired(false);
             builder.Property(em => em.ExpedienteCompleto)
                 .HasDefaultValue(false);
-
             builder.Property(em => em.Activo)
                 .IsRequired()
                 .HasDefaultValue(true);
@@ -145,7 +135,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasOne(em => em.Alumno)
                 .WithMany()
                 .HasForeignKey(em => em.AlumnoId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
 
             builder.HasMany(em => em.Vacunas)
                 .WithOne(v => v.ExpedienteMedico)

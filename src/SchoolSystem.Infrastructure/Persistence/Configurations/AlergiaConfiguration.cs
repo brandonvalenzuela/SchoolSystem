@@ -52,23 +52,28 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(a => a.MedicoDiagnostico)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(a => a.TipoPrueba)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             // Tratamiento
             builder.Property(a => a.TratamientoRecomendado)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(a => a.MedicamentoEmergencia)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             builder.Property(a => a.RequiereAutoinyector)
                 .HasDefaultValue(false);
 
             builder.Property(a => a.InstruccionesEmergencia)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Control
             builder.Property(a => a.Activa)
@@ -79,7 +84,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired(false);
 
             builder.Property(a => a.Observaciones)
-                .HasColumnType("LONGTEXT");
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             // Relaciones
             builder.HasOne(a => a.ExpedienteMedico)
@@ -121,9 +127,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Ignore(a => a.DescripcionCompleta);
 
             // Constraints
-            builder.HasCheckConstraint("CK_Alergias_FechaDiagnostico",
-                "`FechaDiagnostico` IS NULL OR `FechaDiagnostico` <= GETDATE()");
-
             builder.HasCheckConstraint("CK_Alergias_FechaSuperacion",
                 "`FechaSuperacion` IS NULL OR (`FechaSuperacion` >= `FechaDiagnostico` AND `Activa` = 0)");
         }

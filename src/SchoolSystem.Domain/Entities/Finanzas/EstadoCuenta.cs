@@ -26,7 +26,7 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         /// Alumno al que pertenece el estado de cuenta
         /// </summary>
         [Required]
-        public int AlumnoId { get; set; }
+        public int? AlumnoId { get; set; }
 
         /// <summary>
         /// Ciclo escolar
@@ -191,7 +191,7 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         /// Alumno relacionado
         /// </summary>
         [ForeignKey("AlumnoId")]
-        public virtual Alumno Alumno { get; set; }
+        public virtual Alumno? Alumno { get; set; }
 
         #endregion
 

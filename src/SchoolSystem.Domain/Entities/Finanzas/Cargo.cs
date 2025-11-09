@@ -11,7 +11,6 @@ namespace SchoolSystem.Domain.Entities.Finanzas
     /// <summary>
     /// Cargos aplicados a alumnos
     /// </summary>
-    [Table("Cargos")]
     public class Cargo : BaseEntity, IAuditableEntity
     {
         #region Propiedades Principales
@@ -26,7 +25,7 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         /// Alumno al que se aplica el cargo
         /// </summary>
         [Required]
-        public int AlumnoId { get; set; }
+        public int? AlumnoId { get; set; }
 
         /// <summary>
         /// Concepto de pago aplicado
@@ -177,7 +176,7 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         /// Alumno relacionado
         /// </summary>
         [ForeignKey("AlumnoId")]
-        public virtual Alumno Alumno { get; set; }
+        public virtual Alumno? Alumno { get; set; }
 
         /// <summary>
         /// Concepto de pago relacionado
