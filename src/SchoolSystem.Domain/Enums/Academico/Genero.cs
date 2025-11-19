@@ -14,12 +14,12 @@ namespace SchoolSystem.Domain.Enums.Academico
         /// <summary>
         /// Masculino
         /// </summary>
-        M = 1,
+        Masculino = 1,
 
         /// <summary>
         /// Femenino
         /// </summary>
-        F = 2,
+        Femenino = 2,
 
         /// <summary>
         /// Otro
