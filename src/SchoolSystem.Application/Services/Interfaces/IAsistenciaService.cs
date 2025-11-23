@@ -1,0 +1,20 @@
+﻿using SchoolSystem.Application.Common.Models;
+using SchoolSystem.Application.DTOs.Asistencias;
+using SchoolSystem.Application.DTOs.Escuelas;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SchoolSystem.Application.Services.Interfaces
+{
+    public interface IAsistenciaService
+    {
+        Task<AsistenciaDto> GetByIdAsync(int id);
+        Task<PagedResult<AsistenciaDto>> GetPagedAsync(int pageNumber, int pageSize);
+        Task<int> CreateAsync(CreateAsistenciaDto dto);
+        Task UpdateAsync(int id, UpdateAsistenciaDto dto);
+        Task DeleteAsync(int id);
+    }
+}
