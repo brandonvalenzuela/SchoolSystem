@@ -1,8 +1,9 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SchoolSystem.Application.Common.Models;
+using SchoolSystem.Application.Common.Wrappers;
 using SchoolSystem.Application.DTOs.Alumnos;
 using SchoolSystem.Application.Services.Interfaces;
+using System.Threading.Tasks;
 
 namespace SchoolSystem.API.Controllers
 {
@@ -22,41 +23,46 @@ namespace SchoolSystem.API.Controllers
         /// </summary>
         /// <param name="page">Número de página (default: 1)</param>
         /// <param name="size">Tamaño de página (default: 10)</param>
-        /// <returns>Lista paginada de AlumnoDto</returns>
+        /// <returns>Lista paginada envuelta en ApiResponse</returns>
         [HttpGet]
-        public async Task<ActionResult<PagedResult<AlumnoDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10)
+        public async Task<ActionResult<ApiResponse<PagedResult<AlumnoDto>>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             var result = await _service.GetPagedAsync(page, size);
-            return Ok(result);
+            var response = new ApiResponse<PagedResult<AlumnoDto>>(result, "Lista de alumnos obtenida exitosamente.");
+            return Ok(response);
         }
 
         /// <summary>
         /// Obtiene un alumno por su ID.
         /// </summary>
         /// <param name="id">ID del alumno</param>
-        /// <returns>AlumnoDto</returns>
+        /// <returns>AlumnoDto envuelto en ApiResponse</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<AlumnoDto>> GetById(int id)
+        public async Task<ActionResult<ApiResponse<AlumnoDto>>> GetById(int id)
         {
             var result = await _service.GetByIdAsync(id);
+
             if (result == null)
-                return NotFound();
-            return Ok(result);
+                return NotFound(new ApiResponse<AlumnoDto>("Alumno no encontrado."));
+
+            return Ok(new ApiResponse<AlumnoDto>(result, "Alumno encontrado exitosamente."));
         }
 
         /// <summary>
         /// Crea un nuevo alumno.
         /// </summary>
         /// <param name="dto">Datos del alumno</param>
-        /// <returns>ID del alumno creado</returns>
+        /// <returns>ID del alumno creado envuelto en ApiResponse</returns>
         [HttpPost]
-        public async Task<ActionResult<int>> Create([FromBody] CreateAlumnoDto dto)
+        public async Task<ActionResult<ApiResponse<int>>> Create([FromBody] CreateAlumnoDto dto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse<int>("Datos inválidos")); // Opcional: Podrías pasar los errores del ModelState
 
             var id = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var response = new ApiResponse<int>(id, "Alumno creado exitosamente.");
+
+            return CreatedAtAction(nameof(GetById), new { id }, response);
         }
 
         /// <summary>
@@ -64,29 +70,34 @@ namespace SchoolSystem.API.Controllers
         /// </summary>
         /// <param name="id">ID del alumno a actualizar</param>
         /// <param name="dto">Datos actualizados</param>
-        /// <returns>NoContent</returns>
+        /// <returns>ApiResponse indicando éxito</returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateAlumnoDto dto)
+        public async Task<ActionResult<ApiResponse<int>>> Update(int id, [FromBody] UpdateAlumnoDto dto)
         {
             if (id != dto.Id)
-                return BadRequest("El ID de la URL no coincide con el ID del cuerpo de la solicitud.");
+                return BadRequest(new ApiResponse<int>("El ID de la URL no coincide con el ID del cuerpo de la solicitud."));
+
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse<int>("Datos inválidos"));
 
             await _service.UpdateAsync(id, dto);
-            return NoContent();
+
+            // Usamos Ok en lugar de NoContent para poder devolver el mensaje de éxito
+            return Ok(new ApiResponse<int>(id, "Alumno actualizado exitosamente."));
         }
 
         /// <summary>
         /// Elimina (lógicamente) un alumno.
         /// </summary>
         /// <param name="id">ID del alumno</param>
-        /// <returns>NoContent</returns>
+        /// <returns>ApiResponse indicando éxito</returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult<ApiResponse<int>>> Delete(int id)
         {
             await _service.DeleteAsync(id);
-            return NoContent();
+
+            // Usamos Ok en lugar de NoContent para poder devolver el mensaje de éxito
+            return Ok(new ApiResponse<int>(id, "Alumno eliminado exitosamente."));
         }
     }
 }
