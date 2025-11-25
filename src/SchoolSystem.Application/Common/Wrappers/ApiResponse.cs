@@ -41,5 +41,14 @@ namespace SchoolSystem.Application.Common.Wrappers
             Message = message;
             Errors = new List<string>(errors);
         }
+
+        // Constructor para errores de validación
+        public ApiResponse(List<string> errors)
+        {
+            Succeeded = false;
+            Message = "Se encontraron errores de validación";
+            Errors = errors;
+            Data = default;
+        }
     }
 }

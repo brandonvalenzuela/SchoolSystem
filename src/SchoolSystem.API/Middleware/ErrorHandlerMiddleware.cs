@@ -42,6 +42,12 @@ namespace SchoolSystem.API.Middleware
                         response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         break;
 
+                    case FluentValidation.ValidationException e:
+                        response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        var errors = e.Errors.Select(x => x.ErrorMessage).ToList();
+                        responseModel = new ApiResponse<string>(errors);
+                        break;
+
                     default:
                         // Error interno (500)
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;

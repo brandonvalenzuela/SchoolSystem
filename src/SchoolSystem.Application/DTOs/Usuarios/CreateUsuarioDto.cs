@@ -55,5 +55,9 @@ namespace SchoolSystem.Application.DTOs.Usuarios
         public DateTime? FechaNacimiento { get; set; }
 
         public Genero? Genero { get; set; }
+
+        [Phone]
+        [StringLength(20)]
+        public string TelefonoEmergencia { get; set; }
     }
 }

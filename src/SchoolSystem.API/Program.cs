@@ -1,11 +1,13 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models; // Necesario para configurar Swagger con JWT
+using Microsoft.OpenApi.Models;
 using SchoolSystem.Application.Mappings;
 using SchoolSystem.Application.Services.Implementations;
 using SchoolSystem.Application.Services.Interfaces;
-using SchoolSystem.Domain.Entities.Academico;
+using SchoolSystem.Application.Validators;
 using SchoolSystem.Domain.Interfaces;
 using SchoolSystem.Infrastructure.Persistence.Context;
 using SchoolSystem.Infrastructure.Persistence.Repositories;
@@ -63,6 +65,9 @@ builder.Services.AddDbContext<SchoolSystemDbContext>(options =>
 
 builder.Services.AddAutoMapper(typeof(AlumnoProfile).Assembly);
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssembly(typeof(CreateAlumnoValidator).Assembly);
 
 // Inyección de Servicios de Aplicación
 builder.Services.AddScoped<IAlumnoService, AlumnoService>();
@@ -76,6 +81,8 @@ builder.Services.AddScoped<IMateriaService, MateriaService>();
 builder.Services.AddScoped<IInscripcionService, InscripcionService>();
 builder.Services.AddScoped<ICalificacionService, CalificacionService>();
 builder.Services.AddScoped<IAsistenciaService, AsistenciaService>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // --- 4. SWAGGER CON SOPORTE PARA JWT ---
 

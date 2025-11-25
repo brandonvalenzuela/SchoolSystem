@@ -14,24 +14,24 @@ namespace SchoolSystem.Application.Services.Implementations
 {
     public class MateriaService : IMateriaService
     {
-        private readonly IRepository<Materia> _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public MateriaService(IRepository<Materia> repository, IMapper mapper)
+        public MateriaService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<MateriaDto> GetByIdAsync(int id)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _unitOfWork.Materias.GetByIdAsync(id);
             return _mapper.Map<MateriaDto>(entity);
         }
 
         public async Task<PagedResult<MateriaDto>> GetPagedAsync(int pageNumber, int pageSize)
         {
-            var allItems = await _repository.GetAllAsync();
+            var allItems = await _unitOfWork.Materias.GetAllAsync();
             var total = allItems.Count();
             var items = allItems.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
@@ -47,30 +47,30 @@ namespace SchoolSystem.Application.Services.Implementations
         public async Task<int> CreateAsync(CreateMateriaDto dto)
         {
             var entity = _mapper.Map<Materia>(dto);
-            await _repository.AddAsync(entity);
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.Materias.AddAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
             return entity.Id;
         }
 
         public async Task UpdateAsync(int id, UpdateMateriaDto dto)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _unitOfWork.Materias.GetByIdAsync(id);
             if (entity == null)
                 throw new KeyNotFoundException($"Materia con ID {id} no encontrada");
 
             _mapper.Map(dto, entity);
-            await _repository.UpdateAsync(entity);
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.Materias.UpdateAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _unitOfWork.Materias.GetByIdAsync(id);
             if (entity == null)
                 throw new KeyNotFoundException($"Materia con ID {id} no encontrada");
 
-            await _repository.DeleteAsync(entity);
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.Materias.DeleteAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

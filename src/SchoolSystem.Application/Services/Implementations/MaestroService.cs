@@ -14,24 +14,24 @@ namespace SchoolSystem.Application.Services.Implementations
 {
     public class MaestroService : IMaestroService
     {
-        private readonly IRepository<Maestro> _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public MaestroService(IRepository<Maestro> repository, IMapper mapper)
+        public MaestroService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<MaestroDto> GetByIdAsync(int id)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _unitOfWork.Maestros.GetByIdAsync(id);
             return _mapper.Map<MaestroDto>(entity);
         }
 
         public async Task<PagedResult<MaestroDto>> GetPagedAsync(int pageNumber, int pageSize)
         {
-            var all = await _repository.GetAllAsync();
+            var all = await _unitOfWork.Maestros.GetAllAsync();
             var total = all.Count();
             var items = all.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
@@ -54,30 +54,30 @@ namespace SchoolSystem.Application.Services.Implementations
             if (entity.Usuario != null)
                 entity.Usuario.PasswordHash = dto.Password;
 
-            await _repository.AddAsync(entity);
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.Maestros.AddAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
             return entity.Id;
         }
 
         public async Task UpdateAsync(int id, UpdateMaestroDto dto)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _unitOfWork.Maestros.GetByIdAsync(id);
             if (entity == null)
                 throw new System.Collections.Generic.KeyNotFoundException($"Maestro no encontrado");
 
             _mapper.Map(dto, entity);
-            await _repository.UpdateAsync(entity);
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.Maestros.UpdateAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _unitOfWork.Maestros.GetByIdAsync(id);
             if (entity == null)
                 throw new System.Collections.Generic.KeyNotFoundException($"Maestro no encontrado");
 
-            await _repository.DeleteAsync(entity);
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.Maestros.DeleteAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

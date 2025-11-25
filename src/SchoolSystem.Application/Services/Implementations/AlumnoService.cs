@@ -14,12 +14,12 @@ namespace SchoolSystem.Application.Services.Implementations
 {
     public class AlumnoService : IAlumnoService
     {
-        private readonly IRepository<Alumno> _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AlumnoService(IRepository<Alumno> repository, IMapper mapper)
+        public AlumnoService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -28,7 +28,7 @@ namespace SchoolSystem.Application.Services.Implementations
         /// </summary>
         public async Task<AlumnoDto> GetByIdAsync(int id)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _unitOfWork.Alumnos.GetByIdAsync(id);
 
             // Si es null, el controlador puede devolver NotFound, 
             // o podemos lanzar una KeyNotFoundException aquí.
@@ -43,7 +43,7 @@ namespace SchoolSystem.Application.Services.Implementations
             // Nota: En un entorno de producción con muchos datos, 
             // lo ideal es que el repositorio soporte IQueryable para paginar en base de datos.
             // Aquí usamos la implementación genérica básica.
-            var allItems = await _repository.GetAllAsync();
+            var allItems = await _unitOfWork.Alumnos.GetAllAsync();
 
             // Filtramos lógica básica (ej: solo mostrar activos por defecto si se requiere)
             // Como la entidad tiene SoftDelete, el repositorio o el QueryFilter global 
@@ -77,8 +77,8 @@ namespace SchoolSystem.Application.Services.Implementations
             entity.FechaIngreso = DateTime.Now;
             entity.Estatus = SchoolSystem.Domain.Enums.Academico.EstatusAlumno.Activo;
 
-            await _repository.AddAsync(entity);
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.Alumnos.AddAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
 
             return entity.Id;
         }
@@ -88,7 +88,7 @@ namespace SchoolSystem.Application.Services.Implementations
         /// </summary>
         public async Task UpdateAsync(int id, UpdateAlumnoDto dto)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _unitOfWork.Alumnos.GetByIdAsync(id);
 
             if (entity == null)
                 throw new KeyNotFoundException($"Alumno con ID {id} no encontrado.");
@@ -96,8 +96,8 @@ namespace SchoolSystem.Application.Services.Implementations
             // AutoMapper actualiza las propiedades de 'entity' con los valores de 'dto'
             _mapper.Map(dto, entity);
 
-            await _repository.UpdateAsync(entity);
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.Alumnos.UpdateAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         /// <summary>
@@ -105,19 +105,19 @@ namespace SchoolSystem.Application.Services.Implementations
         /// </summary>
         public async Task DeleteAsync(int id)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _unitOfWork.Alumnos.GetByIdAsync(id);
 
             if (entity == null)
                 throw new KeyNotFoundException($"Alumno con ID {id} no encontrado.");
 
             // Si tu Repositorio Genérico maneja SoftDelete automáticamente al llamar DeleteAsync:
-            await _repository.DeleteAsync(entity);
+            await _unitOfWork.Alumnos.DeleteAsync(entity);
 
             // O SI prefieres usar el método de negocio explícito de tu entidad:
             // entity.EliminarLogicamente(usuarioId: 1); // Aquí necesitarías el ID del usuario actual
             // await _repository.UpdateAsync(entity);
 
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

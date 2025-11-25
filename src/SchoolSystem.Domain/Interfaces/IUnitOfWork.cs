@@ -1,0 +1,31 @@
+﻿using SchoolSystem.Domain.Entities.Academico;
+using SchoolSystem.Domain.Entities.Escuelas;
+using SchoolSystem.Domain.Entities.Evaluacion;
+using SchoolSystem.Domain.Entities.Usuarios;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SchoolSystem.Domain.Interfaces
+{
+    public interface IUnitOfWork : IDisposable
+    {
+        // Repositorios Específicos (o genéricos expuestos)
+        IRepository<Alumno> Alumnos { get; }
+        IRepository<Asistencia> Asistencias { get; }
+        IRepository<Calificacion> Calificaciones { get; }
+        IRepository<Escuela> Escuelas { get; }
+        IRepository<Grado> Grados { get; }
+        IRepository<Grupo> Grupos { get; }
+        IRepository<Inscripcion> Inscripciones { get; }
+        IRepository<Maestro> Maestros { get; }
+        IRepository<Materia> Materias { get; } 
+        IRepository<Padre> Padres { get; } 
+        IRepository<Usuario> Usuarios { get; }
+
+        // Método para guardar todos los cambios
+        Task<int> SaveChangesAsync();
+    }
+}

@@ -14,24 +14,24 @@ namespace SchoolSystem.Application.Services.Implementations
 {
     public class GrupoService : IGrupoService
     {
-        private readonly IRepository<Grupo> _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GrupoService(IRepository<Grupo> repository, IMapper mapper)
+        public GrupoService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<GrupoDto> GetByIdAsync(int id)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _unitOfWork.Grupos.GetByIdAsync(id);
             return _mapper.Map<GrupoDto>(entity);
         }
 
         public async Task<PagedResult<GrupoDto>> GetPagedAsync(int pageNumber, int pageSize)
         {
-            var allItems = await _repository.GetAllAsync();
+            var allItems = await _unitOfWork.Grupos.GetAllAsync();
             var total = allItems.Count();
             var items = allItems.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
@@ -47,30 +47,30 @@ namespace SchoolSystem.Application.Services.Implementations
         public async Task<int> CreateAsync(CreateGrupoDto dto)
         {
             var entity = _mapper.Map<Grupo>(dto);
-            await _repository.AddAsync(entity);
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.Grupos.AddAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
             return entity.Id;
         }
 
         public async Task UpdateAsync(int id, UpdateGrupoDto dto)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _unitOfWork.Grupos.GetByIdAsync(id);
             if (entity == null)
                 throw new KeyNotFoundException($"Grupo con ID {id} no encontrado");
 
             _mapper.Map(dto, entity);
-            await _repository.UpdateAsync(entity);
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.Grupos.UpdateAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _unitOfWork.Grupos.GetByIdAsync(id);
             if (entity == null)
                 throw new KeyNotFoundException($"Grupo con ID {id} no encontrado");
 
-            await _repository.DeleteAsync(entity);
-            await _repository.SaveChangesAsync();
+            await _unitOfWork.Grupos.DeleteAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

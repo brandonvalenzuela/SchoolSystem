@@ -15,24 +15,26 @@ namespace SchoolSystem.Application.Services.Implementations
 {
     public class AuthService : IAuthService
     {
-        private readonly IRepository<Usuario> _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public AuthService(IRepository<Usuario> userRepository, IConfiguration configuration)
+        public AuthService(IUnitOfWork unitOfWork, IConfiguration configuration, IPasswordHasher passwordHasher)
         {
-            _userRepository = userRepository;
-            _configuration = configuration;
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
+
         }
 
         public async Task<string> LoginAsync(LoginDto loginDto)
         {
             // 1. Buscar usuario
-            var users = await _userRepository.GetAllAsync();
+            var users = await _unitOfWork.Usuarios.GetAllAsync();
             var user = users.FirstOrDefault(u => u.Username == loginDto.Username);
 
-            // 2. Validar usuario y contraseña (¡Aquí deberías comparar HASHES, no texto plano!)
-            // Por ahora, para el ejemplo, comparamos directo.
-            if (user == null || user.PasswordHash != loginDto.Password)
+            // 2. Validar usuario y contraseña
+            if (user == null || !_passwordHasher.VerifyPassword(loginDto.Password, user.PasswordHash))
             {
                 throw new UnauthorizedAccessException("Credenciales inválidas.");
             }
