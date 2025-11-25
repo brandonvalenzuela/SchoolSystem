@@ -12,16 +12,27 @@ namespace SchoolSystem.Application.Validators
     {
         public CreateAlumnoValidator()
         {
-            RuleFor(x => x.Nombre)
-                .NotEmpty().WithMessage("El nombre es obligatorio")
-                .MaximumLength(100);
+            RuleFor(p => p.Nombre)
+                .NotEmpty().WithMessage("{PropertyName} es requerido.")
+                .MaximumLength(100).WithMessage("{PropertyName} no debe exceder 100 caracteres.");
 
-            RuleFor(x => x.Email)
-                .EmailAddress().WithMessage("Email inválido")
-                .When(x => !string.IsNullOrEmpty(x.Email));
+            RuleFor(p => p.ApellidoPaterno)
+                .NotEmpty().WithMessage("{PropertyName} es requerido.");
 
-            RuleFor(x => x.FechaNacimiento)
-                .LessThan(DateTime.Now).WithMessage("La fecha de nacimiento debe ser en el pasado");
+            RuleFor(p => p.Matricula)
+                .NotEmpty().WithMessage("La matrícula es obligatoria.")
+                .Matches(@"^[A-Z0-9-]+$").WithMessage("La matrícula solo puede contener letras mayúsculas, números y guiones.");
+
+            RuleFor(p => p.FechaNacimiento)
+                .NotEmpty().WithMessage("Fecha de nacimiento requerida.")
+                .LessThan(DateTime.Now.AddYears(-3)).WithMessage("El alumno debe tener al menos 3 años.");
+
+            RuleFor(p => p.Email)
+                .EmailAddress().WithMessage("Formato de email inválido.")
+                .When(p => !string.IsNullOrEmpty(p.Email));
+
+            RuleFor(p => p.EscuelaId)
+                .GreaterThan(0).WithMessage("Debe especificar una escuela válida.");
         }
     }
 }

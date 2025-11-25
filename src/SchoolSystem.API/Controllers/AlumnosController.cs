@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SchoolSystem.Application.Common.Models;
 using SchoolSystem.Application.Common.Wrappers;
 using SchoolSystem.Application.DTOs.Alumnos;
 using SchoolSystem.Application.Services.Interfaces;
+using SchoolSystem.Domain.Constants;
 using System.Threading.Tasks;
 
 namespace SchoolSystem.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AlumnosController : ControllerBase
     {
         private readonly IAlumnoService _service;
@@ -25,6 +28,7 @@ namespace SchoolSystem.API.Controllers
         /// <param name="size">Tamaño de página (default: 10)</param>
         /// <returns>Lista paginada envuelta en ApiResponse</returns>
         [HttpGet]
+        [Authorize(Roles = Roles.Staff)]
         public async Task<ActionResult<ApiResponse<PagedResult<AlumnoDto>>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             var result = await _service.GetPagedAsync(page, size);
@@ -38,6 +42,7 @@ namespace SchoolSystem.API.Controllers
         /// <param name="id">ID del alumno</param>
         /// <returns>AlumnoDto envuelto en ApiResponse</returns>
         [HttpGet("{id}")]
+        [Authorize(Roles = Roles.Staff)]
         public async Task<ActionResult<ApiResponse<AlumnoDto>>> GetById(int id)
         {
             var result = await _service.GetByIdAsync(id);
@@ -54,6 +59,7 @@ namespace SchoolSystem.API.Controllers
         /// <param name="dto">Datos del alumno</param>
         /// <returns>ID del alumno creado envuelto en ApiResponse</returns>
         [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<ApiResponse<int>>> Create([FromBody] CreateAlumnoDto dto)
         {
             if (!ModelState.IsValid)
@@ -72,6 +78,7 @@ namespace SchoolSystem.API.Controllers
         /// <param name="dto">Datos actualizados</param>
         /// <returns>ApiResponse indicando éxito</returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<ApiResponse<int>>> Update(int id, [FromBody] UpdateAlumnoDto dto)
         {
             if (id != dto.Id)
@@ -92,6 +99,7 @@ namespace SchoolSystem.API.Controllers
         /// <param name="id">ID del alumno</param>
         /// <returns>ApiResponse indicando éxito</returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<ApiResponse<int>>> Delete(int id)
         {
             await _service.DeleteAsync(id);

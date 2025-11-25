@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SchoolSystem.Application.Common.Models;
 using SchoolSystem.Application.Common.Wrappers;
 using SchoolSystem.Application.DTOs.Usuarios;
 using SchoolSystem.Application.Services.Interfaces;
+using SchoolSystem.Domain.Constants;
 using System.Threading.Tasks;
 
 namespace SchoolSystem.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = Roles.Admin)]
     public class UsuariosController : ControllerBase
     {
         private readonly IUsuarioService _service;

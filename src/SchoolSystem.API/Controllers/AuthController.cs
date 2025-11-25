@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SchoolSystem.Application.Common.Wrappers;
 using SchoolSystem.Application.DTOs.Auth;
 using SchoolSystem.Application.Services.Interfaces;
@@ -27,6 +28,7 @@ namespace SchoolSystem.API.Controllers
         /// capturada por el middleware global, devolviendo un código 401 Unauthorized.
         /// </remarks>
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<string>>> Login([FromBody] LoginDto loginDto)
         {
             if (!ModelState.IsValid)

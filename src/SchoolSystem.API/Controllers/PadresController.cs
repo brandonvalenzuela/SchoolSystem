@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SchoolSystem.Application.Common.Models;
 using SchoolSystem.Application.Common.Wrappers;
 using SchoolSystem.Application.DTOs.Padres;
 using SchoolSystem.Application.Services.Interfaces;
+using SchoolSystem.Domain.Constants;
 using System.Threading.Tasks;
 
 namespace SchoolSystem.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = Roles.Staff)]
     public class PadresController : ControllerBase
     {
         private readonly IPadreService _service;
@@ -54,6 +57,7 @@ namespace SchoolSystem.API.Controllers
         /// <param name="dto">Datos del padre</param>
         /// <returns>ID del padre creado envuelto en ApiResponse</returns>
         [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<ApiResponse<int>>> Create([FromBody] CreatePadreDto dto)
         {
             if (!ModelState.IsValid)
@@ -72,6 +76,7 @@ namespace SchoolSystem.API.Controllers
         /// <param name="dto">Datos actualizados</param>
         /// <returns>ApiResponse indicando éxito</returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<ApiResponse<int>>> Update(int id, [FromBody] UpdatePadreDto dto)
         {
             if (id != dto.Id)
@@ -91,6 +96,7 @@ namespace SchoolSystem.API.Controllers
         /// <param name="id">ID del padre</param>
         /// <returns>ApiResponse indicando éxito</returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<ApiResponse<int>>> Delete(int id)
         {
             await _service.DeleteAsync(id);
