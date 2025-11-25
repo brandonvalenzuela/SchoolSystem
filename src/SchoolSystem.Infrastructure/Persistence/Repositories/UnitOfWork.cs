@@ -1,4 +1,5 @@
 ﻿using SchoolSystem.Domain.Entities.Academico;
+using SchoolSystem.Domain.Entities.Conducta;
 using SchoolSystem.Domain.Entities.Escuelas;
 using SchoolSystem.Domain.Entities.Evaluacion;
 using SchoolSystem.Domain.Entities.Usuarios;
@@ -28,6 +29,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         private IRepository<Materia> _materias;
         private IRepository<Padre> _padres;
         private IRepository<Usuario> _usuarios;
+        private IRepository<RegistroConducta> _registroConductas;
 
         public UnitOfWork(SchoolSystemDbContext context)
         {
@@ -46,6 +48,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         public IRepository<Materia> Materias => _materias ??= new Repository<Materia>(_context);
         public IRepository<Padre> Padres => _padres ??= new Repository<Padre>(_context);
         public IRepository<Usuario> Usuarios => _usuarios ??= new Repository<Usuario>(_context);
+        public IRepository<RegistroConducta> RegistroConductas => _registroConductas ??= new Repository<RegistroConducta>(_context);
 
         public async Task<int> SaveChangesAsync()
         {

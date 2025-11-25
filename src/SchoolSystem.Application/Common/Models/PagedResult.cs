@@ -59,6 +59,5 @@ namespace SchoolSystem.Application.Common.Models
 				PageNumber = pageNumber;
 				PageSize = pageSize;
 			}
-
 		}
 }

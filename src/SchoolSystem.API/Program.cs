@@ -83,6 +83,7 @@ builder.Services.AddScoped<ICalificacionService, CalificacionService>();
 builder.Services.AddScoped<IAsistenciaService, AsistenciaService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IRegistroConductaService, RegistroConductaService>();
 
 // --- 4. SWAGGER CON SOPORTE PARA JWT ---
 
@@ -151,6 +152,7 @@ app.UseCors("PermitirTodo");
 
 // Autenticación y Autorización (El orden es CRÍTICO)
 app.UseAuthentication(); // 1. ¿Quién eres?
+
 app.UseAuthorization();  // 2. ¿Qué puedes hacer?
 
 app.MapControllers();

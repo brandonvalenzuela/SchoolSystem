@@ -19,6 +19,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\SchoolSystem.API\SchoolSystem.API.csproj" />
+    <ProjectReference Include="..\..\src\SchoolSystem.Application\SchoolSystem.Application.csproj" />
+    <ProjectReference Include="..\..\src\SchoolSystem.Domain\SchoolSystem.Domain.csproj" />
+    <ProjectReference Include="..\..\src\SchoolSystem.Infrastructure\SchoolSystem.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\SchoolSystem.Shared\SchoolSystem.Shared.csproj" />
+    <ProjectReference Include="..\SchoolSystem.FunctionalTests\SchoolSystem.FunctionalTests.csproj" />
+    <ProjectReference Include="..\SchoolSystem.IntegrationTests\SchoolSystem.IntegrationTests.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 

@@ -47,5 +47,17 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         public async Task<int> SaveChangesAsync() =>
             await _context.SaveChangesAsync();
 
+        public async Task<IEnumerable<T>> GetAllIncludingAsync(params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = _context.Set<T>();
+
+            // Aplica cada include (ej: x => x.Alumno)
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }

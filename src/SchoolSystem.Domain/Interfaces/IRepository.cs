@@ -14,5 +14,6 @@ namespace SchoolSystem.Domain.Interfaces
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
         Task<int> SaveChangesAsync();
+        Task<IEnumerable<T>> GetAllIncludingAsync(params Expression<Func<T, object>>[] includeProperties);
     }
 }
