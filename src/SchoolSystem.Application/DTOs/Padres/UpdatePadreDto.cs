@@ -1,4 +1,5 @@
-﻿using SchoolSystem.Domain.Enums.Academico;
+﻿using SchoolSystem.Application.Common.Interfaces;
+using SchoolSystem.Domain.Enums.Academico;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,7 @@ namespace SchoolSystem.Application.DTOs.Padres
     /// <summary>
     /// DTO para actualizar la información de un Padre/Tutor existente.
     /// </summary>
-    public class UpdatePadreDto
+    public class UpdatePadreDto : IPersonaDto
     {
         [Required]
         public int Id { get; set; } // ID del registro Padre

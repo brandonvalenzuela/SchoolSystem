@@ -1,4 +1,5 @@
-﻿using SchoolSystem.Domain.Enums.Academico;
+﻿using SchoolSystem.Application.Common.Interfaces;
+using SchoolSystem.Domain.Enums.Academico;
 using SchoolSystem.Domain.Enums.Escuelas;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace SchoolSystem.Application.DTOs.Usuarios
     /// <summary>
     /// DTO para actualizar la información de un usuario existente.
     /// </summary>
-    public class UpdateUsuarioDto
+    public class UpdateUsuarioDto : IPersonaDto
     {
         [Required]
         public int Id { get; set; }

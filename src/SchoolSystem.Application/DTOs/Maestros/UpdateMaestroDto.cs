@@ -1,4 +1,5 @@
-﻿using SchoolSystem.Domain.Enums.Academico;
+﻿using SchoolSystem.Application.Common.Interfaces;
+using SchoolSystem.Domain.Enums.Academico;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,7 @@ namespace SchoolSystem.Application.DTOs.Maestros
     /// <summary>
     /// DTO para actualizar la información de un Maestro existente.
     /// </summary>
-    public class UpdateMaestroDto
+    public class UpdateMaestroDto : IPersonaDto
     {
         [Required]
         public int Id { get; set; } // ID del registro Maestro
@@ -44,6 +45,10 @@ namespace SchoolSystem.Application.DTOs.Maestros
         [StringLength(20)]
         public string Telefono { get; set; }
         public bool Activo { get; set; } // Activo del Usuario
+
+        [Required(ErrorMessage = "La fecha de nacimiento es obligatoria.")]
+        public DateTime? FechaNacimiento { get; set; }
+
 
         // --- Campos actualizables del Maestro ---
         [Required(ErrorMessage = "El número de empleado es obligatorio.")]

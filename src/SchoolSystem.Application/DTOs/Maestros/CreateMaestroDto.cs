@@ -1,4 +1,5 @@
-﻿using SchoolSystem.Domain.Enums.Academico;
+﻿using SchoolSystem.Application.Common.Interfaces;
+using SchoolSystem.Domain.Enums.Academico;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,7 @@ namespace SchoolSystem.Application.DTOs.Maestros
     /// <summary>
     /// DTO para la creación de un nuevo Maestro, incluyendo sus datos de Usuario.
     /// </summary>
-    public class CreateMaestroDto
+    public class CreateMaestroDto : IPersonaDto
     {
         [Required]
         public int EscuelaId { get; set; }
@@ -44,6 +45,9 @@ namespace SchoolSystem.Application.DTOs.Maestros
         [Phone]
         [StringLength(20)]
         public string Telefono { get; set; }
+
+        [Required(ErrorMessage = "La fecha de nacimiento es obligatoria.")]
+        public DateTime? FechaNacimiento { get; set; }
 
         // --- Campos para la entidad Maestro ---
         [Required(ErrorMessage = "El número de empleado es obligatorio.")]

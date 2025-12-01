@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchoolSystem.Application.Common.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,16 +10,21 @@ namespace SchoolSystem.Application.DTOs.Padres
     /// <summary>
     /// DTO para representar la información combinada de un Padre y su Usuario asociado.
     /// </summary>
-    public class PadreDto
+    public class PadreDto : IPersonaDto
     {
         public int Id { get; set; } // ID del registro Padre
         public int UsuarioId { get; set; } // ID del registro Usuario
         public int EscuelaId { get; set; }
 
         // --- Datos del Usuario ---
+
+        public string Nombre { get; set; }
+        public string ApellidoPaterno { get; set; }
+        public string ApellidoMaterno { get; set; }
         public string NombreCompleto { get; set; }
         public string Email { get; set; }
         public string Telefono { get; set; }
+        public DateTime? FechaNacimiento { get; set; }
         public string FotoUrl { get; set; }
         public bool Activo { get; set; }
 
@@ -44,6 +50,7 @@ namespace SchoolSystem.Application.DTOs.Padres
         /// Lista simplificada de los hijos asociados.
         /// </summary>
         public List<HijoAsociadoDto> Hijos { get; set; }
+ 
     }
 
     /// <summary>

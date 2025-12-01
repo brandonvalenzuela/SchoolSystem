@@ -1,4 +1,5 @@
-﻿using SchoolSystem.Domain.Enums.Academico;
+﻿using SchoolSystem.Application.Common.Interfaces;
+using SchoolSystem.Domain.Enums.Academico;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,7 @@ namespace SchoolSystem.Application.DTOs.Padres
     /// <summary>
     /// DTO para la creación de un nuevo Padre/Tutor, incluyendo sus datos de Usuario.
     /// </summary>
-    public class CreatePadreDto
+    public class CreatePadreDto : IPersonaDto
     {
         [Required]
         public int EscuelaId { get; set; }

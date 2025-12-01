@@ -1,4 +1,5 @@
-﻿using SchoolSystem.Domain.Enums.Academico;
+﻿using SchoolSystem.Application.Common.Interfaces;
+using SchoolSystem.Domain.Enums.Academico;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +13,7 @@ namespace SchoolSystem.Application.DTOs.Alumnos
     /// DTO para la creación de un nuevo alumno.
     /// Contiene las validaciones necesarias para el registro.
     /// </summary>
-    public class CreateAlumnoDto
+    public class CreateAlumnoDto : IPersonaDto
     {
         [Required]
         public int EscuelaId { get; set; }
@@ -33,7 +34,7 @@ namespace SchoolSystem.Application.DTOs.Alumnos
         public string ApellidoMaterno { get; set; }
 
         [Required(ErrorMessage = "La fecha de nacimiento es obligatoria.")]
-        public DateTime FechaNacimiento { get; set; }
+        public DateTime? FechaNacimiento { get; set; }
 
         [Required(ErrorMessage = "El género es obligatorio.")]
         public Genero Genero { get; set; } // Se asume que es un Enum

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchoolSystem.Application.Common.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace SchoolSystem.Application.DTOs.Alumnos
     /// <summary>
     /// DTO para representar la información de un alumno al ser leída.
     /// </summary>
-    public class AlumnoDto
+    public class AlumnoDto : IPersonaDto
     {
         /// <summary>
         /// ID único del alumno.
@@ -54,7 +55,7 @@ namespace SchoolSystem.Application.DTOs.Alumnos
         /// <summary>
         /// Fecha de nacimiento del alumno.
         /// </summary>
-        public DateTime FechaNacimiento { get; set; }
+        public DateTime? FechaNacimiento { get; set; }
 
         /// <summary>
         /// Edad calculada del alumno.

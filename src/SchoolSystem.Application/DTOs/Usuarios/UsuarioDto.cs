@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchoolSystem.Application.Common.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace SchoolSystem.Application.DTOs.Usuarios
     /// <summary>
     /// DTO para representar la información de un usuario al ser leída.
     /// </summary>
-    public class UsuarioDto
+    public class UsuarioDto : IPersonaDto
     {
         public int Id { get; set; }
         public int EscuelaId { get; set; }

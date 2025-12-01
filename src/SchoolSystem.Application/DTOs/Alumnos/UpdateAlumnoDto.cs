@@ -1,4 +1,5 @@
-﻿using SchoolSystem.Domain.Enums.Academico;
+﻿using SchoolSystem.Application.Common.Interfaces;
+using SchoolSystem.Domain.Enums.Academico;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,7 @@ namespace SchoolSystem.Application.DTOs.Alumnos
     /// <summary>
     /// DTO para actualizar la información de un alumno existente.
     /// </summary>
-    public class UpdateAlumnoDto
+    public class UpdateAlumnoDto : IPersonaDto
     {
         [Required]
         public int Id { get; set; }
@@ -32,7 +33,7 @@ namespace SchoolSystem.Application.DTOs.Alumnos
         public string ApellidoMaterno { get; set; }
 
         [Required(ErrorMessage = "La fecha de nacimiento es obligatoria.")]
-        public DateTime FechaNacimiento { get; set; }
+        public DateTime? FechaNacimiento { get; set; }
 
         [Required(ErrorMessage = "El género es obligatorio.")]
         public Genero Genero { get; set; }

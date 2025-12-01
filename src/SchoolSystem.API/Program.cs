@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Models;
 using SchoolSystem.Application.Mappings;
 using SchoolSystem.Application.Services.Implementations;
 using SchoolSystem.Application.Services.Interfaces;
-using SchoolSystem.Application.Validators;
+using SchoolSystem.Application.Validations.Alumnos;
 using SchoolSystem.Domain.Interfaces;
 using SchoolSystem.Infrastructure.Persistence.Context;
 using SchoolSystem.Infrastructure.Persistence.Repositories;

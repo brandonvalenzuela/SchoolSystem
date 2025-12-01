@@ -1,4 +1,5 @@
-﻿using SchoolSystem.Domain.Enums.Academico;
+﻿using SchoolSystem.Application.Common.Interfaces;
+using SchoolSystem.Domain.Enums.Academico;
 using SchoolSystem.Domain.Enums.Escuelas;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace SchoolSystem.Application.DTOs.Usuarios
     /// <summary>
     /// DTO para la creación de un nuevo usuario.
     /// </summary>
-    public class CreateUsuarioDto
+    public class CreateUsuarioDto : IPersonaDto
     {
         [Required]
         public int EscuelaId { get; set; }
