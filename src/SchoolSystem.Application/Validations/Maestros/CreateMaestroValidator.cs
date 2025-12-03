@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SchoolSystem.Application.Validations.Maestros
 {
-    public class CreateMaestroValidator : BasePersonaValidator<CreateMaestroDto>
+    public class CreateMaestroValidator : BaseCreatePersonaValidator<CreateMaestroDto>
     {
         public CreateMaestroValidator()
         {

@@ -16,5 +16,10 @@ namespace SchoolSystem.Application.Services.Interfaces
         Task<int> CreateAsync(CreateAsistenciaDto dto);
         Task UpdateAsync(int id, UpdateAsistenciaDto dto);
         Task DeleteAsync(int id);
+        /// <summary>
+        /// Registra la asistencia de todo un grupo para una fecha específica.
+        /// </summary>
+        /// <returns>Cantidad de registros creados.</returns>
+        Task<int> CreateMasivoAsync(CreateAsistenciaMasivaDto dto);
     }
 }

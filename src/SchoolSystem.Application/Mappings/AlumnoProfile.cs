@@ -24,7 +24,8 @@ namespace SchoolSystem.Application.Mappings
             CreateMap<CreateAlumnoDto, Alumno>();
 
             // DTO de actualización → Entidad
-            CreateMap<UpdateAlumnoDto, Alumno>();
+            CreateMap<UpdateAlumnoDto, Alumno>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

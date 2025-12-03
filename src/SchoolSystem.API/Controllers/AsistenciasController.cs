@@ -104,5 +104,29 @@ namespace SchoolSystem.API.Controllers
 
             return Ok(new ApiResponse<int>(id, "Registro de asistencia eliminado exitosamente."));
         }
+
+        /// <summary>
+        /// Registra la asistencia masiva para un grupo completo.
+        /// </summary>
+        /// <param name="dto">Datos de la asistencia grupal.</param>
+        /// <returns>Cantidad de registros creados.</returns>
+        [HttpPost("masivo")]
+        [Authorize(Roles = Roles.Staff)] // Maestros y Admin
+        public async Task<ActionResult<ApiResponse<int>>> CreateMasivo([FromBody] CreateAsistenciaMasivaDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse<int>("Datos de asistencia inválidos."));
+
+            try
+            {
+                var count = await _service.CreateMasivoAsync(dto);
+                return Ok(new ApiResponse<int>(count, $"{count} asistencias registradas exitosamente."));
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Capturamos la validación de duplicados
+                return BadRequest(new ApiResponse<int>(ex.Message));
+            }
+        }
     }
 }

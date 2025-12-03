@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SchoolSystem.Application.Validations.Padres
 {
-    public class CreatePadreValidator : BasePersonaValidator<CreatePadreDto>
+    public class CreatePadreValidator : BaseCreatePersonaValidator<CreatePadreDto>
     {
         public CreatePadreValidator()
         {

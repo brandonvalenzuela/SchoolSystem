@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SchoolSystem.Application.Validations.Usuarios
 {
-    public class CreateUsuarioValidator : BasePersonaValidator<CreateUsuarioDto>
+    public class CreateUsuarioValidator : BaseCreatePersonaValidator<CreateUsuarioDto>
     {
         public CreateUsuarioValidator()
         {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SchoolSystem.Application.Validations.Alumnos
 {
-    public class CreateAlumnoValidator : BasePersonaValidator<CreateAlumnoDto>
+    public class CreateAlumnoValidator : BaseCreatePersonaValidator<CreateAlumnoDto>
     {
         public CreateAlumnoValidator()
         {
