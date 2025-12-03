@@ -21,5 +21,9 @@ namespace SchoolSystem.Application.Services.Interfaces
         /// </summary>
         /// <returns>Cantidad de registros creados.</returns>
         Task<int> CreateMasivoAsync(CreateAsistenciaMasivaDto dto);
+        Task<List<AsistenciaDto>> GetByGrupoAndFechaAsync(int grupoId, DateTime fecha);
+        Task<List<AsistenciaDto>> GetHistorialByAlumnoAsync(int alumnoId);
+        Task JustificarFaltaAsync(int asistenciaId, JustificarFaltaDto dto, int usuarioId);
+        Task<List<ReporteMensualDto>> GetReporteMensualAsync(int grupoId, int mes, int anio);
     }
 }

@@ -22,8 +22,21 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         public async Task<IEnumerable<T>> GetAllAsync() =>
             await _context.Set<T>().ToListAsync();
 
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate) =>
-            await _context.Set<T>().Where(predicate).ToListAsync();
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _context.Set<T>();
+
+            // Aplicar relaciones si existen
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            return await query.Where(predicate).ToListAsync();
+        }
 
         public async Task<T> AddAsync(T entity)
         {
@@ -58,6 +71,15 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
             }
 
             return await query.ToListAsync();
+        }
+
+        /// <summary>
+        /// Agrega múltiples registros (Optimizado para carga masiva)
+        /// </summary>
+        public async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            await _context.AddRangeAsync(entities);
+            // No hacemos SaveChanges aquí para permitir que el servicio controle la transacción
         }
     }
 }

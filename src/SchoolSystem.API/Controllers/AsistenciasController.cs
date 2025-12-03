@@ -128,5 +128,78 @@ namespace SchoolSystem.API.Controllers
                 return BadRequest(new ApiResponse<int>(ex.Message));
             }
         }
+
+
+        /// <summary>
+        /// Obtiene la lista de asistencia de un grupo para una fecha específica.
+        /// Útil para verificar si ya se tomó lista o para editarla.
+        /// </summary>
+        [HttpGet("grupo/{grupoId}/fecha/{fecha}")]
+        public async Task<ActionResult<ApiResponse<List<AsistenciaDto>>>> GetByGrupoFecha(int grupoId, DateTime fecha)
+        {
+            var result = await _service.GetByGrupoAndFechaAsync(grupoId, fecha);
+
+            if (result == null || !result.Any())
+                return NotFound(new ApiResponse<List<AsistenciaDto>>("No se encontraron registros para esa fecha."));
+
+            return Ok(new ApiResponse<List<AsistenciaDto>>(result, "Asistencias encontradas."));
+        }
+
+        // B. HISTORIAL DE UN ALUMNO
+        /// <summary>
+        /// Obtiene el historial completo de asistencias de un alumno.
+        /// </summary>
+        [HttpGet("alumno/{alumnoId}")]
+        [Authorize(Roles = Roles.Staff + "," + Roles.Padre + "," + Roles.Alumno)] // Padres y Alumnos también pueden ver esto
+        public async Task<ActionResult<ApiResponse<List<AsistenciaDto>>>> GetHistorialAlumno(int alumnoId)
+        {
+            // TODO: Aquí deberías validar que si el usuario es Padre, el alumno sea su hijo.
+            var historial = await _service.GetHistorialByAlumnoAsync(alumnoId);
+            return Ok(new ApiResponse<List<AsistenciaDto>>(historial, "Historial obtenido correctamente."));
+        }
+
+        // C. JUSTIFICAR FALTA
+        /// <summary>
+        /// Justifica una falta o retardo existente.
+        /// </summary>
+        [HttpPost("{id}/justificar")]
+        [Authorize(Roles = Roles.Staff)] // Solo maestros o admin pueden justificar
+        public async Task<ActionResult<ApiResponse<bool>>> JustificarFalta(int id, [FromBody] JustificarFaltaDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse<bool>("Datos inválidos."));
+
+            // Obtener ID del usuario actual (suponiendo que tienes el servicio CurrentUser)
+            // var userId = _currentUserService.UserId;
+            var userId = 1; // Temporal
+
+            try
+            {
+                await _service.JustificarFaltaAsync(id, dto, userId);
+                return Ok(new ApiResponse<bool>(true, "Falta justificada exitosamente."));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new ApiResponse<bool>(ex.Message));
+            }
+        }
+
+        // D. REPORTE MENSUAL
+        /// <summary>
+        /// Obtiene el reporte mensual de asistencia (Sábana) para un grupo.
+        /// </summary>
+        [HttpGet("reporte/mensual")]
+        [Authorize(Roles = Roles.Staff)] // Directores y Maestros
+        public async Task<ActionResult<ApiResponse<List<ReporteMensualDto>>>> GetReporteMensual(
+            [FromQuery] int grupoId,
+            [FromQuery] int mes,
+            [FromQuery] int anio)
+        {
+            if (grupoId <= 0 || mes < 1 || mes > 12 || anio < 2000)
+                return BadRequest(new ApiResponse<List<ReporteMensualDto>>("Parámetros de reporte inválidos."));
+
+            var reporte = await _service.GetReporteMensualAsync(grupoId, mes, anio);
+            return Ok(new ApiResponse<List<ReporteMensualDto>>(reporte, $"Reporte generado para {mes}/{anio}."));
+        }
     }
 }
