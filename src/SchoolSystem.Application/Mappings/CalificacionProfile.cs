@@ -21,7 +21,14 @@ namespace SchoolSystem.Application.Mappings
                 .ForMember(dest => dest.NombreMaestroCaptura, opt => opt.MapFrom(src => src.MaestroCaptura != null ? src.MaestroCaptura.Usuario.NombreCompleto : "Sistema"));
 
             CreateMap<CreateCalificacionDto, Calificacion>();
-            CreateMap<UpdateCalificacionDto, Calificacion>();
+            CreateMap<UpdateCalificacionDto, Calificacion>()
+                // 1. Ignoramos explícitamente la calificación para manejarla con lógica de negocio
+                .ForMember(dest => dest.CalificacionNumerica, opt => opt.Ignore())
+                // 2. Ignoramos estos campos porque los maneja el método Modificar de la entidad
+                .ForMember(dest => dest.Aprobado, opt => opt.Ignore())
+                .ForMember(dest => dest.CalificacionLetra, opt => opt.Ignore())
+                // 3. Mapeamos el resto solo si no es nulo
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

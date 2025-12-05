@@ -129,7 +129,6 @@ namespace SchoolSystem.API.Controllers
             }
         }
 
-
         /// <summary>
         /// Obtiene la lista de asistencia de un grupo para una fecha específica.
         /// Útil para verificar si ya se tomó lista o para editarla.

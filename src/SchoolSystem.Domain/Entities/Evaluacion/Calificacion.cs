@@ -111,22 +111,22 @@ namespace SchoolSystem.Domain.Entities.Evaluacion
         /// <summary>
         /// Observaciones del maestro sobre el desempeño del alumno
         /// </summary>
-        public string Observaciones { get; set; }
+        public string? Observaciones { get; set; }
 
         /// <summary>
         /// Fortalezas identificadas del alumno
         /// </summary>
-        public string Fortalezas { get; set; }
+        public string? Fortalezas { get; set; }
 
         /// <summary>
         /// Áreas de oportunidad o mejora
         /// </summary>
-        public string AreasOportunidad { get; set; }
+        public string? AreasOportunidad { get; set; }
 
         /// <summary>
         /// Recomendaciones para el alumno
         /// </summary>
-        public string Recomendaciones { get; set; }
+        public string? Recomendaciones { get; set; }
 
         #endregion
 

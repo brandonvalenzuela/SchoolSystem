@@ -43,7 +43,7 @@ namespace SchoolSystem.Application.DTOs.Calificaciones
         /// <summary>
         /// Tipo de evaluación (ej: "Examen Final", "Promedio Tareas").
         /// </summary>
-        public string TipoEvaluacion { get; set; }
+        public string? TipoEvaluacion { get; set; }
 
         /// <summary>
         /// Peso de esta calificación en el total del período.
@@ -53,22 +53,22 @@ namespace SchoolSystem.Application.DTOs.Calificaciones
         /// <summary>
         /// Observaciones generales del maestro.
         /// </summary>
-        public string Observaciones { get; set; }
+        public string? Observaciones { get; set; }
 
         /// <summary>
         /// Fortalezas identificadas en el desempeño del alumno.
         /// </summary>
-        public string Fortalezas { get; set; }
+        public string? Fortalezas { get; set; }
 
         /// <summary>
         /// Áreas de oportunidad para el alumno.
         /// </summary>
-        public string AreasOportunidad { get; set; }
+        public string? AreasOportunidad { get; set; }
 
         /// <summary>
         /// Recomendaciones para mejorar.
         /// </summary>
-        public string Recomendaciones { get; set; }
+        public string? Recomendaciones { get; set; }
 
         /// <summary>
         /// Fecha en que se capturó o modificó la calificación.
@@ -78,6 +78,6 @@ namespace SchoolSystem.Application.DTOs.Calificaciones
         /// <summary>
         /// Nombre del maestro que capturó la calificación.
         /// </summary>
-        public string NombreMaestroCaptura { get; set; }
+        public string? NombreMaestroCaptura { get; set; }
     }
 }

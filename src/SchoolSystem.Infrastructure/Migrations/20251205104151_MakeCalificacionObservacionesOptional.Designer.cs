@@ -11,8 +11,8 @@ using SchoolSystem.Infrastructure.Persistence.Context;
 namespace SchoolSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(SchoolSystemDbContext))]
-    [Migration("20251109101934_PRIMERA_MIGRACION")]
-    partial class PRIMERA_MIGRACION
+    [Migration("20251205104151_MakeCalificacionObservacionesOptional")]
+    partial class MakeCalificacionObservacionesOptional
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -5542,7 +5542,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PeriodoId")

@@ -28,19 +28,4 @@ namespace SchoolSystem.Application.DTOs.Calificaciones
         [MinLength(1, ErrorMessage = "Debe haber al menos una calificación.")]
         public List<CalificacionAlumnoDto> Calificaciones { get; set; }
     }
-
-    /// <summary>
-    /// Representa la calificación de un único alumno en una captura masiva.
-    /// </summary>
-    public class CalificacionAlumnoDto
-    {
-        [Required]
-        public int AlumnoId { get; set; }
-
-        [Required]
-        [Range(0, 10)]
-        public decimal CalificacionNumerica { get; set; }
-
-        public string Observaciones { get; set; }
-    }
 }

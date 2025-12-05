@@ -88,7 +88,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Observaciones
             builder.Property(c => c.Observaciones)
-                .HasColumnType("TEXT");
+                .HasColumnType("TEXT")
+                .IsRequired(false);
 
             // Fortalezas
             builder.Property(c => c.Fortalezas)

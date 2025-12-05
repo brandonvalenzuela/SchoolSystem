@@ -1,4 +1,5 @@
 ﻿using SchoolSystem.Domain.Entities.Academico;
+using SchoolSystem.Domain.Entities.Auditoria;
 using SchoolSystem.Domain.Entities.Conducta;
 using SchoolSystem.Domain.Entities.Escuelas;
 using SchoolSystem.Domain.Entities.Evaluacion;
@@ -26,6 +27,7 @@ namespace SchoolSystem.Domain.Interfaces
         IRepository<Padre> Padres { get; } 
         IRepository<Usuario> Usuarios { get; }
         IRepository<RegistroConducta> RegistroConductas { get; }
+        IRepository<LogAuditoria> LogAuditorias { get; }
 
         // Método para guardar todos los cambios
         Task<int> SaveChangesAsync();

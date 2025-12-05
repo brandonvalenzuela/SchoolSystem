@@ -5539,7 +5539,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PeriodoId")

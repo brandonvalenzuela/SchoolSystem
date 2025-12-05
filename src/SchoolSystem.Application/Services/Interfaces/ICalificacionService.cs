@@ -1,4 +1,5 @@
 ﻿using SchoolSystem.Application.Common.Models;
+using SchoolSystem.Application.DTOs.Calificacion;
 using SchoolSystem.Application.DTOs.Calificaciones;
 using SchoolSystem.Application.DTOs.Escuelas;
 using System;
@@ -16,5 +17,11 @@ namespace SchoolSystem.Application.Services.Interfaces
         Task<int> CreateAsync(CreateCalificacionDto dto);
         Task UpdateAsync(int id, UpdateCalificacionDto dto);
         Task DeleteAsync(int id);
+
+        // 5. Carga Masiva
+        Task<int> CreateMasivoAsync(CreateCalificacionMasivaDto dto);
+
+        // 3. Reporte de Boleta
+        Task<BoletaDto> GetBoletaAsync(int alumnoId, string cicloEscolar);
     }
 }

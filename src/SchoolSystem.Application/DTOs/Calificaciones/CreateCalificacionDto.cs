@@ -31,6 +31,9 @@ namespace SchoolSystem.Application.DTOs.Calificaciones
         [Range(0, 10, ErrorMessage = "La calificación debe estar entre 0 y 10.")]
         public decimal CalificacionNumerica { get; set; }
 
+        [Required(ErrorMessage = "La calificación letra es obligatoria.")]
+        public string? CalificacionLetra { get; set; }
+
         [Required(ErrorMessage = "Se requiere el ID del maestro que captura la calificación.")]
         public int CapturadoPor { get; set; }
 
@@ -40,9 +43,9 @@ namespace SchoolSystem.Application.DTOs.Calificaciones
         [Range(0, 100, ErrorMessage = "El peso debe estar entre 0 y 100.")]
         public decimal? Peso { get; set; }
 
-        public string Observaciones { get; set; }
-        public string Fortalezas { get; set; }
-        public string AreasOportunidad { get; set; }
-        public string Recomendaciones { get; set; }
+        public string? Observaciones { get; set; }
+        public string? Fortalezas { get; set; }
+        public string? AreasOportunidad { get; set; }
+        public string? Recomendaciones { get; set; }
     }
 }

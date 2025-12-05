@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SchoolSystem.Application.Common.Models;
 using SchoolSystem.Application.Common.Wrappers;
+using SchoolSystem.Application.DTOs.Calificacion;
 using SchoolSystem.Application.DTOs.Calificaciones;
 using SchoolSystem.Application.Services.Interfaces;
 using SchoolSystem.Domain.Constants;
@@ -102,6 +103,50 @@ namespace SchoolSystem.API.Controllers
             await _service.DeleteAsync(id);
 
             return Ok(new ApiResponse<int>(id, "Calificación eliminada exitosamente."));
+        }
+
+        // 5. CARGA MASIVA
+        /// <summary>
+        /// Registra calificaciones para todo un grupo en una materia y periodo específicos.
+        /// </summary>
+        [HttpPost("masivo")]
+        [Authorize(Roles = Roles.Staff)] // Maestros
+        public async Task<ActionResult<ApiResponse<int>>> CreateMasivo([FromBody] CreateCalificacionMasivaDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse<int>("Datos inválidos."));
+
+            try
+            {
+                var count = await _service.CreateMasivoAsync(dto);
+                return Ok(new ApiResponse<int>(count, $"Se registraron {count} calificaciones exitosamente."));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<int>(ex.Message));
+            }
+        }
+
+        // 3. REPORTE BOLETA
+        /// <summary>
+        /// Obtiene la boleta de calificaciones estructurada de un alumno.
+        /// </summary>
+        [HttpGet("boleta/{alumnoId}")]
+        [Authorize(Roles = Roles.Staff + "," + Roles.Padre + "," + Roles.Alumno)]
+        public async Task<ActionResult<ApiResponse<BoletaDto>>> GetBoleta(int alumnoId, [FromQuery] string cicloEscolar)
+        {
+            if (string.IsNullOrEmpty(cicloEscolar))
+                return BadRequest(new ApiResponse<BoletaDto>("El ciclo escolar es requerido."));
+
+            try
+            {
+                var boleta = await _service.GetBoletaAsync(alumnoId, cicloEscolar);
+                return Ok(new ApiResponse<BoletaDto>(boleta, "Boleta generada exitosamente."));
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new ApiResponse<BoletaDto>(ex.Message));
+            }
         }
     }
 }
