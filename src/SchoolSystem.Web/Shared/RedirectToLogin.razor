@@ -1,0 +1,51 @@
+﻿@inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Components.Authorization
+
+@if (noTienePermisos)
+{
+    <div class="container mt-5">
+        <div class="alert alert-danger text-center shadow">
+            <h4 class="alert-heading">🚫 Acceso Denegado</h4>
+            <p>No tienes los permisos suficientes para ver esta sección.</p>
+            <hr>
+            <button class="btn btn-outline-danger" @onclick="IrAlInicio">Volver al Inicio</button>
+        </div>
+    </div>
+}
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthStateTask { get; set; } // Nota el ? para nullable
+
+    private bool noTienePermisos = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // 1. Verificar si el parámetro en cascada es nulo
+        if (AuthStateTask == null)
+        {
+            // Si es nulo, algo falló en la configuración de seguridad.
+            // Por seguridad, mandamos al login.
+            Navigation.NavigateTo("login");
+            return;
+        }
+
+        // 2. Ahora es seguro hacer el await
+        var authState = await AuthStateTask;
+        var user = authState.User;
+
+        if (user.Identity == null || !user.Identity.IsAuthenticated)
+        {
+            Navigation.NavigateTo("login");
+        }
+        else
+        {
+            noTienePermisos = true;
+        }
+    }
+
+    private void IrAlInicio()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

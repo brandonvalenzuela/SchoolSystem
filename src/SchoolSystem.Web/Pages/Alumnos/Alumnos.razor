@@ -1,0 +1,147 @@
+﻿@page "/alumnos"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@attribute [Authorize]
+@inject AlumnoService AlumnoService
+
+<PageTitle>Alumnos</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Listado de Alumnos</h1>
+    <button class="btn btn-primary">
+        <i class="oi oi-plus"></i> Nuevo Alumno
+    </button>
+</div>
+
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
+}
+else if (errorMessage != null)
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (alumnos == null || !alumnos.Any())
+{
+    <div class="alert alert-info">No hay alumnos registrados.</div>
+}
+else
+{
+    <div class="table-responsive shadow-sm">
+        <table class="table table-hover table-bordered mb-0 bg-white">
+            <thead class="table-light">
+                <tr>
+                    <th>Matrícula</th>
+                    <th>Nombre Completo</th>
+                    <th>Email</th>
+                    <th>Estatus</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var alumno in alumnos)
+                {
+                    <tr>
+                        <td>@alumno.Matricula</td>
+                        <td>@alumno.NombreCompleto</td>
+                        <td>@alumno.Email</td>
+                        <td>
+                            <span class="badge @ObtenerClaseEstatus(alumno.Estatus)">
+                                @alumno.Estatus
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-info me-1" title="Editar">
+                                ✏️
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <span>Mostrando página @currentPage de @totalPages</span>
+        <div>
+            <button class="btn btn-outline-secondary btn-sm"
+                    disabled="@(!hasPrevious)"
+                    @onclick="() => CargarAlumnos(currentPage - 1)">
+                Anterior
+            </button>
+            <button class="btn btn-outline-secondary btn-sm"
+                    disabled="@(!hasNext)"
+                    @onclick="() => CargarAlumnos(currentPage + 1)">
+                Siguiente
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    private List<AlumnoDto> alumnos;
+    private bool isLoading = true;
+    private string errorMessage;
+
+    // Variables de paginación
+    private int currentPage = 1;
+    private int pageSize = 10;
+    private int totalPages = 0;
+    private bool hasPrevious;
+    private bool hasNext;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarAlumnos(1);
+    }
+
+    private async Task CargarAlumnos(int page)
+    {
+        isLoading = true;
+        try
+        {
+            var response = await AlumnoService.GetAlumnosAsync(page, pageSize);
+
+            if (response.Succeeded)
+            {
+                alumnos = response.Data.Items.ToList();
+                currentPage = response.Data.PageNumber;
+                totalPages = response.Data.TotalPages;
+                hasPrevious = response.Data.HasPreviousPage;
+                hasNext = response.Data.HasNextPage;
+                errorMessage = null;
+            }
+            else
+            {
+                errorMessage = response.Message ?? "No se pudieron cargar los alumnos.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Error de conexión: " + ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private string ObtenerClaseEstatus(string estatus)
+    {
+        return estatus switch
+        {
+            "Activo" => "bg-success",
+            "Baja" => "bg-danger",
+            "Egresado" => "bg-primary",
+            _ => "bg-secondary"
+        };
+    }
+}

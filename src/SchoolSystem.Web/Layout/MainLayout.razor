@@ -1,0 +1,37 @@
+﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
+@using SchoolSystem.Web.Services
+@inject ClientAuthService AuthService
+@inject NavigationManager Navigation
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <AuthorizeView>
+                <Authorized Context="authContext">
+                    <span class="me-3">Hola, @authContext.User.Identity?.Name</span>
+                    <button class="btn btn-outline-danger btn-sm" @onclick="Logout">Cerrar Sesión</button>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="login">Iniciar Sesión</a>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/login");
+    }
+}
