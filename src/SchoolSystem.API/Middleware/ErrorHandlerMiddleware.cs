@@ -53,7 +53,7 @@ namespace SchoolSystem.API.Middleware
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         responseModel.Message = "Ocurrió un error interno en el servidor.";
                         // En desarrollo, podrías querer ver el error real:
-                        // responseModel.Errors = new List<string> { error.Message };
+                        responseModel.Errors = new List<string> { error.Message };
                         break;
                 }
 

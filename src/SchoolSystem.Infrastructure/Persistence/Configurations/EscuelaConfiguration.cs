@@ -39,11 +39,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Razón Social
             builder.Property(e => e.RazonSocial)
-                .HasMaxLength(250);
-
+                .HasMaxLength(250)
+                .IsRequired(false);
             // RFC
             builder.Property(e => e.RFC)
-                .HasMaxLength(13);
+                .HasMaxLength(13)
+                .IsRequired(false);
 
             #endregion
 
@@ -79,15 +80,19 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Sitio Web
             builder.Property(e => e.SitioWeb)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired(false);
 
             // Logo URL
             builder.Property(e => e.LogoUrl)
-                .HasMaxLength(500);
+                .HasMaxLength(500)
+                .IsRequired(false);
 
             // Teléfono Alternativo
             builder.Property(e => e.TelefonoAlternativo)
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .IsRequired(false);
+            ;
 
             #endregion
 
@@ -115,11 +120,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             #endregion
 
             #region Configuración Personalizada
-
-            // Configuración (JSON)
-            builder.Property(e => e.Configuracion)
-                .HasColumnType("JSON")
-                .IsRequired(false);
 
             // Max Alumnos
             builder.Property(e => e.MaxAlumnos)

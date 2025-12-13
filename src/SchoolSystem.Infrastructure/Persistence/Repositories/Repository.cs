@@ -16,11 +16,9 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
 
         public Repository(SchoolSystemDbContext context) => _context = context;
 
-        public async Task<T> GetByIdAsync(int id) => 
-            await _context.Set<T>().FindAsync(id);
+        public async Task<T> GetByIdAsync(int id) => await _context.Set<T>().FindAsync(id);
 
-        public async Task<IEnumerable<T>> GetAllAsync() =>
-            await _context.Set<T>().ToListAsync();
+        public async Task<IEnumerable<T>> GetAllAsync() => await _context.Set<T>().ToListAsync();
 
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
         {
@@ -80,6 +78,11 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         {
             await _context.AddRangeAsync(entities);
             // No hacemos SaveChanges aquí para permitir que el servicio controle la transacción
+        }
+
+        public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().CountAsync(predicate);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using SchoolSystem.Application.DTOs.ConfiguracionEscuela;
 using SchoolSystem.Application.DTOs.Escuelas;
+using SchoolSystem.Domain.Entities.Configuracion;
 using SchoolSystem.Domain.Entities.Escuelas;
 using System;
 using System.Collections.Generic;
@@ -25,6 +27,13 @@ namespace SchoolSystem.Application.Mappings
 
             // UpdateDTO -> Entity
             CreateMap<UpdateEscuelaDto, Escuela>();
+
+            CreateMap<ConfiguracionEscuela, ConfiguracionEscuelaDto>();
+
+            CreateMap<UpdateConfiguracionEscuelaDto, ConfiguracionEscuela>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
+
+
     }
 }

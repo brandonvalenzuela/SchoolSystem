@@ -27,8 +27,13 @@ namespace SchoolSystem.Application.Validations.Escuelas
                 .MaximumLength(200);
 
             RuleFor(x => x.RFC)
-                .NotEmpty().WithMessage("El RFC es obligatorio.")
-                .MaximumLength(13);
+                // 1. Si lo escriben, debe tener entre 12 y 13 caracteres
+                .Length(12, 13)
+                // 2. Validación de formato real (Personas Morales o Físicas)
+                // 3 letras (o 4), 6 números (fecha), 3 caracteres (homoclave)
+                .Matches(@"^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A-Z\d])$")
+                .WithMessage("El formato del RFC no es válido.")
+                .When(x => !string.IsNullOrEmpty(x.RFC));
 
             RuleFor(x => x.Direccion).MaximumLength(200);
             RuleFor(x => x.Ciudad).MaximumLength(100);

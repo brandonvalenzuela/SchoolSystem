@@ -86,7 +86,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Teléfono Emergencia
             builder.Property(u => u.TelefonoEmergencia)
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .IsRequired(false);
 
             // Foto URL
             builder.Property(u => u.FotoUrl)

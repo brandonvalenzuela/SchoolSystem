@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SchoolSystem.Infrastructure.Persistence.Context;
 
@@ -10,9 +11,11 @@ using SchoolSystem.Infrastructure.Persistence.Context;
 namespace SchoolSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(SchoolSystemDbContext))]
-    partial class SchoolSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251208092719_RemoveEscuelaJsonConfig")]
+    partial class RemoveEscuelaJsonConfig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5228,6 +5231,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("LogoUrl")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -5248,14 +5252,17 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("RFC")
+                        .IsRequired()
                         .HasMaxLength(13)
                         .HasColumnType("varchar(13)");
 
                     b.Property<string>("RazonSocial")
+                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("varchar(250)");
 
                     b.Property<string>("SitioWeb")
+                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -5265,6 +5272,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("TelefonoAlternativo")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
@@ -7436,6 +7444,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("TelefonoEmergencia")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 

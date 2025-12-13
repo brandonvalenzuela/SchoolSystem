@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SchoolSystem.Application.Common.Models;
 using SchoolSystem.Application.Common.Wrappers;
+using SchoolSystem.Application.DTOs.ConfiguracionEscuela;
 using SchoolSystem.Application.DTOs.Escuelas;
 using SchoolSystem.Application.Services.Interfaces;
 using SchoolSystem.Domain.Constants;
@@ -15,10 +16,12 @@ namespace SchoolSystem.API.Controllers
     public class EscuelasController : ControllerBase
     {
         private readonly IEscuelaService _service;
+        private readonly ICurrentUserService _currentUser;
 
-        public EscuelasController(IEscuelaService service)
+        public EscuelasController(IEscuelaService service, ICurrentUserService currentUser)
         {
             _service = service;
+            _currentUser = currentUser;
         }
 
         /// <summary>
@@ -105,5 +108,61 @@ namespace SchoolSystem.API.Controllers
 
             return Ok(new ApiResponse<int>(id, "Escuela eliminada exitosamente."));
         }
+
+        /// <summary>
+        /// Obtiene un resumen estadístico de la escuela (Dashboard).
+        /// </summary>
+        /// <param name="id">ID de la escuela</param>
+        /// <returns>Resumen con contadores y estado de licencia</returns>
+        [HttpGet("{id}/resumen")]
+        [Authorize(Roles = Roles.Admin)] // Solo Directores y SuperAdmin pueden ver esto
+        public async Task<ActionResult<ApiResponse<ResumenEscuelaDto>>> GetResumen(int id)
+        {
+            // --- VALIDACIÓN DE SEGURIDAD HORIZONTAL ---
+            // Si NO es SuperAdmin Y el ID solicitado es diferente al ID de su escuela:
+            if (!_currentUser.IsInRole(Roles.SuperAdmin) && _currentUser.EscuelaId != id)
+            {
+                // Retornamos 403 Forbidden (Entendí quién eres, pero no tienes permiso para ver ESTO)
+                return Forbid();
+
+                // O si prefieres usar tu wrapper estándar:
+                // return StatusCode(403, new ApiResponse<ResumenEscuelaDto>("No tiene permisos para acceder a esta escuela."));
+            }
+
+            var resumen = await _service.GetResumenAsync(id);
+
+            if (resumen == null)
+                return NotFound(new ApiResponse<ResumenEscuelaDto>("Escuela no encontrada."));
+
+            return Ok(new ApiResponse<ResumenEscuelaDto>(resumen, "Resumen generado exitosamente."));
+        }
+
+        [HttpGet("{id}/configuracion")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<ActionResult<ApiResponse<ConfiguracionEscuelaDto>>> GetConfig(int id)
+        {
+            if (!_currentUser.IsInRole(Roles.SuperAdmin) && _currentUser.EscuelaId != id)
+            {
+                return Forbid();
+            }
+
+            // Validar seguridad horizontal (mismo código que en resumen)
+            var config = await _service.GetConfiguracionAsync(id);
+            return Ok(new ApiResponse<ConfiguracionEscuelaDto>(config));
+        }
+
+        [HttpPut("{id}/configuracion")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> UpdateConfig(int id, [FromBody] UpdateConfiguracionEscuelaDto dto)
+        {
+            if (!_currentUser.IsInRole(Roles.SuperAdmin) && _currentUser.EscuelaId != id)
+            {
+                return Forbid();
+            }
+
+            await _service.UpdateConfiguracionAsync(id, dto);
+            return Ok(new ApiResponse<bool>(true, "Configuración actualizada."));
+        }
+
     }
 }

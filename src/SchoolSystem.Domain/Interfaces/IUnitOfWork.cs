@@ -1,6 +1,7 @@
 ﻿using SchoolSystem.Domain.Entities.Academico;
 using SchoolSystem.Domain.Entities.Auditoria;
 using SchoolSystem.Domain.Entities.Conducta;
+using SchoolSystem.Domain.Entities.Configuracion;
 using SchoolSystem.Domain.Entities.Escuelas;
 using SchoolSystem.Domain.Entities.Evaluacion;
 using SchoolSystem.Domain.Entities.Usuarios;
@@ -28,6 +29,7 @@ namespace SchoolSystem.Domain.Interfaces
         IRepository<Usuario> Usuarios { get; }
         IRepository<RegistroConducta> RegistroConductas { get; }
         IRepository<LogAuditoria> LogAuditorias { get; }
+        IRepository<ConfiguracionEscuela> ConfiguracionEscuelas { get; }
 
         // Método para guardar todos los cambios
         Task<int> SaveChangesAsync();

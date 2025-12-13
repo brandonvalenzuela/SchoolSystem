@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SchoolSystem.API.Services;
 using SchoolSystem.Application.Mappings;
 using SchoolSystem.Application.Services.Implementations;
 using SchoolSystem.Application.Services.Interfaces;
@@ -68,6 +69,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssembly(typeof(CreateAlumnoValidator).Assembly);
+builder.Services.AddHttpContextAccessor();
 
 // Inyección de Servicios de Aplicación
 builder.Services.AddScoped<IAlumnoService, AlumnoService>();
@@ -84,6 +86,8 @@ builder.Services.AddScoped<IAsistenciaService, AsistenciaService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IRegistroConductaService, RegistroConductaService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
 
 // --- 4. SWAGGER CON SOPORTE PARA JWT ---
 

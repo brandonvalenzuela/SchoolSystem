@@ -113,13 +113,7 @@ namespace SchoolSystem.Domain.Entities.Escuelas
         #endregion
         
         #region Configuración Personalizada
-        
-        /// <summary>
-        /// Configuraciones específicas de la escuela en formato JSON
-        /// Incluye: colores tema, preferencias, reglas de negocio específicas
-        /// </summary>
-        public string Configuracion { get; set; }
-        
+
         /// <summary>
         /// Número máximo de alumnos permitidos según el plan
         /// </summary>

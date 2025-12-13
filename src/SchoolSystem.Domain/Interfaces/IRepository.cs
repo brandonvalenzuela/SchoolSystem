@@ -17,5 +17,6 @@ namespace SchoolSystem.Domain.Interfaces
         Task<IEnumerable<T>> GetAllIncludingAsync(params Expression<Func<T, object>>[] includeProperties);
         // Método para agregar rangos (útil para la carga masiva)
         Task AddRangeAsync(IEnumerable<T> entities);
+        Task<int> CountAsync(Expression<Func<T, bool>> predicate);
     }
 }

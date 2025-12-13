@@ -22,10 +22,10 @@ namespace SchoolSystem.Application.DTOs.Escuelas
         public string Nombre { get; set; }
 
         [StringLength(300)]
-        public string RazonSocial { get; set; }
+        public string? RazonSocial { get; set; }
 
         [StringLength(13, ErrorMessage = "El RFC debe tener entre 12 y 13 caracteres.")]
-        public string RFC { get; set; }
+        public string? RFC { get; set; }
 
         // Contacto
         [Required(ErrorMessage = "La dirección es obligatoria.")]
@@ -60,11 +60,11 @@ namespace SchoolSystem.Application.DTOs.Escuelas
 
         [Url]
         [StringLength(300)]
-        public string SitioWeb { get; set; }
+        public string? SitioWeb { get; set; }
 
         [Url]
         [StringLength(500)]
-        public string LogoUrl { get; set; }
+        public string? LogoUrl { get; set; }
 
         // Suscripción
         [Required]
