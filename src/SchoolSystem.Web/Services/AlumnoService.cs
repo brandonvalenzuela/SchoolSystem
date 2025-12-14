@@ -17,6 +17,25 @@ namespace SchoolSystem.Web.Services
             return await _apiService.GetPagedAsync<AlumnoDto>($"api/Alumnos?page={page}&size={size}");
         }
 
-        // Aquí agregaremos luego Create, Update, Delete
+        public async Task<ApiResponse<AlumnoDto>> GetByIdAsync(int id)
+        {
+            return await _apiService.GetAsync<AlumnoDto>($"api/Alumnos/{id}");
+        }
+
+        public async Task<ApiResponse<int>> CreateAsync(CreateAlumnoDto model)
+        {
+            return await _apiService.PostAsync<CreateAlumnoDto, int>("api/Alumnos", model);
+        }
+
+        public async Task<ApiResponse<int>> UpdateAsync(int id, UpdateAlumnoDto model)
+        {
+            return await _apiService.PutAsync<UpdateAlumnoDto, int>($"api/Alumnos/{id}", model);
+        }
+
+        // Opcional: Método Delete
+        public async Task<ApiResponse<object>> DeleteAsync(int id)
+        {
+            return await _apiService.DeleteAsync<object>($"api/Alumnos/{id}");
+        }
     }
 }

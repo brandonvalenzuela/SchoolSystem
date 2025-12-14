@@ -48,6 +48,13 @@ namespace SchoolSystem.API.Middleware
                         responseModel = new ApiResponse<string>(errors);
                         break;
 
+                    case InvalidOperationException e:
+                        // Tratamos InvalidOperation como un Bad Request (error de lógica de negocio)
+                        // en lugar de un error interno.
+                        response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        responseModel.Message = e.Message; // Ponemos el mensaje directamente aquí
+                        break;
+
                     default:
                         // Error interno (500)
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;

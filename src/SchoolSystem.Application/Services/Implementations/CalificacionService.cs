@@ -96,6 +96,7 @@ namespace SchoolSystem.Application.Services.Implementations
                 throw new KeyNotFoundException($"Calificación con ID {id} no encontrada");
 
             await _unitOfWork.Calificaciones.DeleteAsync(entity);
+
             await _unitOfWork.SaveChangesAsync();
         }
 

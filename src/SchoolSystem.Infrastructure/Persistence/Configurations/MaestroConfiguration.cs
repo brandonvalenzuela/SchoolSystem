@@ -93,6 +93,39 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(m => m.DisponibleExtracurriculares)
                 .HasDefaultValue(false);
 
+            #region Auditoría
+
+            builder.Property(a => a.CreatedAt)
+                .IsRequired();
+
+            builder.Property(a => a.UpdatedAt)
+                .IsRequired();
+
+            builder.Property(a => a.CreatedBy);
+
+            builder.Property(a => a.UpdatedBy);
+
+            #endregion
+
+            #region Soft Delete
+
+            // Is Deleted
+            builder.Property(a => a.IsDeleted)
+                .HasDefaultValue(false)
+                .IsRequired();
+
+            // Deleted At
+            builder.Property(a => a.DeletedAt)
+                .HasColumnType("DATETIME");
+
+            // Deleted By
+            builder.Property(a => a.DeletedBy);
+
+            // Query Filter para Soft Delete (solo mostrar no eliminados por defecto)
+            builder.HasQueryFilter(a => !a.IsDeleted);
+
+            #endregion
+
             // Relaciones
             builder.HasOne(m => m.Escuela)
                 .WithMany()

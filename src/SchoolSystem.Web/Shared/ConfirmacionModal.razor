@@ -1,0 +1,47 @@
+﻿@if (Mostrar)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">@Titulo</h5>
+                    <button type="button" class="btn-close btn-close-white" @onclick="Ocultar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>@Mensaje</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="Ocultar">Cancelar</button>
+                    <button type="button" class="btn btn-danger" @onclick="Confirmar">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string Titulo { get; set; } = "Confirmar Eliminación";
+    [Parameter] public string Mensaje { get; set; } = "¿Estás seguro?";
+    [Parameter] public EventCallback OnConfirm { get; set; }
+
+    // Variable para controlar si se ve o no
+    public bool Mostrar { get; private set; }
+
+    public void Show()
+    {
+        Mostrar = true;
+        StateHasChanged();
+    }
+
+    public void Ocultar()
+    {
+        Mostrar = false;
+        StateHasChanged();
+    }
+
+    private async Task Confirmar()
+    {
+        Mostrar = false;
+        await OnConfirm.InvokeAsync();
+    }
+}

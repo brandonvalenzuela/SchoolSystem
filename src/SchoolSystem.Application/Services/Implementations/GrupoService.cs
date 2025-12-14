@@ -70,6 +70,7 @@ namespace SchoolSystem.Application.Services.Implementations
                 throw new KeyNotFoundException($"Grupo con ID {id} no encontrado");
 
             await _unitOfWork.Grupos.DeleteAsync(entity);
+
             await _unitOfWork.SaveChangesAsync();
         }
     }

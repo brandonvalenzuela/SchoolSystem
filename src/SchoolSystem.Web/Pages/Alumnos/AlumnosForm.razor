@@ -1,0 +1,219 @@
+﻿@page "/alumnos/crear"
+@page "/alumnos/editar/{Id:int}"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@inject AlumnoService AlumnoService
+@inject NavigationManager Navigation
+@inject UiService UiService
+@attribute [Authorize]
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">@(Id == 0 ? "Nuevo Alumno" : "Editar Alumno")</h3>
+            <a href="alumnos" class="btn btn-light btn-sm">Volver</a>
+        </div>
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p>Cargando...</p>
+                </div>
+            }
+            else
+            {
+                <EditForm Model="@modelo" OnValidSubmit="GuardarAlumno">
+                    <DataAnnotationsValidator />
+                    
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger">@errorMessage</div>
+                    }
+
+                    <div class="row g-3">
+                        <!-- Matrícula -->
+                        <div class="col-md-4">
+                            <label class="form-label">Matrícula</label>
+                            <InputText class="form-control" @bind-Value="modelo.Matricula" />
+                            <ValidationMessage For="@(() => modelo.Matricula)" />
+                        </div>
+
+                        <!-- Nombre -->
+                        <div class="col-md-4">
+                            <label class="form-label">Nombre</label>
+                            <InputText class="form-control" @bind-Value="modelo.Nombre" />
+                            <ValidationMessage For="@(() => modelo.Nombre)" />
+                        </div>
+
+                        <!-- Apellidos -->
+                        <div class="col-md-4">
+                            <label class="form-label">Apellido Paterno</label>
+                            <InputText class="form-control" @bind-Value="modelo.ApellidoPaterno" />
+                            <ValidationMessage For="@(() => modelo.ApellidoPaterno)" />
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label">Apellido Materno</label>
+                            <InputText class="form-control" @bind-Value="modelo.ApellidoMaterno" />
+                        </div>
+
+                        <!-- Fecha Nacimiento -->
+                        <div class="col-md-4">
+                            <label class="form-label">Fecha de Nacimiento</label>
+                            <InputDate class="form-control" @bind-Value="modelo.FechaNacimiento" />
+                            <ValidationMessage For="@(() => modelo.FechaNacimiento)" />
+                        </div>
+
+                        <!-- Género (Select) -->
+                        <div class="col-md-4">
+                            <label class="form-label">Género</label>
+                            <InputSelect class="form-select" @bind-Value="modelo.Genero">
+                                <option value="1">Masculino</option>
+                                <option value="2">Femenino</option>
+                                <option value="3">Otro</option>
+                            </InputSelect>
+                        </div>
+
+                        <!-- Contacto -->
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <InputText class="form-control" @bind-Value="modelo.Email" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Teléfono</label>
+                            <InputText class="form-control" @bind-Value="modelo.Telefono" />
+                        </div>
+
+                         <div class="col-12">
+                            <label class="form-label">Dirección</label>
+                            <InputTextArea class="form-control" @bind-Value="modelo.Direccion" rows="2" />
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-success px-4" disabled="@isSubmitting">
+                            @if (isSubmitting)
+                            {
+                                <span class="spinner-border spinner-border-sm"></span> <span>Guardando...</span>
+                            }
+                            else
+                            {
+                                <span>@(Id == 0 ? "Crear Alumno" : "Guardar Cambios")</span>
+                            }
+                        </button>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; } // Viene de la URL
+
+    // Usamos CreateAlumnoDto como modelo base, ya que tiene casi todo lo necesario.
+    // Si editamos, mapeamos manualmente.
+    private CreateAlumnoDto modelo = new CreateAlumnoDto();
+    
+    private bool isLoading = false;
+    private bool isSubmitting = false;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id > 0)
+        {
+            await CargarAlumnoParaEditar();
+        }
+    }
+
+    private async Task CargarAlumnoParaEditar()
+    {
+        isLoading = true;
+        var response = await AlumnoService.GetByIdAsync(Id);
+        if (response.Succeeded)
+        {
+            var alumno = response.Data;
+            // Mapeo manual del DTO de lectura al modelo del formulario
+            modelo.Matricula = alumno.Matricula;
+            modelo.Nombre = alumno.Nombre;
+            modelo.ApellidoPaterno = alumno.ApellidoPaterno;
+            modelo.ApellidoMaterno = alumno.ApellidoMaterno;
+            modelo.FechaNacimiento = alumno.FechaNacimiento;
+            modelo.Email = alumno.Email;
+            // modelo.Genero = ... (Aquí necesitarías mapear el string "Masculino" a int 1, o ajustar el DTO)
+            // modelo.Telefono = alumno.Telefono; 
+            // etc...
+        }
+        else
+        {
+            errorMessage = "No se pudo cargar el alumno.";
+        }
+        isLoading = false;
+    }
+
+    private async Task GuardarAlumno()
+    {
+        isSubmitting = true;
+        errorMessage = null;
+
+        try
+        {
+            bool exito = false;
+            string msg = "";
+
+            if (Id == 0)
+            {
+                // Crear
+                var response = await AlumnoService.CreateAsync(modelo);
+                exito = response.Succeeded;
+                msg = response.Message;
+            }
+            else
+            {
+                // Editar
+                var updateDto = new UpdateAlumnoDto
+                {
+                    Id = this.Id,
+                    Matricula = modelo.Matricula,
+                    Nombre = modelo.Nombre,
+                    ApellidoPaterno = modelo.ApellidoPaterno,
+                    ApellidoMaterno = modelo.ApellidoMaterno,
+                    FechaNacimiento = modelo.FechaNacimiento,
+                    Genero = modelo.Genero,
+                    Email = modelo.Email,
+                    Telefono = modelo.Telefono,
+                    Direccion = modelo.Direccion,
+                    Estatus = 1 // Activo por defecto al editar, o agregar campo
+                };
+
+                var response = await AlumnoService.UpdateAsync(Id, updateDto);
+                exito = response.Succeeded;
+                msg = response.Message;
+            }
+
+            if (exito)
+            {
+                UiService.ShowSuccess(Id == 0 
+                    ? "¡Alumno creado exitosamente!" 
+                    : "¡Alumno actualizado exitosamente!");
+
+                Navigation.NavigateTo("alumnos");
+            }
+            else
+            {
+                errorMessage = msg ?? "Error al guardar.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Error de conexión: " + ex.Message;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

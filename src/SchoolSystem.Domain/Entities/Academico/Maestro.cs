@@ -12,7 +12,7 @@ namespace SchoolSystem.Domain.Entities.Academico
     /// Entidad Maestro - Representa a un profesor o docente
     /// Extiende la información de un Usuario con rol de Maestro
     /// </summary>
-    public class Maestro : BaseEntity
+    public class Maestro : BaseEntity, IAuditableEntity, ISoftDeletable
     {
         #region Propiedades de la Escuela (Multi-tenant)
 
@@ -161,6 +161,49 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// CORRECCIÓN: Nombre ajustado a 'AsignacionesDeGrupoMateria' para coincidir con la configuración de EF Core.
         /// </summary>
         public virtual ICollection<GrupoMateriaMaestro> AsignacionesDeGrupoMateria { get; set; }
+
+        #endregion
+
+        #region Propiedades de Auditoría (IAuditableEntity)
+
+        /// <summary>
+        /// Fecha y hora de creación del usuario
+        /// </summary>
+        public DateTime CreatedAt { get; set; }
+
+        /// <summary>
+        /// Fecha y hora de la última actualización
+        /// </summary>
+        public DateTime UpdatedAt { get; set; }
+
+        /// <summary>
+        /// ID del usuario que creó este registro
+        /// </summary>
+        public int? CreatedBy { get; set; }
+
+        /// <summary>
+        /// ID del usuario que realizó la última actualización
+        /// </summary>
+        public int? UpdatedBy { get; set; }
+
+        #endregion
+
+        #region Soft Delete (ISoftDeletable)
+
+        /// <summary>
+        /// Indica si el alumno ha sido eliminado lógicamente
+        /// </summary>
+        public bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// Fecha de eliminación lógica
+        /// </summary>
+        public DateTime? DeletedAt { get; set; }
+
+        /// <summary>
+        /// ID del usuario que eliminó el registro
+        /// </summary>
+        public int? DeletedBy { get; set; }
 
         #endregion
 

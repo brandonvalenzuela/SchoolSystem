@@ -1,10 +1,12 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SchoolSystem.API.Services;
+using SchoolSystem.Application.Common.Wrappers;
 using SchoolSystem.Application.Mappings;
 using SchoolSystem.Application.Services.Implementations;
 using SchoolSystem.Application.Services.Interfaces;
@@ -52,6 +54,25 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 // --- 2. CONTROLADORES Y BASE DE DATOS ---
 
 builder.Services.AddControllers();
+
+// Interceptar la validación automática para usar nuestro formato ApiResponse
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        // 1. Obtener todos los mensajes de error del ModelState
+        var errors = context.ModelState.Values
+            .SelectMany(v => v.Errors)
+            .Select(e => e.ErrorMessage)
+            .ToList();
+
+        // 2. Crear nuestra respuesta estándar
+        var response = new ApiResponse<object>(errors, "Errores de validación en los datos enviados.");
+
+        // 3. Devolver un BadRequest (400) con nuestra estructura
+        return new BadRequestObjectResult(response);
+    };
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(connectionString))

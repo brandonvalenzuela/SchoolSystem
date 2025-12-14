@@ -13,7 +13,7 @@ namespace SchoolSystem.Domain.Entities.Usuarios
     /// Entidad Usuario - Representa a cualquier persona con acceso al sistema
     /// Incluye: Directores, Subdirectores, Maestros, Administrativos, Padres, Alumnos
     /// </summary>
-    public class Usuario : BaseEntity, IAuditableEntity
+    public class Usuario : BaseEntity, IAuditableEntity, ISoftDeletable
     {
         #region Propiedades de la Escuela (Multi-tenant)
 
@@ -152,6 +152,25 @@ namespace SchoolSystem.Domain.Entities.Usuarios
         /// ID del usuario que realizó la última actualización
         /// </summary>
         public int? UpdatedBy { get; set; }
+
+        #endregion
+
+        #region Soft Delete (ISoftDeletable)
+
+        /// <summary>
+        /// Indica si el alumno ha sido eliminado lógicamente
+        /// </summary>
+        public bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// Fecha de eliminación lógica
+        /// </summary>
+        public DateTime? DeletedAt { get; set; }
+
+        /// <summary>
+        /// ID del usuario que eliminó el registro
+        /// </summary>
+        public int? DeletedBy { get; set; }
 
         #endregion
 
@@ -369,6 +388,40 @@ namespace SchoolSystem.Domain.Entities.Usuarios
         {
             return Rol == RolUsuario.Alumno;
         }
+
+        #region Validaciones de Integridad de Rol
+
+        /// <summary>
+        /// Valida si el usuario tiene los datos de perfil correspondientes a su rol.
+        /// </summary>
+        public bool PerfilEstaCompleto()
+        {
+            switch (Rol)
+            {
+                case RolUsuario.Maestro:
+                    return Maestro != null; // Requiere registro en tabla Maestros
+                case RolUsuario.Padre:
+                    return Padre != null;   // Requiere registro en tabla Padres
+                case RolUsuario.Alumno:
+                    return Alumno != null;  // Requiere registro en tabla Alumnos
+                default:
+                    return true; // Admin, Director, etc. solo requieren tabla Usuario
+            }
+        }
+
+        /// <summary>
+        /// Verifica si el usuario tiene permisos para operar en una escuela específica.
+        /// </summary>
+        public bool TieneAccesoAEscuela(int escuelaIdSolicitada)
+        {
+            if (Rol == RolUsuario.SuperAdmin)
+                return true; // SuperAdmin entra a todas
+            return EscuelaId == escuelaIdSolicitada;
+        }
+
+        #endregion
+
+
 
         #endregion
     }

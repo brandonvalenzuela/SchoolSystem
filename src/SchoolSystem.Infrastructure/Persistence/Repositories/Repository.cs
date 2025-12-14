@@ -52,7 +52,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         public async Task DeleteAsync(T entity)
         {
             _context.Set<T>().Remove(entity);
-            await SaveChangesAsync();
+            //await SaveChangesAsync();
         }
 
         public async Task<int> SaveChangesAsync() =>

@@ -71,6 +71,7 @@ namespace SchoolSystem.Application.Services.Implementations
                 throw new KeyNotFoundException($"Asistencia con ID {id} no encontrada");
 
             await _unitOfWork.Asistencias.DeleteAsync(entity);
+
             await _unitOfWork.SaveChangesAsync();
         }
 

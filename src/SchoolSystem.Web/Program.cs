@@ -21,9 +21,11 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
-
 builder.Services.AddScoped<ClientAuthService>();
 builder.Services.AddScoped<AlumnoService>();
+builder.Services.AddScoped<UiService>();
+builder.Services.AddScoped<MaestroService>();
+builder.Services.AddScoped<UsuarioService>();
 
 // 4. Servicios de la Aplicación
 builder.Services.AddScoped<ApiService>();

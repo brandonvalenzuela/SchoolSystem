@@ -88,10 +88,7 @@ namespace SchoolSystem.Application.Services.Implementations
         /// </summary>
         public async Task UpdateAsync(int id, UpdateAlumnoDto dto)
         {
-            var entity = await _unitOfWork.Alumnos.GetByIdAsync(id);
-
-            if (entity == null)
-                throw new KeyNotFoundException($"Alumno con ID {id} no encontrado.");
+            var entity = await _unitOfWork.Alumnos.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Alumno con ID {id} no encontrado.");
 
             // AutoMapper actualiza las propiedades de 'entity' con los valores de 'dto'
             _mapper.Map(dto, entity);
@@ -105,17 +102,10 @@ namespace SchoolSystem.Application.Services.Implementations
         /// </summary>
         public async Task DeleteAsync(int id)
         {
-            var entity = await _unitOfWork.Alumnos.GetByIdAsync(id);
-
-            if (entity == null)
-                throw new KeyNotFoundException($"Alumno con ID {id} no encontrado.");
+            var entity = await _unitOfWork.Alumnos.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Alumno con ID {id} no encontrado.");
 
             // Si tu Repositorio Genérico maneja SoftDelete automáticamente al llamar DeleteAsync:
             await _unitOfWork.Alumnos.DeleteAsync(entity);
-
-            // O SI prefieres usar el método de negocio explícito de tu entidad:
-            // entity.EliminarLogicamente(usuarioId: 1); // Aquí necesitarías el ID del usuario actual
-            // await _repository.UpdateAsync(entity);
 
             await _unitOfWork.SaveChangesAsync();
         }

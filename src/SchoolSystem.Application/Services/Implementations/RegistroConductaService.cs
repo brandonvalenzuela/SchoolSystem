@@ -110,6 +110,7 @@ namespace SchoolSystem.Application.Services.Implementations
 
             // Soft Delete (si el repositorio lo soporta) o Hard Delete
             await _unitOfWork.RegistroConductas.DeleteAsync(entity);
+
             await _unitOfWork.SaveChangesAsync();
         }
     }

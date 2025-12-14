@@ -70,6 +70,7 @@ namespace SchoolSystem.Application.Services.Implementations
                 throw new KeyNotFoundException($"Materia con ID {id} no encontrada");
 
             await _unitOfWork.Materias.DeleteAsync(entity);
+
             await _unitOfWork.SaveChangesAsync();
         }
     }

@@ -96,6 +96,7 @@ namespace SchoolSystem.Application.Services.Implementations
             if (entity == null)
                 throw new KeyNotFoundException($"Inscripción con ID {id} no encontrada");
             await _unitOfWork.Inscripciones.DeleteAsync(entity);
+
             await _unitOfWork.SaveChangesAsync();
         }
 

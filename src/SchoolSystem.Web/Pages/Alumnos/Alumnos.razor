@@ -3,15 +3,24 @@
 @using SchoolSystem.Web.Services
 @attribute [Authorize]
 @inject AlumnoService AlumnoService
+@inject UiService UiService
 
 <PageTitle>Alumnos</PageTitle>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Listado de Alumnos</h1>
-    <button class="btn btn-primary">
+    <a href="alumnos/crear" class="btn btn-primary">
         <i class="oi oi-plus"></i> Nuevo Alumno
-    </button>
+    </a>
 </div>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="oi oi-check me-2"></i> @successMessage
+        <button type="button" class="btn-close" @onclick="() => successMessage = null"></button>
+    </div>
+}
 
 @if (isLoading)
 {
@@ -55,10 +64,12 @@ else
                             </span>
                         </td>
                         <td class="text-center">
-                            <button class="btn btn-sm btn-outline-info me-1" title="Editar">
+                            <a href="alumnos/editar/@alumno.Id" class="btn btn-sm btn-outline-info me-1" title="Editar">
                                 ✏️
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger" title="Eliminar">
+                            </a>
+                            <button class="btn btn-sm btn-outline-danger"
+                                    title="Eliminar"
+                                    @onclick="() => SolicitarEliminacion(alumno.Id, alumno.NombreCompleto)">
                                 🗑️
                             </button>
                         </td>
@@ -86,6 +97,11 @@ else
     </div>
 }
 
+<SchoolSystem.Web.Shared.ConfirmacionModal @ref="modalEliminar"
+                                           Titulo="Eliminar Alumno"
+                                           Mensaje="@mensajeConfirmacion"
+                                           OnConfirm="ConfirmarEliminacionReal" />
+
 @code {
     private List<AlumnoDto> alumnos;
     private bool isLoading = true;
@@ -97,9 +113,25 @@ else
     private int totalPages = 0;
     private bool hasPrevious;
     private bool hasNext;
+    private string? successMessage;
+    private SchoolSystem.Web.Shared.ConfirmacionModal modalEliminar;
+    private int idParaEliminar;
+    private string mensajeConfirmacion;
+
 
     protected override async Task OnInitializedAsync()
     {
+
+        if (UiService.HasMessage)
+        {
+            successMessage = UiService.GetSuccessMessage();
+
+            _ = Task.Delay(3000).ContinueWith(_ =>
+            {
+                successMessage = null;
+                StateHasChanged();
+            });
+        }
         await CargarAlumnos(1);
     }
 
@@ -127,6 +159,57 @@ else
         catch (Exception ex)
         {
             errorMessage = "Error de conexión: " + ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    // 1. Este método se llama al dar clic en el botón de la tabla (Basurero)
+    private void SolicitarEliminacion(int id, string nombre)
+    {
+        // Guardamos el ID en memoria temporalmente
+        idParaEliminar = id;
+
+        // Configuramos el mensaje
+        mensajeConfirmacion = $"¿Realmente deseas eliminar al alumno {nombre}? Esta acción no se puede deshacer.";
+
+        // Mostramos el modal
+        modalEliminar.Show();
+    }
+
+    // 2. Este método se ejecuta SOLO si el usuario da clic en "Eliminar" en el modal
+    private async Task ConfirmarEliminacionReal()
+    {
+        isLoading = true;
+        try
+        {
+            var response = await AlumnoService.DeleteAsync(idParaEliminar);
+
+            if (response.Succeeded)
+            {
+                // Asigna el mensaje directamente a la variable que usa tu HTML.
+                successMessage = "Alumno eliminado correctamente.";
+
+                // Opcional: Hacer que desaparezca solo a los 3 segundos
+                _ = Task.Delay(3000).ContinueWith(_ =>
+                {
+                    successMessage = null;
+                    InvokeAsync(StateHasChanged);
+                });
+
+                // Recargar la tabla
+                await CargarAlumnos(currentPage);
+            }
+            else
+            {
+                errorMessage = response.Message ?? "No se pudo eliminar.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Error: " + ex.Message;
         }
         finally
         {

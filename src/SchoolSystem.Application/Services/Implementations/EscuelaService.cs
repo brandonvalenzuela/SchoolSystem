@@ -134,6 +134,7 @@ namespace SchoolSystem.Application.Services.Implementations
                 throw new KeyNotFoundException($"Escuela con ID {id} no encontrada");
 
             await _unitOfWork.Escuelas.DeleteAsync(entity);
+
             await _unitOfWork.SaveChangesAsync();
         }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SchoolSystem.Application.Services.Interfaces;
 using SchoolSystem.Domain.Entities.Academico;
 using SchoolSystem.Domain.Entities.Auditoria;
 using SchoolSystem.Domain.Entities.Biblioteca;
@@ -27,24 +28,28 @@ namespace SchoolSystem.Infrastructure.Persistence.Context
     /// DbContext principal del Sistema de Gestión Escolar.
     /// Maneja todas las entidades y configuraciones de la base de datos.
     /// </summary>
-    public class SchoolSystemDbContext : DbContext
+    public class SchoolSystemDbContext : DbContext 
     {
         // TODO: Inyectar servicio para obtener el tenant (escuela) actual
         // private readonly ICurrentTenantService _currentTenantService;
 
-        // TODO: Inyectar servicio para obtener el usuario actual (para auditoría)
-        // private readonly ICurrentUserService _currentUserService;
-
+        private readonly ICurrentUserService? _currentUserService;
         #region Constructor
 
         /// <summary>
         /// Constructor del DbContext
         /// </summary>
         /// <param name="options">Opciones de configuración del DbContext</param>
-        public SchoolSystemDbContext(DbContextOptions<SchoolSystemDbContext> options)
+        public SchoolSystemDbContext(DbContextOptions<SchoolSystemDbContext> options, ICurrentUserService currentUser)
             : base(options)
         {
+            _currentUserService = currentUser;
         }
+
+        // CONSTRUCTOR 2: Para las Migraciones (Factory)
+        // No pide el usuario, por lo que _currentUserService quedará como null
+        public SchoolSystemDbContext(DbContextOptions<SchoolSystemDbContext> options)
+            : base(options) => _currentUserService = null;
 
         #endregion
 
@@ -465,16 +470,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Context
         #region Sobrescritura de SaveChanges para Auditoría Automática
 
         /// <summary>
-        /// Sobrescribe SaveChanges para aplicar auditoría automática
-        /// </summary>
-        /// <returns>Cantidad de registros afectados</returns>
-        public override int SaveChanges()
-        {
-            AplicarAuditoria();
-            return base.SaveChanges();
-        }
-
-        /// <summary>
         /// Sobrescribe SaveChangesAsync para aplicar auditoría automática
         /// </summary>
         /// <param name="cancellationToken">Token de cancelación</param>
@@ -495,8 +490,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Context
                            (e.State == EntityState.Added || e.State == EntityState.Modified));
 
             // TODO: Obtener el ID del usuario actual desde ICurrentUserService
-            // var currentUserId = _currentUserService?.GetCurrentUserId();
-            var currentUserId = 1; // Temporal para desarrollo
+            var currentUserId = _currentUserService?.UserId;
 
             foreach (var entry in entries)
             {

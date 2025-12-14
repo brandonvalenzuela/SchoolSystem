@@ -1,0 +1,212 @@
+﻿@page "/maestros"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@inject MaestroService MaestroService
+@inject UiService UiService
+@attribute [Authorize]
+
+<PageTitle>Maestros</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Plantilla Docente</h1>
+    <a href="maestros/crear" class="btn btn-primary">
+        <i class="oi oi-plus"></i> Nuevo Maestro
+    </a>
+</div>
+
+<!-- Alerta de éxito -->
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @successMessage
+        <button type="button" class="btn-close" @onclick="() => successMessage = null"></button>
+    </div>
+}
+
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center mt-5">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (maestros == null || !maestros.Any())
+{
+    <div class="alert alert-info">No hay maestros registrados.</div>
+}
+else
+{
+    <div class="table-responsive shadow-sm bg-white rounded">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>No. Empleado</th>
+                    <th>Nombre</th>
+                    <th>Especialidad</th>
+                    <th>Título</th>
+                    <th>Email</th>
+                    <th>Estado</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var maestro in maestros)
+                {
+                    <tr>
+                        <td><strong>@maestro.NumeroEmpleado</strong></td>
+                        <td>@maestro.NombreCompleto</td>
+                        <td>@maestro.Especialidad</td>
+                        <td>@maestro.TituloAcademico</td>
+                        <td><small>@maestro.Email</small></td>
+                        <td>
+                            @if (maestro.Activo)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <a href="maestros/editar/@maestro.Id" class="btn btn-sm btn-outline-info me-1" title="Editar">
+                                ✏️
+                            </a>
+                            <button class="btn btn-sm btn-outline-danger" title="Eliminar"
+                                    @onclick="() => SolicitarEliminacion(maestro.Id, maestro.NombreCompleto)">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <span class="text-muted">Página @currentPage de @totalPages</span>
+        <div>
+            <button class="btn btn-outline-secondary btn-sm" disabled="@(!hasPrevious)" @onclick="() => CargarMaestros(currentPage - 1)">Anterior</button>
+            <button class="btn btn-outline-secondary btn-sm" disabled="@(!hasNext)" @onclick="() => CargarMaestros(currentPage + 1)">Siguiente</button>
+        </div>
+    </div>
+}
+
+<SchoolSystem.Web.Shared.ConfirmacionModal @ref="modalEliminar"
+                                           Titulo="Eliminar Maestro"
+                                           Mensaje="@mensajeConfirmacion"
+                                           OnConfirm="ConfirmarEliminacionReal" />
+
+@code {
+    private List<MaestroDto> maestros;
+    private bool isLoading = true;
+    private string errorMessage;
+    private string successMessage;
+
+    // Paginación
+    private int currentPage = 1;
+    private int totalPages = 0;
+    private bool hasPrevious;
+    private bool hasNext;
+
+    // Eliminación
+    private SchoolSystem.Web.Shared.ConfirmacionModal modalEliminar;
+    private int idParaEliminar;
+    private string mensajeConfirmacion;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UiService.HasMessage)
+        {
+            successMessage = UiService.GetSuccessMessage();
+        }
+        await CargarMaestros(1);
+    }
+
+    private async Task CargarMaestros(int page)
+    {
+        isLoading = true;
+        try
+        {
+            var response = await MaestroService.GetMaestrosAsync(page, 10);
+            if (response.Succeeded)
+            {
+                if (!response.Data.Items.Any() && page > 1)
+                {
+                    await CargarMaestros(page - 1);
+                    return;
+                }
+
+                maestros = response.Data.Items.ToList();
+                currentPage = response.Data.PageNumber;
+                totalPages = response.Data.TotalPages;
+                hasPrevious = response.Data.HasPreviousPage;
+                hasNext = response.Data.HasNextPage;
+            }
+            else
+            {
+                errorMessage = response.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Error de conexión.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void SolicitarEliminacion(int id, string nombre)
+    {
+        idParaEliminar = id;
+        mensajeConfirmacion = $"¿Estás seguro de eliminar al maestro {nombre}? Esto podría afectar los grupos asignados.";
+        modalEliminar.Show();
+    }
+
+    private async Task ConfirmarEliminacionReal()
+    {
+        modalEliminar.Ocultar();
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            var response = await MaestroService.DeleteAsync(idParaEliminar);
+
+            if (response.Succeeded)
+            {
+                // Asigna el mensaje directamente a la variable que usa tu HTML.
+                successMessage = "Maestro eliminado correctamente.";
+
+                // Opcional: Hacer que desaparezca solo a los 3 segundos
+                _ = Task.Delay(3000).ContinueWith(_ =>
+                {
+                    successMessage = null;
+                    InvokeAsync(StateHasChanged);
+                });
+
+                // Recargar la tabla
+                await CargarMaestros(currentPage);
+            }
+            else
+            {
+                errorMessage = response.Message ?? "No se pudo eliminar el registro.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Error: " + ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+}

@@ -72,6 +72,7 @@ namespace SchoolSystem.Application.Services.Implementations
                 throw new KeyNotFoundException($"Padre con ID {id} no encontrado");
 
             await _unitOfWork.Padres.DeleteAsync(entity);
+
             await _unitOfWork.SaveChangesAsync();
         }
     }

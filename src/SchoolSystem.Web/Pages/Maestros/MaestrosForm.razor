@@ -1,0 +1,299 @@
+﻿@page "/maestros/crear"
+@page "/maestros/editar/{Id:int}"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@inject MaestroService MaestroService
+@inject UiService UiService
+@inject NavigationManager Navigation
+@attribute [Authorize]
+
+<div class="container mt-4 mb-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="oi oi-person"></i> @(Id == 0 ? "Nuevo Maestro" : "Editar Maestro")</h4>
+            <a href="maestros" class="btn btn-outline-light btn-sm">Cancelar</a>
+        </div>
+        <div class="card-body p-4">
+            @if (isLoading)
+            {
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                </div>
+            }
+            else
+            {
+                <EditForm Model="@modelo" OnValidSubmit="Guardar">
+                    <DataAnnotationsValidator />
+                    
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger mb-4">@errorMessage</div>
+                    }
+
+                    <div class="row">
+                        <!-- Sección 1: Datos Personales y Cuenta -->
+                        <div class="col-md-6 border-end">
+                            <h5 class="text-primary mb-3">Datos de Usuario</h5>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Nombre</label>
+                                    <InputText class="form-control" @bind-Value="modelo.Nombre" />
+                                    <ValidationMessage For="@(() => modelo.Nombre)" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Apellido Paterno</label>
+                                    <InputText class="form-control" @bind-Value="modelo.ApellidoPaterno" />
+                                    <ValidationMessage For="@(() => modelo.ApellidoPaterno)" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Apellido Materno</label>
+                                    <InputText class="form-control" @bind-Value="modelo.ApellidoMaterno" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Teléfono</label>
+                                    <InputText class="form-control" @bind-Value="modelo.Telefono" />
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label class="form-label">Email Institucional</label>
+                                    <InputText class="form-control" @bind-Value="modelo.Email" />
+                                    <ValidationMessage For="@(() => modelo.Email)" />
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Usuario (Login)</label>
+                                    <InputText class="form-control" @bind-Value="modelo.Username" />
+                                    <ValidationMessage For="@(() => modelo.Username)" />
+                                </div>
+
+                                @if (Id == 0) // Solo mostrar password al crear
+                                {
+                                    <div class="col-md-6">
+                                        <label class="form-label">Contraseña</label>
+                                        <InputText type="password" class="form-control" @bind-Value="modelo.Password" />
+                                        <ValidationMessage For="@(() => modelo.Password)" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Sección 2: Datos Profesionales -->
+                        <div class="col-md-6 ps-md-4">
+                            <h5 class="text-secondary mb-3">Información Académica</h5>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">No. Empleado</label>
+                                    <InputText class="form-control" @bind-Value="modelo.NumeroEmpleado" />
+                                    <ValidationMessage For="@(() => modelo.NumeroEmpleado)" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Fecha de Ingreso</label>
+                                    <InputDate class="form-control" @bind-Value="modelo.FechaIngreso" />
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Especialidad</label>
+                                    <InputText class="form-control" @bind-Value="modelo.Especialidad" placeholder="Ej: Matemáticas, Ciencias..." />
+                                    <ValidationMessage For="@(() => modelo.Especialidad)" />
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Título Académico</label>
+                                    <InputSelect class="form-select" @bind-Value="modelo.TituloAcademico">
+                                        <option value="">Seleccione...</option>
+                                        <option value="Licenciatura">Licenciatura</option>
+                                        <option value="Maestría">Maestría</option>
+                                        <option value="Doctorado">Doctorado</option>
+                                        <option value="Ingeniería">Ingeniería</option>
+                                    </InputSelect>
+                                    <ValidationMessage For="@(() => modelo.TituloAcademico)" />
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Universidad</label>
+                                    <InputText class="form-control" @bind-Value="modelo.Universidad" />
+                                </div>
+
+                                <div class="col-md-6">
+                                    <InputText class="form-control" @bind-Value="modelo.CedulaProfesional" />
+                                    <ValidationMessage For="@(() => modelo.CedulaProfesional)" />
+                                    <label class="form-label">Cédula Profesional</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                        <a href="maestros" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success px-4" disabled="@isSubmitting">
+                            @if (isSubmitting)
+                            {
+                                <span class="spinner-border spinner-border-sm"></span> <span>Guardando...</span>
+                            }
+                            else
+                            {
+                                <span><i class="oi oi-check"></i> Guardar Maestro</span>
+                            }
+                        </button>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    // Usamos el CreateDTO como base para el formulario
+    private CreateMaestroDto modelo = new CreateMaestroDto();
+
+    // Variables para guardar datos al editar
+    private int usuarioIdEdicion;
+    private bool activoEdicion;
+
+    private bool isLoading = false;
+    private bool isSubmitting = false;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id > 0)
+        {
+            await CargarDatos();
+        }
+    }
+
+    private async Task CargarDatos()
+    {
+        isLoading = true;
+        var response = await MaestroService.GetByIdAsync(Id);
+        if (response.Succeeded)
+        {
+            var m = response.Data;
+
+            // Guardamos datos ocultos
+            usuarioIdEdicion = m.UsuarioId;
+            activoEdicion = m.Activo;
+
+            // Mapeo seguro
+            modelo.EscuelaId = m.EscuelaId; // Asegúrate de mapear esto
+            modelo.Nombre = m.Nombre;
+            modelo.ApellidoPaterno = m.ApellidoPaterno;
+            modelo.ApellidoMaterno = m.ApellidoMaterno;
+            modelo.Username = m.Username;
+            modelo.Email = m.Email;
+            modelo.Telefono = m.Telefono;
+
+            modelo.NumeroEmpleado = m.NumeroEmpleado;
+            modelo.Especialidad = m.Especialidad;
+            modelo.TituloAcademico = m.TituloAcademico;
+            modelo.Universidad = m.Universidad;
+            modelo.FechaIngreso = m.FechaIngreso ?? DateTime.Now;
+            modelo.CedulaProfesional = m.CedulaProfesional;
+
+            // Manejo de fecha nula (importante)
+            modelo.FechaIngreso = m.FechaIngreso ?? DateTime.Now;
+            
+            // Password placeholder para pasar validación de [Required]
+            modelo.Password = "PLACEHOLDER_NO_CHANGE"; 
+        }
+        else
+        {
+           // TIP: Imprime el error real en consola para depurar
+            Console.WriteLine($"Error API: {response.Message}");
+            if(response.Errors != null) 
+            {
+                foreach(var err in response.Errors) Console.WriteLine(err);
+            }
+            
+            errorMessage = "No se pudo cargar la información.";
+        }
+        isLoading = false;
+    }
+
+    private async Task Guardar()
+    {
+        isSubmitting = true;
+        errorMessage = null;
+
+        try
+        {
+            if (Id == 0)
+            {
+                // MODO CREAR
+                var response = await MaestroService.CreateAsync(modelo);
+                if (response.Succeeded)
+                {
+                    UiService.ShowSuccess("Maestro registrado correctamente.");
+                    Navigation.NavigateTo("maestros");
+                }
+                else
+                {
+                    errorMessage = response.Message;
+                }
+            }
+            else
+            {
+                // MODO EDITAR
+                var updateDto = new UpdateMaestroDto
+                {
+                    Id = this.Id,
+                    UsuarioId = this.usuarioIdEdicion,
+                    
+                    Nombre = modelo.Nombre,
+                    ApellidoPaterno = modelo.ApellidoPaterno,
+                    ApellidoMaterno = modelo.ApellidoMaterno,
+                    Username = modelo.Username,
+                    Email = modelo.Email,
+                    Telefono = modelo.Telefono,
+                    Activo = this.activoEdicion,
+
+                    // Fecha de Nacimiento: Si no está en el form, pon una por defecto o la actual
+                    FechaNacimiento = modelo.FechaNacimiento == default ? DateTime.Now.AddYears(-25) : modelo.FechaNacimiento,
+                    Genero = modelo.Genero, // Asegúrate de enviarlo
+
+                    NumeroEmpleado = modelo.NumeroEmpleado,
+                    Especialidad = modelo.Especialidad,
+                    TituloAcademico = modelo.TituloAcademico,
+                    Universidad = modelo.Universidad,
+                    FechaIngreso = modelo.FechaIngreso,
+                    CedulaProfesional = modelo.CedulaProfesional,
+
+                    TipoContrato = 1, // 1 = Planta (o lo que sea tu enum default)
+                    Estatus = 1,      // 1 = Activo
+                };
+
+                var response = await MaestroService.UpdateAsync(Id, updateDto);
+
+                if (response.Succeeded)
+                {
+                    UiService.ShowSuccess("Información actualizada correctamente.");
+                    Navigation.NavigateTo("maestros");
+                }
+                else
+                {
+                    // Si Errors es una lista, la mostramos bonita
+                    if (response.Errors != null && response.Errors.Any())
+                    {
+                        errorMessage = string.Join("\n", response.Errors);
+                    }
+                    else
+                    {
+                        errorMessage = response.Message;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Error inesperado: " + ex.Message;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

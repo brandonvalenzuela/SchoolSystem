@@ -18,6 +18,7 @@ namespace SchoolSystem.Application.DTOs.Maestros
 
         // --- Datos del Usuario ---
         public string Nombre { get; set; }
+        public string Username { get; set; }
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
         public string NombreCompleto { get; set; }
@@ -49,5 +50,8 @@ namespace SchoolSystem.Application.DTOs.Maestros
         /// Antigüedad en años dentro de la institución.
         /// </summary>
         public int? AntiguedadEnAnios { get; set; }
+
+        public string CedulaProfesional { get; set; }
+
     }
 }

@@ -97,11 +97,11 @@ namespace SchoolSystem.API.Controllers
         /// <returns>ApiResponse indicando éxito</returns>
         [HttpDelete("{id}")]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<ActionResult<ApiResponse<int>>> Delete(int id)
+        public async Task<ActionResult<ApiResponse<bool>>> Delete(int id)
         {
             await _service.DeleteAsync(id);
 
-            return Ok(new ApiResponse<int>(id, "Maestro eliminado exitosamente."));
+            return Ok(new ApiResponse<bool>(true, "Maestro eliminado exitosamente."));
         }
     }
 }

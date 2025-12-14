@@ -70,6 +70,7 @@ namespace SchoolSystem.Application.Services.Implementations
                 throw new KeyNotFoundException($"Grado con ID {id} no encontrado");
 
             await _unitOfWork.Grados.DeleteAsync(entity);
+
             await _unitOfWork.SaveChangesAsync();
         }
     }

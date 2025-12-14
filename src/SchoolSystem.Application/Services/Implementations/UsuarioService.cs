@@ -2,7 +2,9 @@
 using SchoolSystem.Application.Common.Models;
 using SchoolSystem.Application.DTOs.Usuarios;
 using SchoolSystem.Application.Services.Interfaces;
+using SchoolSystem.Domain.Constants;
 using SchoolSystem.Domain.Entities.Usuarios;
+using SchoolSystem.Domain.Enums.Escuelas;
 using SchoolSystem.Domain.Interfaces;
 using System;
 using System.Collections;
@@ -71,23 +73,73 @@ namespace SchoolSystem.Application.Services.Implementations
 
         public async Task UpdateAsync(int id, UpdateUsuarioDto dto)
         {
-            var entity = await _unitOfWork.Usuarios.GetByIdAsync(id);
-            if (entity == null)
-                throw new KeyNotFoundException($"Usuario con ID {id} no encontrado");
+            var usuario = await _unitOfWork.Usuarios.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Usuario con ID {id} no encontrado");
 
-            _mapper.Map(dto, entity);
-            await _unitOfWork.Usuarios.UpdateAsync(entity);
+            // REGLA DE NEGOCIO: Protección de Roles Especializados
+            // Si intentan cambiar el rol y el usuario ya es de un tipo especial, debemos validar
+            if (usuario.Rol != dto.Rol)
+            {
+                if (EsRolEspecializado(usuario.Rol))
+                {
+                    // Aquí podrías ser más sofisticado y verificar si realmente existe el registro en la otra tabla,
+                    // pero por seguridad, es mejor prohibir el cambio de rol directo.
+                    throw new InvalidOperationException(
+                        $"No se puede cambiar el rol de un usuario tipo '{usuario.Rol}' directamente. " +
+                        "Debe dar de baja el perfil especializado primero.");
+                }
+            }
+            // REGLA: No permitir desactivar al propio SuperAdmin actual (opcional, requiere contexto de usuario actual)
+            if (usuario.Rol == RolUsuario.SuperAdmin && !dto.Activo)
+            {     
+                throw new InvalidOperationException("No se puede desactivar al SuperAdmin actual."); 
+            }
+
+            _mapper.Map(dto, usuario);
+
+            await _unitOfWork.Usuarios.UpdateAsync(usuario);
             await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await _unitOfWork.Usuarios.GetByIdAsync(id);
-            if (entity == null)
-                throw new KeyNotFoundException($"Usuario con ID {id} no encontrado");
+            var usuario = await _unitOfWork.Usuarios.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Usuario con ID {id} no encontrado");
 
-            await _unitOfWork.Usuarios.DeleteAsync(entity);
+            // REGLA 1: Protección de SuperAdmin
+            if (usuario.Rol == RolUsuario.SuperAdmin)
+            {
+                throw new InvalidOperationException("No se puede eliminar a un Super Administrador.");
+            }
+
+            // REGLA 2: Redirección de responsabilidad para Roles Especializados
+            if (EsRolEspecializado(usuario.Rol))
+            {
+                string modulo = ObtenerNombreModulo(usuario.Rol);
+                throw new InvalidOperationException(
+                    $"Este usuario tiene el rol '{usuario.Rol}'. " +
+                    $"Para mantener la integridad de los datos, debe eliminarlo desde el módulo de **{modulo}**.");
+            }
+
+            await _unitOfWork.Usuarios.DeleteAsync(usuario);
+
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        private bool EsRolEspecializado(RolUsuario rol)
+        {
+            return rol == RolUsuario.Maestro ||
+                   rol == RolUsuario.Padre ||
+                   rol == RolUsuario.Alumno;
+        }
+
+        private string ObtenerNombreModulo(RolUsuario rol)
+        {
+            return rol switch
+            {
+                RolUsuario.Maestro => "Maestros",
+                RolUsuario.Padre => "Padres de Familia",
+                RolUsuario.Alumno => "Alumnos",
+                _ => "General"
+            };
         }
     }
 }
