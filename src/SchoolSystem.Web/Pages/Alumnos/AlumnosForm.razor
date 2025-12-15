@@ -2,9 +2,10 @@
 @page "/alumnos/editar/{Id:int}"
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
 @inject AlumnoService AlumnoService
 @inject NavigationManager Navigation
-@inject UiService UiService
+@inject ToastService ToastService
 @attribute [Authorize]
 
 <div class="container mt-4">
@@ -149,7 +150,7 @@
         }
         else
         {
-            errorMessage = "No se pudo cargar el alumno.";
+            ToastService.ShowError("No se pudo cargar el alumno.");
         }
         isLoading = false;
     }
@@ -157,7 +158,7 @@
     private async Task GuardarAlumno()
     {
         isSubmitting = true;
-        errorMessage = null;
+        errorMessage = null!;
 
         try
         {
@@ -196,7 +197,7 @@
 
             if (exito)
             {
-                UiService.ShowSuccess(Id == 0 
+                ToastService.ShowSuccess(Id == 0 
                     ? "¡Alumno creado exitosamente!" 
                     : "¡Alumno actualizado exitosamente!");
 
@@ -204,12 +205,12 @@
             }
             else
             {
-                errorMessage = msg ?? "Error al guardar.";
+                ToastService.ShowError(msg ?? "Error al guardar.");
             }
         }
         catch (Exception ex)
         {
-            errorMessage = "Error de conexión: " + ex.Message;
+            ToastService.ShowError("Error de conexión: " + ex.Message);
         }
         finally
         {

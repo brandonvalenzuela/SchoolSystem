@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using SchoolSystem.Web;
 using SchoolSystem.Web.Auth;
 using SchoolSystem.Web.Services;
+using SchoolSystem.Web.Services.Toast;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -26,6 +27,7 @@ builder.Services.AddScoped<AlumnoService>();
 builder.Services.AddScoped<UiService>();
 builder.Services.AddScoped<MaestroService>();
 builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<ToastService>();
 
 // 4. Servicios de la Aplicación
 builder.Services.AddScoped<ApiService>();

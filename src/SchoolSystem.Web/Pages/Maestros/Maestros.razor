@@ -1,8 +1,10 @@
 ﻿@page "/maestros"
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
 @inject MaestroService MaestroService
 @inject UiService UiService
+@inject ToastService ToastService
 @attribute [Authorize]
 
 <PageTitle>Maestros</PageTitle>
@@ -121,9 +123,8 @@ else
     protected override async Task OnInitializedAsync()
     {
         if (UiService.HasMessage)
-        {
-            successMessage = UiService.GetSuccessMessage();
-        }
+             ToastService.ShowSuccess(UiService.GetSuccessMessage());
+
         await CargarMaestros(1);
     }
 
@@ -133,6 +134,7 @@ else
         try
         {
             var response = await MaestroService.GetMaestrosAsync(page, 10);
+
             if (response.Succeeded)
             {
                 if (!response.Data.Items.Any() && page > 1)
@@ -149,12 +151,12 @@ else
             }
             else
             {
-                errorMessage = response.Message;
+                ToastService.ShowError(response.Message);
             }
         }
         catch (Exception ex)
         {
-            errorMessage = "Error de conexión.";
+            ToastService.ShowError("Error de conexión.");
         }
         finally
         {
@@ -181,27 +183,18 @@ else
 
             if (response.Succeeded)
             {
-                // Asigna el mensaje directamente a la variable que usa tu HTML.
-                successMessage = "Maestro eliminado correctamente.";
+                ToastService.ShowSuccess("Maestro eliminado correctamente.");
 
-                // Opcional: Hacer que desaparezca solo a los 3 segundos
-                _ = Task.Delay(3000).ContinueWith(_ =>
-                {
-                    successMessage = null;
-                    InvokeAsync(StateHasChanged);
-                });
-
-                // Recargar la tabla
                 await CargarMaestros(currentPage);
             }
             else
             {
-                errorMessage = response.Message ?? "No se pudo eliminar el registro.";
+                ToastService.ShowError(response.Message ?? "No se pudo eliminar el registro.");
             }
         }
         catch (Exception ex)
         {
-            errorMessage = "Error: " + ex.Message;
+            ToastService.ShowError("Error: " + ex.Message);
         }
         finally
         {

@@ -2,9 +2,10 @@
 @page "/usuarios/editar/{Id:int}"
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
 @inject UsuarioService UsuarioService
-@inject UiService UiService
 @inject NavigationManager Navigation
+@inject ToastService ToastService
 @attribute [Authorize]
 
 <div class="container mt-4">
@@ -87,7 +88,7 @@
     [Parameter] public int Id { get; set; }
     private CreateUsuarioDto modelo = new CreateUsuarioDto { Rol = 4 }; // Default Administrativo
     private bool isLoading = false, isSubmitting = false;
-    private string errorMessage;
+    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -123,9 +124,12 @@
             {
                 var res = await UsuarioService.CreateAsync(modelo);
                 if (res.Succeeded)
-                { UiService.ShowSuccess("Usuario creado."); Navigation.NavigateTo("usuarios"); }
+                { 
+                    ToastService.ShowSuccess("Usuario creado.");
+                    Navigation.NavigateTo("usuarios"); 
+                }
                 else
-                    errorMessage = res.Message;
+                    ToastService.ShowError(res.Message);
             }
             else
             {

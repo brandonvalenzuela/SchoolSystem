@@ -2,9 +2,10 @@
 @page "/maestros/editar/{Id:int}"
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
 @inject MaestroService MaestroService
-@inject UiService UiService
 @inject NavigationManager Navigation
+@inject ToastService ToastService
 @attribute [Authorize]
 
 <div class="container mt-4 mb-5">
@@ -209,7 +210,7 @@
                 foreach(var err in response.Errors) Console.WriteLine(err);
             }
             
-            errorMessage = "No se pudo cargar la información.";
+            ToastService.ShowError("No se pudo cargar la información.");
         }
         isLoading = false;
     }
@@ -227,12 +228,12 @@
                 var response = await MaestroService.CreateAsync(modelo);
                 if (response.Succeeded)
                 {
-                    UiService.ShowSuccess("Maestro registrado correctamente.");
+                    ToastService.ShowSuccess("Maestro registrado correctamente.");
                     Navigation.NavigateTo("maestros");
                 }
                 else
                 {
-                    errorMessage = response.Message;
+                    ToastService.ShowError(response.Message);
                 }
             }
             else
@@ -270,7 +271,7 @@
 
                 if (response.Succeeded)
                 {
-                    UiService.ShowSuccess("Información actualizada correctamente.");
+                    ToastService.ShowSuccess("Información actualizada correctamente.");
                     Navigation.NavigateTo("maestros");
                 }
                 else
@@ -278,18 +279,18 @@
                     // Si Errors es una lista, la mostramos bonita
                     if (response.Errors != null && response.Errors.Any())
                     {
-                        errorMessage = string.Join("\n", response.Errors);
+                        ToastService.ShowError(string.Join("\n", response.Errors));
                     }
                     else
                     {
-                        errorMessage = response.Message;
+                        ToastService.ShowError(response.Message);
                     }
                 }
             }
         }
         catch (Exception ex)
         {
-            errorMessage = "Error inesperado: " + ex.Message;
+            ToastService.ShowError("Error inesperado: " + ex.Message);
         }
         finally
         {

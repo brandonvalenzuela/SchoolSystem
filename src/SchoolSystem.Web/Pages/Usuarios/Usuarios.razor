@@ -1,8 +1,10 @@
 ﻿@page "/usuarios"
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
 @inject UsuarioService UsuarioService
 @inject UiService UiService
+@inject ToastService ToastService
 @attribute [Authorize]
 
 <PageTitle>Usuarios del Sistema</PageTitle>
@@ -116,7 +118,8 @@ else
     protected override async Task OnInitializedAsync()
     {
         if (UiService.HasMessage)
-            successMessage = UiService.GetSuccessMessage();
+             ToastService.ShowSuccess(UiService.GetSuccessMessage());
+
         await Cargar(1);
     }
 
@@ -167,7 +170,7 @@ else
 
             if (response.Succeeded)
             {
-                successMessage = "Usuario eliminado correctamente.";
+                ToastService.ShowSuccess("Usuario eliminado correctamente.");
                 await Cargar(currentPage);
             }
             else
@@ -177,17 +180,17 @@ else
                 // Opción A: Si hay una lista de errores (validaciones múltiples)
                 if (response.Errors != null && response.Errors.Any())
                 {
-                    errorMessage = response.Errors.First();
+                    ToastService.ShowError(response.Errors.First());
                 }
                 // Opción B: Si hay un mensaje directo (tu caso actual)
                 else if (!string.IsNullOrEmpty(response.Message))
                 {
-                    errorMessage = response.Message;
+                    ToastService.ShowError(response.Message ?? "Error al eliminar.");
                 }
                 // Opción C: Fallback
                 else
                 {
-                    errorMessage = "No se pudo eliminar el registro.";
+                    ToastService.ShowError("No se pudo eliminar el registro.");
                 }
 
                 // Para depurar: Ver en la consola del navegador (F12)

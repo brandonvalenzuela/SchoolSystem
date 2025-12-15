@@ -1,9 +1,11 @@
 ﻿@page "/alumnos"
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
 @attribute [Authorize]
 @inject AlumnoService AlumnoService
 @inject UiService UiService
+@inject ToastService ToastService
 
 <PageTitle>Alumnos</PageTitle>
 
@@ -123,15 +125,8 @@ else
     {
 
         if (UiService.HasMessage)
-        {
-            successMessage = UiService.GetSuccessMessage();
+            ToastService.ShowSuccess(UiService.GetSuccessMessage());
 
-            _ = Task.Delay(3000).ContinueWith(_ =>
-            {
-                successMessage = null;
-                StateHasChanged();
-            });
-        }
         await CargarAlumnos(1);
     }
 
@@ -153,12 +148,12 @@ else
             }
             else
             {
-                errorMessage = response.Message ?? "No se pudieron cargar los alumnos.";
+                 ToastService.ShowError(response.Message ?? "No se pudieron cargar los alumnos.");
             }
         }
         catch (Exception ex)
         {
-            errorMessage = "Error de conexión: " + ex.Message;
+             ToastService.ShowError("Error de conexión: " + ex.Message);
         }
         finally
         {
@@ -190,26 +185,19 @@ else
             if (response.Succeeded)
             {
                 // Asigna el mensaje directamente a la variable que usa tu HTML.
-                successMessage = "Alumno eliminado correctamente.";
-
-                // Opcional: Hacer que desaparezca solo a los 3 segundos
-                _ = Task.Delay(3000).ContinueWith(_ =>
-                {
-                    successMessage = null;
-                    InvokeAsync(StateHasChanged);
-                });
+                ToastService.ShowSuccess("Alumno eliminado correctamente.");
 
                 // Recargar la tabla
                 await CargarAlumnos(currentPage);
             }
             else
             {
-                errorMessage = response.Message ?? "No se pudo eliminar.";
+                ToastService.ShowError(response.Message ?? "No se pudo eliminar.");
             }
         }
         catch (Exception ex)
         {
-            errorMessage = "Error: " + ex.Message;
+            ToastService.ShowError("Error: " + ex.Message);
         }
         finally
         {
