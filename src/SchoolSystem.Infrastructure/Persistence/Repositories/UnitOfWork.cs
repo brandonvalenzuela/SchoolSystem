@@ -1,9 +1,11 @@
-﻿using SchoolSystem.Domain.Entities.Academico;
+﻿using Hangfire.Dashboard;
+using SchoolSystem.Domain.Entities.Academico;
 using SchoolSystem.Domain.Entities.Auditoria;
 using SchoolSystem.Domain.Entities.Conducta;
 using SchoolSystem.Domain.Entities.Configuracion;
 using SchoolSystem.Domain.Entities.Escuelas;
 using SchoolSystem.Domain.Entities.Evaluacion;
+using SchoolSystem.Domain.Entities.Finanzas;
 using SchoolSystem.Domain.Entities.Usuarios;
 using SchoolSystem.Domain.Interfaces;
 using SchoolSystem.Infrastructure.Persistence.Configurations;
@@ -35,6 +37,10 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         private IRepository<RegistroConducta> _registroConductas;
         private IRepository<LogAuditoria> _logAuditorias;
         private IRepository<ConfiguracionEscuela> _configuracionEscuelas;
+        private IRepository<Cargo> _cargos;
+        private IRepository<ConceptoPago> _conceptoPagos;
+        private IRepository<EstadoCuenta> _estadoCuentas;
+        private IRepository<Pago> _pagos;
 
         public UnitOfWork(SchoolSystemDbContext context)
         {
@@ -56,8 +62,10 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         public IRepository<RegistroConducta> RegistroConductas => _registroConductas ??= new Repository<RegistroConducta>(_context);
         public IRepository<LogAuditoria> LogAuditorias => _logAuditorias ??= new Repository<LogAuditoria>(_context);
         public IRepository<ConfiguracionEscuela> ConfiguracionEscuelas => _configuracionEscuelas ??= new Repository<ConfiguracionEscuela>(_context);
-
-     
+        public IRepository<Cargo> Cargos => _cargos ??= new Repository<Cargo>(_context);
+        public IRepository<ConceptoPago> ConceptoPagos => _conceptoPagos ??= new Repository<ConceptoPago>(_context);
+        public IRepository<EstadoCuenta> EstadoCuentas => _estadoCuentas ??= new Repository<EstadoCuenta>(_context);
+        public IRepository<Pago> Pagos => _pagos ??= new Repository<Pago>(_context);
 
         public async Task<int> SaveChangesAsync()
         {

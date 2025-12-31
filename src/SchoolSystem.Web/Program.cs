@@ -28,6 +28,10 @@ builder.Services.AddScoped<UiService>();
 builder.Services.AddScoped<MaestroService>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<ToastService>();
+builder.Services.AddScoped<GradoService>();
+builder.Services.AddScoped<MateriaService>();
+builder.Services.AddScoped<GrupoService>();
+builder.Services.AddScoped<InscripcionService>();
 
 // 4. Servicios de la Aplicación
 builder.Services.AddScoped<ApiService>();

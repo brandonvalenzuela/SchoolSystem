@@ -1,0 +1,195 @@
+﻿@page "/materias"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
+@inject MateriaService MateriaService
+@inject UiService UiService
+@inject ToastService ToastService
+@attribute [Authorize]
+
+<PageTitle>Materias</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Catálogo de Materias</h1>
+    <a href="materias/crear" class="btn btn-primary">
+        <i class="oi oi-plus"></i> Nueva Materia
+    </a>
+</div>
+
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center mt-5">
+        <div class="spinner-border text-primary"></div>
+    </div>
+}
+else if (materias == null || !materias.Any())
+{
+    <div class="alert alert-info">No hay materias registradas.</div>
+}
+else
+{
+    <div class="table-responsive bg-white shadow-sm rounded">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Clave</th>
+                    <th>Nombre</th>
+                    <th>Área</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in materias)
+                {
+                    <tr>
+                        <td class="fw-bold">@item.Clave</td>
+                        <td>@item.Nombre</td>
+                        <td>@ObtenerNombreArea(item.Area)</td> <!-- Convertir ID a Texto -->
+                        <td>@ObtenerNombreTipo(item.Tipo)</td> <!-- Convertir ID a Texto -->
+                        <td>
+                            @if (item.Activo)
+                            {
+                                <span class="badge bg-success">Activa</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactiva</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <a href="materias/editar/@item.Id" class="btn btn-sm btn-outline-info me-1" title="Editar">
+                                ✏️
+                            </a>
+                            <button class="btn btn-sm btn-outline-danger" title="Eliminar"
+                                    @onclick="() => SolicitarEliminacion(item)">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <span class="text-muted">Página @currentPage de @totalPages</span>
+        <div>
+            <button class="btn btn-outline-secondary btn-sm" disabled="@(!hasPrevious)" @onclick="() => Cargar(currentPage - 1)">Anterior</button>
+            <button class="btn btn-outline-secondary btn-sm" disabled="@(!hasNext)" @onclick="() => Cargar(currentPage + 1)">Siguiente</button>
+        </div>
+    </div>
+}
+
+<!-- Modal de Confirmación -->
+<SchoolSystem.Web.Shared.ConfirmacionModal @ref="modalEliminar"
+                                           Titulo="Eliminar Materia"
+                                           Mensaje="@mensajeConfirmacion"
+                                           OnConfirm="ConfirmarEliminacionReal" />
+
+@code {
+    private List<MateriaDto> materias;
+    private bool isLoading = true;
+    private string errorMessage;
+    private string successMessage;
+
+    // Paginación
+    private int currentPage = 1;
+    private int totalPages = 0;
+    private bool hasPrevious, hasNext;
+
+    // Eliminación
+    private SchoolSystem.Web.Shared.ConfirmacionModal modalEliminar;
+    private int idEliminar;
+    private string mensajeConfirmacion;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UiService.HasMessage)
+            ToastService.ShowSuccess(UiService.GetSuccessMessage());
+        await Cargar(1);
+    }
+
+    private async Task Cargar(int page)
+    {
+        isLoading = true;
+        try
+        {
+            var response = await MateriaService.GetAsync(page, 10);
+            if (response.Succeeded)
+            {
+                materias = response.Data.Items.ToList();
+                currentPage = response.Data.PageNumber;
+                totalPages = response.Data.TotalPages;
+                hasPrevious = response.Data.HasPreviousPage;
+                hasNext = response.Data.HasNextPage;
+            }
+            else
+            {
+                errorMessage = response.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Error de conexión: " + ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void SolicitarEliminacion(MateriaDto item)
+    {
+        idEliminar = item.Id;
+        mensajeConfirmacion = $"¿Eliminar la materia '{item.Nombre}' ({item.Clave})? Esto podría afectar calificaciones asociadas.";
+        modalEliminar.Show();
+    }
+
+    private async Task ConfirmarEliminacionReal()
+    {
+        modalEliminar.Ocultar();
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            var response = await MateriaService.DeleteAsync(idEliminar);
+
+            if (response.Succeeded)
+            {
+                ToastService.ShowSuccess("Materia eliminada correctamente.");
+
+                await Cargar(currentPage);
+            }
+            else
+            {
+                ToastService.ShowError(response.Message ?? "No se pudo eliminar el registro.");
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError("Error: " + ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    // Helpers para mostrar nombres en lugar de IDs (ajusta los valores según tus Enums del Backend)
+    private string ObtenerNombreArea(string areaId)
+    {
+        // Si el DTO devuelve string "Ciencias", lo retornamos.
+        // Si devuelve "1", hacemos el switch. Asumo que tu DTO devuelve Strings gracias al AutoMapper.
+        return areaId;
+    }
+
+    private string ObtenerNombreTipo(string tipoId)
+    {
+        return tipoId;
+    }
+}

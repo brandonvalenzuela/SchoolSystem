@@ -1,0 +1,215 @@
+﻿@page "/grupos/crear"
+@page "/grupos/editar/{Id:int}"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@inject GradoService GradoService   // Necesario para el Select
+@inject MaestroService MaestroService // Necesario para el Select
+@inject GrupoService GrupoService // Necesario para el Select
+@inject UiService UiService
+@inject NavigationManager Navigation
+@attribute [Authorize]
+
+<div class="container mt-4 mb-5">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between">
+            <h4 class="mb-0">@(Id == 0 ? "Nuevo Grupo" : "Editar Grupo")</h4>
+            <a href="grupos" class="btn btn-outline-light btn-sm">Cancelar</a>
+        </div>
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <p class="text-center">Cargando catalogos...</p>
+            }
+            else
+            {
+                <EditForm Model="@modelo" OnValidSubmit="Guardar">
+                    <DataAnnotationsValidator />
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger">@errorMessage</div>
+                    }
+
+                    <div class="row g-3">
+                        <!-- Selección de Grado -->
+                        <div class="col-md-6">
+                            <label class="form-label">Grado Académico *</label>
+                            <InputSelect class="form-select" @bind-Value="modelo.GradoId">
+                                <option value="">-- Seleccione Grado --</option>
+                                @foreach (var g in listaGrados)
+                                {
+                                    <option value="@g.Id">@g.NombreCompleto</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => modelo.GradoId)" />
+                        </div>
+
+                        <!-- Selección de Maestro Titular -->
+                        <div class="col-md-6">
+                            <label class="form-label">Maestro Titular (Opcional)</label>
+                            <InputSelect class="form-select" @bind-Value="modelo.MaestroTitularId">
+                                <option value="">-- Sin asignar --</option>
+                                @foreach (var m in listaMaestros)
+                                {
+                                    <option value="@m.Id">@m.NombreCompleto</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <!-- Nombre y Ciclo -->
+                        <div class="col-md-4">
+                            <label class="form-label">Nombre del Grupo *</label>
+                            <InputText class="form-control" @bind-Value="modelo.Nombre" placeholder="Ej: A, B, Matutino" />
+                            <ValidationMessage For="@(() => modelo.Nombre)" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Ciclo Escolar *</label>
+                            <InputText class="form-control" @bind-Value="modelo.CicloEscolar" placeholder="Ej: 2024-2025" />
+                            <ValidationMessage For="@(() => modelo.CicloEscolar)" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Turno</label>
+                            <InputSelect class="form-select" @bind-Value="modelo.Turno">
+                                <option value="1">Matutino</option>
+                                <option value="2">Vespertino</option>
+                                <option value="3">Nocturno</option>
+                                <option value="4">Mixto</option>
+                            </InputSelect>
+                        </div>
+
+                        <!-- Capacidad y Aula -->
+                        <div class="col-md-4">
+                            <label class="form-label">Capacidad Máxima</label>
+                            <InputNumber class="form-control" @bind-Value="modelo.CapacidadMaxima" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Aula</label>
+                            <InputText class="form-control" @bind-Value="modelo.Aula" />
+                        </div>
+
+                        <div class="col-md-4 d-flex align-items-center mt-4">
+                            <div class="form-check form-switch">
+                                <InputCheckbox class="form-check-input" @bind-Value="modelo.Activo" id="activoCheck" />
+                                <label class="form-check-label" for="activoCheck">Grupo Activo</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-end">
+                        <button type="submit" class="btn btn-success px-4" disabled="@isSubmitting">Guardar</button>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private CreateGrupoDto modelo = new CreateGrupoDto { CapacidadMaxima = 30, Turno = Web.Enum.Turno.Matutino };
+
+    // Listas para los Selects
+    private List<GradoDto> listaGrados = new();
+    private List<MaestroDto> listaMaestros = new();
+
+    private bool isLoading = true;
+    private bool isSubmitting = false;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        // 1. Cargar catálogos necesarios en paralelo
+        var t1 = GradoService.GetGradosAsync(1, 100); // Traer todos
+        var t2 = MaestroService.GetMaestrosAsync(1, 100); // Traer todos
+
+        await Task.WhenAll(t1, t2);
+
+        if (t1.Result.Succeeded)
+            listaGrados = t1.Result.Data.Items.ToList();
+        if (t2.Result.Succeeded)
+            listaMaestros = t2.Result.Data.Items.ToList();
+
+        // 2. Si es edición, cargar datos
+        if (Id > 0)
+        {
+            var res = await GrupoService.GetByIdAsync(Id);
+            if (res.Succeeded)
+            {
+                var g = res.Data;
+                modelo.Nombre = g.Nombre;
+                modelo.GradoId = g.GradoId;
+                modelo.CicloEscolar = g.CicloEscolar;
+                modelo.CapacidadMaxima = g.CapacidadMaxima;
+                modelo.MaestroTitularId = g.MaestroTitularId;
+                modelo.Aula = g.Aula;
+                // Mapeo de turno (string a enum/int si es necesario)
+                modelo.Activo = g.Activo;
+            }
+        }
+
+        isLoading = false;
+    }
+
+    private async Task Guardar()
+    {
+        isSubmitting = true;
+        errorMessage = null;
+
+        try
+        {
+            if (Id == 0)
+            {
+                var res = await GrupoService.CreateAsync(modelo);
+                if (res.Succeeded)
+                {
+                    UiService.ShowSuccess("Grupo creado.");
+                    Navigation.NavigateTo("grupos");
+                }
+                else
+                    errorMessage = res.Message;
+            }
+            else
+            {
+                var updateDto = new UpdateGrupoDto
+                {
+                    Id = this.Id,
+                    Nombre = modelo.Nombre,
+                    GradoId = modelo.GradoId,
+                    CicloEscolar = modelo.CicloEscolar,
+                    CapacidadMaxima = modelo.CapacidadMaxima,
+                    MaestroTitularId = modelo.MaestroTitularId,
+                    Aula = modelo.Aula,
+                    Turno = modelo.Turno,
+                    Activo = modelo.Activo
+                };
+
+                var res = await GrupoService.UpdateAsync(Id, updateDto);
+                if (res.Succeeded)
+                {
+                    UiService.ShowSuccess("Grupo actualizado.");
+                    Navigation.NavigateTo("grupos");
+                }
+                else
+                {
+                    if (res.Errors != null && res.Errors.Any())
+                        errorMessage = string.Join("\n", res.Errors);
+                    else
+                        errorMessage = res.Message;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

@@ -318,6 +318,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
                     b.Property<string>("Descripcion")
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
@@ -330,6 +336,11 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.Property<int?>("HorasSemanales")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("NivelEducativoId")
                         .HasColumnType("int");
@@ -650,6 +661,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
                     b.Property<int?>("DiasAsistidos")
                         .HasColumnType("int");
 
@@ -689,6 +706,11 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.Property<int>("GrupoId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<int?>("LugarEnGrupo")
                         .HasColumnType("int");
@@ -994,6 +1016,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
                     b.Property<string>("Descripcion")
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
@@ -1008,6 +1036,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<string>("InstalacionesRequeridas")
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("MaterialesRequeridos")
                         .HasMaxLength(1000)
@@ -5344,6 +5377,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
                     b.Property<int>("EscuelaId")
                         .HasColumnType("int");
 
@@ -5380,6 +5419,11 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.Property<TimeSpan?>("HoraSalida")
                         .HasColumnType("time(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("Justificado")
                         .ValueGeneratedOnAdd()
@@ -5513,6 +5557,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
                     b.Property<bool>("EsRecalificacion")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
@@ -5543,6 +5593,11 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.Property<int>("GrupoId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("MateriaId")
                         .HasColumnType("int");

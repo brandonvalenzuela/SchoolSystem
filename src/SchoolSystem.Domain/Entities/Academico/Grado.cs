@@ -10,7 +10,7 @@ namespace SchoolSystem.Domain.Entities.Academico
     /// Entidad Grado - Representa un grado escolar dentro de un nivel educativo
     /// Ejemplos: 1°, 2°, 3° de Primaria | 1°, 2°, 3° de Secundaria
     /// </summary>
-    public class Grado : BaseEntity, IAuditableEntity
+    public class Grado : BaseEntity, IAuditableEntity, ISoftDeletable
     {
         #region Propiedades de la Escuela (Multi-tenant)
 
@@ -111,6 +111,25 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// ID del usuario que realizó la última actualización
         /// </summary>
         public int? UpdatedBy { get; set; }
+
+        #endregion
+
+        #region Soft Delete (ISoftDeletable)
+
+        /// <summary>
+        /// Indica si el alumno ha sido eliminado lógicamente
+        /// </summary>
+        public bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// Fecha de eliminación lógica
+        /// </summary>
+        public DateTime? DeletedAt { get; set; }
+
+        /// <summary>
+        /// ID del usuario que eliminó el registro
+        /// </summary>
+        public int? DeletedBy { get; set; }
 
         #endregion
 

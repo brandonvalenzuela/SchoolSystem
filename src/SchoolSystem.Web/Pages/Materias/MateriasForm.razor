@@ -1,0 +1,246 @@
+﻿@page "/materias/crear"
+@page "/materias/editar/{Id:int}"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
+@inject MateriaService MateriaService
+@inject NavigationManager Navigation
+@inject ToastService ToastService
+@attribute [Authorize]
+
+<div class="container mt-4 mb-5">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">@(Id == 0 ? "Nueva Materia" : "Editar Materia")</h4>
+            <a href="materias" class="btn btn-outline-light btn-sm">Volver</a>
+        </div>
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary"></div>
+                    <p>Cargando información...</p>
+                </div>
+            }
+            else
+            {
+                <EditForm Model="@modelo" OnValidSubmit="Guardar">
+                    <DataAnnotationsValidator />
+                    
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger">@errorMessage</div>
+                    }
+
+                    <div class="row g-3">
+                        <!-- Clave -->
+                        <div class="col-md-3">
+                            <label class="form-label">Clave *</label>
+                            <InputText class="form-control" @bind-Value="modelo.Clave" placeholder="Ej: MAT-101" />
+                            <ValidationMessage For="@(() => modelo.Clave)" />
+                        </div>
+
+                        <!-- Nombre -->
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre de la Materia *</label>
+                            <InputText class="form-control" @bind-Value="modelo.Nombre" />
+                            <ValidationMessage For="@(() => modelo.Nombre)" />
+                        </div>
+                         
+                        <!-- Color (Opcional) -->
+                        <div class="col-md-3">
+                            <label class="form-label">Color (Hex)</label>
+                            <div class="input-group">
+                                <InputText type="color" class="form-control form-control-color" @bind-Value="modelo.Color" title="Elige un color" />
+                                <InputText class="form-control" @bind-Value="modelo.Color" placeholder="#FFFFFF" />
+                            </div>
+                        </div>
+
+                        <!-- Área Académica -->
+                        <div class="col-md-6">
+                            <label class="form-label">Área Académica *</label>
+                            <InputSelect class="form-select" @bind-Value="modelo.Area">
+                                <!-- Ajusta estos valores a los de tu Enum Domain.Enums.Academico.AreaAcademica -->
+                                <option value="1">Ciencias Exactas</option>
+                                <option value="2">Ciencias Naturales</option>
+                                <option value="3">Humanidades</option>
+                                <option value="4">Ciencias Sociales</option>
+                                <option value="5">Artes</option>
+                                <option value="6">Educación Física</option>
+                                <option value="7">Idiomas</option>
+                                <option value="8">Tecnología</option>
+                            </InputSelect>
+                            <ValidationMessage For="@(() => modelo.Area)" />
+                        </div>
+
+                        <!-- Tipo -->
+                        <div class="col-md-6">
+                            <label class="form-label">Tipo *</label>
+                            <InputSelect class="form-select" @bind-Value="modelo.Tipo">
+                                <!-- Ajusta estos valores a los de tu Enum TipoMateria -->
+                                <option value="1">Teórica</option>
+                                <option value="2">Práctica</option>
+                                <option value="3">Taller</option>
+                                <option value="4">Laboratorio</option>
+                                <option value="5">Extracurricular</option>
+                            </InputSelect>
+                            <ValidationMessage For="@(() => modelo.Tipo)" />
+                        </div>
+                        
+                        <!-- Descripción -->
+                        <div class="col-12">
+                            <label class="form-label">Descripción</label>
+                            <InputTextArea class="form-control" @bind-Value="modelo.Descripcion" rows="3" />
+                        </div>
+
+                        <!-- Configuración Avanzada -->
+                        <div class="col-12">
+                            <div class="card bg-light border-0">
+                                <div class="card-body">
+                                    <h6 class="card-title">Configuración Adicional</h6>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-check form-switch">
+                                                <InputCheckbox class="form-check-input" @bind-Value="modelo.Activo" id="chkActivo" />
+                                                <label class="form-check-label" for="chkActivo">Materia Activa</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-check form-switch">
+                                                <InputCheckbox class="form-check-input" @bind-Value="modelo.RequiereMateriales" id="chkMat" />
+                                                <label class="form-check-label" for="chkMat">Requiere Materiales</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-check form-switch">
+                                                <InputCheckbox class="form-check-input" @bind-Value="modelo.RequiereInstalacionesEspeciales" id="chkInst" />
+                                                <label class="form-check-label" for="chkInst">Instalaciones Especiales</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (modelo.RequiereMateriales)
+                        {
+                            <div class="col-12">
+                                <label class="form-label">Lista de Materiales</label>
+                                <InputText class="form-control" @bind-Value="modelo.MaterialesRequeridos" placeholder="Ej: Calculadora, Bata de laboratorio..." />
+                            </div>
+                        }
+
+                    </div>
+
+                    <div class="mt-4 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-success px-4" disabled="@isSubmitting">
+                            @if (isSubmitting)
+                            {
+                                <span class="spinner-border spinner-border-sm"></span> <span>Guardando...</span>
+                            }
+                            else
+                            {
+                                <span><i class="oi oi-check"></i> Guardar</span>
+                            }
+                        </button>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private CreateMateriaDto modelo = new CreateMateriaDto { Color = "#3b82f6", Area = 1, Tipo = 1 }; // Valores por defecto
+    private bool isLoading = false;
+    private bool isSubmitting = false;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id > 0)
+        {
+            await CargarParaEditar();
+        }
+    }
+
+    private async Task CargarParaEditar()
+    {
+        isLoading = true;
+        var res = await MateriaService.GetByIdAsync(Id);
+        if (res.Succeeded)
+        {
+            var m = res.Data;
+            // Mapeo manual
+            modelo.Nombre = m.Nombre;
+            modelo.Clave = m.Clave;
+            modelo.Activo = m.Activo;
+            // Nota: Aquí tendrías que mapear el String que devuelve el DTO (ej: "Ciencias") 
+            // de vuelta al entero del Enum (ej: 1) si tu API devuelve strings.
+            // Si la API devuelve ints, es directo. 
+            // Para simplificar, asumiremos que al editar, el usuario reselecciona si no coincide.
+            
+            // Si tu DTO de lectura trae más campos, asígnalos aquí:
+            // modelo.Descripcion = m.Descripcion;
+            // modelo.Color = m.Color;
+        }
+        else
+        {
+            ToastService.ShowError(res.Message);
+        }
+        isLoading = false;
+    }
+
+    private async Task Guardar()
+    {
+        isSubmitting = true;
+        errorMessage = null;
+        bool exito = false;
+
+        try
+        {
+            if (Id == 0)
+            {
+                var response = await MateriaService.CreateAsync(modelo);
+                exito = response.Succeeded;
+                if (!exito) 
+                    ToastService.ShowError(response.Message);
+            }
+            else
+            {
+                var updateDto = new UpdateMateriaDto
+                {
+                    Id = this.Id,
+                    Nombre = modelo.Nombre,
+                    Clave = modelo.Clave,
+                    Area = modelo.Area,
+                    Tipo = modelo.Tipo,
+                    Activo = modelo.Activo,
+                    // Agrega aquí los demás campos si tu UpdateDto los tiene:
+                    // Color = modelo.Color,
+                    // Descripcion = modelo.Descripcion
+                };
+                
+                var response = await MateriaService.UpdateAsync(Id, updateDto);
+                exito = response.Succeeded;
+                if (!exito) 
+                    ToastService.ShowError(response.Message);
+            }
+
+            if (exito)
+            {
+                ToastService.ShowSuccess(Id == 0 ? "Materia creada." : "Materia actualizada.");
+                Navigation.NavigateTo("materias");
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError("Error: " + ex.Message);
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

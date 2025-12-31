@@ -1,0 +1,180 @@
+﻿@page "/inscripciones"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
+@inject InscripcionService InscripcionService
+@inject UiService UiService
+@inject ToastService ToastService
+@attribute [Authorize]
+
+<PageTitle>Inscripciones</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Inscripciones</h1>
+    <a href="inscripciones/crear" class="btn btn-primary"><i class="oi oi-plus"></i> Inscribir Alumno</a>
+</div>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @successMessage
+        <button type="button" class="btn-close" @onclick="() => successMessage = null"></button>
+    </div>
+}
+
+@if (isLoading)
+{
+    <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+}
+else
+{
+    <div class="table-responsive bg-white shadow-sm rounded">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Ciclo</th>
+                    <th>Alumno</th>
+                    <th>Grupo</th>
+                    <th>Estado</th>
+                    <th>Promedio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.CicloEscolar</td>
+                        <td class="fw-bold">@item.NombreCompletoAlumno</td>
+                        <td>@item.NombreCompletoGrupo</td>
+                        <td>
+                            <span class="badge @ObtenerClaseEstatus(item.Estatus)">@item.Estatus</span>
+                        </td>
+                        <td>@(item.PromedioAcumulado?.ToString("F1") ?? "-")</td>
+                        <td>
+                            <a href="inscripciones/editar/@item.Id" class="btn btn-sm btn-outline-info me-1">✏️</a>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => SolicitarEliminacion(item)">🗑️</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="mt-3 d-flex justify-content-between">
+        <span>Página @currentPage de @totalPages</span>
+        <div>
+            <button class="btn btn-outline-secondary btn-sm" disabled="@(!hasPrevious)" @onclick="() => CargarInscripciones(currentPage - 1)">Anterior</button>
+            <button class="btn btn-outline-secondary btn-sm" disabled="@(!hasNext)" @onclick="() => CargarInscripciones(currentPage + 1)">Siguiente</button>
+        </div>
+    </div>
+}
+
+<SchoolSystem.Web.Shared.ConfirmacionModal @ref="modalEliminar" Titulo="Cancelar Inscripción" Mensaje="@mensajeConfirmacion" OnConfirm="ConfirmarEliminacion" />
+
+@code {
+    private List<InscripcionDto> lista;
+    private bool isLoading = true;
+    private int pageSize = 10;
+    private string successMessage, errorMessage, mensajeConfirmacion;
+    private int currentPage = 1, totalPages = 0;
+    private bool hasPrevious, hasNext;
+
+    private SchoolSystem.Web.Shared.ConfirmacionModal modalEliminar;
+    private int idEliminar;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UiService.HasMessage)
+            ToastService.ShowSuccess(UiService.GetSuccessMessage());
+
+        await CargarInscripciones(1);
+    }
+
+    private async Task CargarInscripciones(int page)
+    {
+        isLoading = true;
+        try
+        {
+            var response = await InscripcionService.GetInscripcionesAsync(page, pageSize);
+
+            if (response.Succeeded)
+            {
+                lista = response.Data.Items.ToList();
+                currentPage = response.Data.PageNumber;
+                totalPages = response.Data.TotalPages;
+                hasPrevious = response.Data.HasPreviousPage;
+                hasNext = response.Data.HasNextPage;
+                errorMessage = null;
+            }
+            else
+            {
+                ToastService.ShowError(response.Message ?? "No se pudieron cargar las incripciones.");
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError("Error de conexión: " + ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void SolicitarEliminacion(InscripcionDto inscripcion)
+    {
+        idEliminar = inscripcion.Id;
+        mensajeConfirmacion = $"¿Cancelar la inscripción de {inscripcion.NombreCompletoAlumno} en {inscripcion.NombreCompletoGrupo}?";
+        modalEliminar.Show();
+    }
+
+    private async Task ConfirmarEliminacion()
+    {
+        isLoading = true;
+
+        try
+        {
+            var response = await InscripcionService.DeleteAsync(idEliminar);
+
+            if (response.Succeeded)
+            {
+                ToastService.ShowSuccess("Inscripción eliminada.");
+                await CargarInscripciones(currentPage);
+            }
+            else
+            {
+                if (response.Errors != null && response.Errors.Any())
+                {
+                    ToastService.ShowError(response.Errors.First());
+                }
+                else if (!string.IsNullOrEmpty(response.Message))
+                {
+                    ToastService.ShowError(response.Message ?? "Error al eliminar.");
+                }
+                else
+                {
+                    ToastService.ShowError("No se pudo eliminar el registro.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError("Error: " + ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private string ObtenerClaseEstatus(string estatus) => estatus switch
+    {
+        "Inscrito" => "bg-success",
+        "BajaTemporal" => "bg-warning text-dark",
+        "BajaDefinitiva" => "bg-danger",
+        "Finalizado" => "bg-secondary",
+        _ => "bg-light text-dark"
+    };
+}

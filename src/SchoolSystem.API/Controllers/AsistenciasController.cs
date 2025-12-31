@@ -20,6 +20,7 @@ namespace SchoolSystem.API.Controllers
         {
             _service = service;
         }
+        // GET ALL / GET BY ID (Estándar)
 
         /// <summary>
         /// Obtiene una lista paginada de registros de asistencia.

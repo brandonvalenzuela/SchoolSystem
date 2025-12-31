@@ -1,0 +1,179 @@
+﻿@page "/grupos"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
+@inject GrupoService GrupoService
+@inject UiService UiService
+@inject ToastService ToastService
+@attribute [Authorize]
+
+<PageTitle>Grupos</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Gestión de Grupos</h1>
+    <a href="grupos/crear" class="btn btn-primary"><i class="oi oi-plus"></i> Nuevo Grupo</a>
+</div>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @successMessage
+        <button type="button" class="btn-close" @onclick="() => successMessage = null"></button>
+    </div>
+}
+
+@if (isLoading)
+{
+    <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+}
+else
+{
+    <div class="table-responsive bg-white shadow-sm rounded">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Grado</th>
+                    <th>Grupo</th>
+                    <th>Turno</th>
+                    <th>Titular</th>
+                    <th>Alumnos</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var grupo in grupos)
+                {
+                    <tr>
+                        <td>@grupo.NombreGrado</td>
+                        <td class="fw-bold">@grupo.Nombre</td>
+                        <td>@grupo.Turno</td>
+                        <td>@(string.IsNullOrEmpty(grupo.NombreMaestroTitular) ? "Sin asignar" : grupo.NombreMaestroTitular)</td>
+                        <td>
+                            <span class="badge bg-info text-dark">@grupo.CantidadAlumnos / @grupo.CapacidadMaxima</span>
+                        </td>
+                        <td>
+                            @if (grupo.Activo)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="grupos/editar/@grupo.Id" class="btn btn-sm btn-outline-info me-1">✏️</a>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => SolicitarEliminacion(grupo)">🗑️</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<SchoolSystem.Web.Shared.ConfirmacionModal @ref="modalEliminar" Titulo="Eliminar Grupo" Mensaje="@mensajeConfirmacion" OnConfirm="ConfirmarEliminacion" />
+
+@code {
+    private List<GrupoDto> grupos;
+    private string errorMessage;
+    private bool isLoading = true;
+
+    private int currentPage = 1;
+    private int pageSize = 10;
+    private int totalPages = 0;
+    private bool hasPrevious;
+    private bool hasNext;
+    private string? successMessage;
+    private SchoolSystem.Web.Shared.ConfirmacionModal modalEliminar;
+    private int idParaEliminar;
+    private string mensajeConfirmacion;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UiService.HasMessage)
+            ToastService.ShowSuccess(UiService.GetSuccessMessage());
+
+        await CargarGrupos(1);
+    }
+
+    private async Task CargarGrupos(int page)
+    {
+        isLoading = true;
+        try
+        {
+            var response = await GrupoService.GetGruposAsync(page, pageSize);
+
+            if (response.Succeeded)
+            {
+                grupos = response.Data.Items.ToList();
+                currentPage = response.Data.PageNumber;
+                totalPages = response.Data.TotalPages;
+                hasPrevious = response.Data.HasPreviousPage;
+                hasNext = response.Data.HasNextPage;
+                errorMessage = null;
+            }
+            else
+            {
+                ToastService.ShowError(response.Message ?? "No se pudieron cargar los grupos.");
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError("Error de conexión: " + ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void SolicitarEliminacion(GrupoDto grupo)
+    {
+        idParaEliminar = grupo.Id;
+        mensajeConfirmacion = $"¿Eliminar el grupo {grupo.NombreCompleto}? No se podrá eliminar si tiene alumnos.";
+        modalEliminar.Show();
+    }
+
+    private async Task ConfirmarEliminacion()
+    {
+        isLoading = true;
+
+        try
+        {
+            var response = await GrupoService.DeleteAsync(idParaEliminar);
+
+            if (response.Succeeded)
+            {
+                ToastService.ShowSuccess("Grupo eliminado correctamente.");
+                await CargarGrupos(currentPage);
+            }
+            else
+            {
+                if (response.Errors != null && response.Errors.Any())
+                {
+                    ToastService.ShowError(response.Errors.First());
+                }
+                else if (!string.IsNullOrEmpty(response.Message))
+                {
+                    ToastService.ShowError(response.Message ?? "Error al eliminar.");
+                }
+                else
+                {
+                    ToastService.ShowError("No se pudo eliminar el registro.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError("Error: " + ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

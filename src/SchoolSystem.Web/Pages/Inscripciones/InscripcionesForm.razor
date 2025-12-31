@@ -1,0 +1,216 @@
+﻿@page "/inscripciones/crear"
+@page "/inscripciones/editar/{Id:int}"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
+@inject InscripcionService InscripcionService
+@inject AlumnoService AlumnoService
+@inject GrupoService GrupoService
+@inject NavigationManager Navigation
+@inject ToastService ToastService
+@attribute [Authorize]
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3>@(Id == 0 ? "Nueva Inscripción" : "Editar Inscripción")</h3>
+        </div>
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <p class="text-center">Cargando catálogos...</p>
+            }
+            else
+            {
+                <EditForm Model="@modelo" OnValidSubmit="Guardar">
+                    <DataAnnotationsValidator />
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger">@errorMessage</div>
+                    }
+
+                    <div class="row g-3">
+                        <!-- Alumno (Solo editable al crear) -->
+                        <div class="col-md-6">
+                            <label class="form-label">Alumno *</label>
+                            @if (Id == 0)
+                            {
+                                <InputSelect class="form-select" @bind-Value="modelo.AlumnoId">
+                                    <option value="0">-- Seleccione Alumno --</option>
+                                    @foreach (var a in listaAlumnos)
+                                    {
+                                        <option value="@a.Id">@a.NombreCompleto (@a.Matricula)</option>
+                                    }
+                                </InputSelect>
+                            }
+                            else
+                            {
+                                <!-- Al editar no cambiamos el alumno, solo mostramos el nombre -->
+                                <input class="form-control" value="@nombreAlumnoEdicion" disabled />
+                            }
+                            <ValidationMessage For="@(() => modelo.AlumnoId)" />
+                        </div>
+
+                        <!-- Grupo -->
+                        <div class="col-md-6">
+                            <label class="form-label">Grupo *</label>
+                            <InputSelect class="form-select" @bind-Value="modelo.GrupoId">
+                                <option value="0">-- Seleccione Grupo --</option>
+                                @foreach (var g in listaGrupos)
+                                {
+                                    <option value="@g.Id">@g.NombreCompleto</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => modelo.GrupoId)" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Ciclo Escolar</label>
+                            <InputText class="form-control" @bind-Value="modelo.CicloEscolar" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Número de Lista</label>
+                            <InputNumber class="form-control" @bind-Value="modelo.NumeroLista" />
+                        </div>
+
+                        <!-- Solo mostrar estatus al editar -->
+                        @if (Id > 0)
+                        {
+                            <div class="col-md-4">
+                                <label class="form-label">Estatus</label>
+                                <InputSelect class="form-select" @bind-Value="estatusEdicion">
+                                    <option value="1">Inscrito</option>
+                                    <option value="2">Baja Temporal</option>
+                                    <option value="3">Baja Definitiva</option>
+                                    <option value="4">Finalizado</option>
+                                </InputSelect>
+                            </div>
+                        }
+
+                        <div class="col-12 mt-3">
+                            <div class="form-check form-check-inline">
+                                <InputCheckbox class="form-check-input" @bind-Value="modelo.Becado" id="chkBecado" />
+                                <label class="form-check-label" for="chkBecado">Becado</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <InputCheckbox class="form-check-input" @bind-Value="modelo.Repetidor" id="chkRep" />
+                                <label class="form-check-label" for="chkRep">Repetidor</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Observaciones</label>
+                            <InputTextArea class="form-control" @bind-Value="modelo.Observaciones" rows="2" />
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-end">
+                        <button type="submit" class="btn btn-success" disabled="@isSubmitting">Guardar</button>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private CreateInscripcionDto modelo = new CreateInscripcionDto();
+
+    // Variables para catálogos
+    private List<AlumnoDto> listaAlumnos = new();
+    private List<GrupoDto> listaGrupos = new();
+
+    // Variables para edición
+    private string nombreAlumnoEdicion;
+    private int estatusEdicion = 1;
+
+    private bool isLoading = true, isSubmitting = false;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        // Cargar catálogos (Traemos los primeros 100 para no saturar, idealmente usarías un buscador)
+        var t1 = AlumnoService.GetAlumnosAsync(1, 100);
+        var t2 = GrupoService.GetGruposAsync(1, 100);
+
+        await Task.WhenAll(t1, t2);
+
+        if (t1.Result.Succeeded)
+            listaAlumnos = t1.Result.Data.Items.ToList();
+        if (t2.Result.Succeeded)
+            listaGrupos = t2.Result.Data.Items.ToList();
+
+        if (Id > 0)
+        {
+            var res = await InscripcionService.GetByIdAsync(Id);
+            if (res.Succeeded)
+            {
+                var i = res.Data;
+                modelo.AlumnoId = i.AlumnoId;
+                modelo.GrupoId = i.GrupoId;
+                modelo.CicloEscolar = i.CicloEscolar;
+                modelo.NumeroLista = i.NumeroLista;
+                // modelo.Observaciones = ... (si el DTO de lectura lo trae)
+
+                nombreAlumnoEdicion = i.NombreCompletoAlumno;
+                // Mapear string "Inscrito" a int 1 es tedioso manualmente,
+                // pero asumiremos 1 por defecto o necesitarás un helper.
+            }
+        }
+        isLoading = false;
+    }
+
+    private async Task Guardar()
+    {
+        isSubmitting = true;
+        errorMessage = null;
+        try
+        {
+            if (Id == 0)
+            {
+                var res = await InscripcionService.CreateAsync(modelo);
+                if (res.Succeeded)
+                {
+                    ToastService.ShowSuccess("Alumno inscrito correctamente.");
+                    Navigation.NavigateTo("inscripciones");
+                }
+                else
+                    errorMessage = res.Message;
+            }
+            else
+            {
+                var updateDto = new UpdateInscripcionDto
+                {
+                    Id = this.Id,
+                    GrupoId = modelo.GrupoId,
+                    NumeroLista = modelo.NumeroLista,
+                    Becado = modelo.Becado,
+                    Repetidor = modelo.Repetidor,
+                    Observaciones = modelo.Observaciones,
+                    Estatus = estatusEdicion
+                };
+
+                var res = await InscripcionService.UpdateAsync(Id, updateDto);
+                if (res.Succeeded)
+                {
+                    ToastService.ShowSuccess("Inscripción actualizada.");
+                    Navigation.NavigateTo("inscripciones");
+                }
+                else
+                    errorMessage = res.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

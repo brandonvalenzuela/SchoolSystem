@@ -108,6 +108,7 @@ builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IRegistroConductaService, RegistroConductaService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IPagoService, PagoService>();
 
 
 // --- 4. SWAGGER CON SOPORTE PARA JWT ---

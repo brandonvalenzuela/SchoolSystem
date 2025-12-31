@@ -8,18 +8,18 @@
 @inject ToastService ToastService
 @attribute [Authorize]
 
-<div class="container mt-4">
-    <div class="card shadow">
+<div class="container mt-4 mb-5">
+    <div class="card shadow border-0">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h3 class="mb-0">@(Id == 0 ? "Nuevo Alumno" : "Editar Alumno")</h3>
-            <a href="alumnos" class="btn btn-light btn-sm">Volver</a>
+            <h4 class="mb-0">@(Id == 0 ? "Nuevo Alumno" : "Editar Alumno")</h4>
+            <a href="alumnos" class="btn btn-outline-light btn-sm">Volver</a>
         </div>
         <div class="card-body">
             @if (isLoading)
             {
-                <div class="text-center">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <p>Cargando...</p>
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary"></div>
+                    <p>Cargando información...</p>
                 </div>
             }
             else
@@ -35,7 +35,7 @@
                     <div class="row g-3">
                         <!-- Matrícula -->
                         <div class="col-md-4">
-                            <label class="form-label">Matrícula</label>
+                            <label>Matrícula</label>
                             <InputText class="form-control" @bind-Value="modelo.Matricula" />
                             <ValidationMessage For="@(() => modelo.Matricula)" />
                         </div>

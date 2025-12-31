@@ -9,12 +9,12 @@
 @attribute [Authorize]
 
 <div class="container mt-4 mb-5">
-    <div class="card shadow-lg border-0">
+    <div class="card shadow border-0">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h4 class="mb-0"><i class="oi oi-person"></i> @(Id == 0 ? "Nuevo Maestro" : "Editar Maestro")</h4>
-            <a href="maestros" class="btn btn-outline-light btn-sm">Cancelar</a>
+            <h4 class="mb-0">@(Id == 0 ? "Nuevo Maestro" : "Editar Maestro")</h4>
+            <a href="maestros" class="btn btn-outline-light btn-sm">Volver</a>
         </div>
-        <div class="card-body p-4">
+        <div class="card-body">
             @if (isLoading)
             {
                 <div class="text-center py-5">

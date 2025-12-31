@@ -8,16 +8,19 @@
 @inject ToastService ToastService
 @attribute [Authorize]
 
-<div class="container mt-4">
-    <div class="card shadow">
-        <div class="card-header bg-dark text-white d-flex justify-content-between">
-            <h3>@(Id == 0 ? "Nuevo Usuario Administrativo" : "Editar Usuario")</h3>
-            <a href="usuarios" class="btn btn-light btn-sm">Volver</a>
+<div class="container mt-4 mb-5">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">@(Id == 0 ? "Nuevo Usuario Administrativo" : "Editar Usuario")</h4>
+            <a href="usuarios" class="btn btn-outline-light btn-sm">Volver</a>
         </div>
         <div class="card-body">
             @if (isLoading)
             {
-                <p>Cargando...</p>
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p>Cargando...</p>
+                </div>
             }
             else
             {
@@ -96,6 +99,7 @@
         {
             isLoading = true;
             var response = await UsuarioService.GetByIdAsync(Id);
+
             if (response.Succeeded)
             {
                 var u = response.Data;

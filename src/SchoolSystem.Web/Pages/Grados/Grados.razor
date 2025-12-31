@@ -1,0 +1,131 @@
+﻿@page "/grados"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
+@inject GradoService GradoService
+@inject UiService UiService
+@inject ToastService ToastService
+@attribute [Authorize]
+
+<PageTitle>Grados Escolares</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Grados Escolares</h1>
+    <a href="grados/crear" class="btn btn-primary"><i class="oi oi-plus"></i> Nuevo Grado</a>
+</div>
+
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center mt-5">
+        <div class="spinner-border text-primary"></div>
+    </div>
+}
+else
+{
+    <div class="table-responsive bg-white shadow-sm rounded">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Nivel</th>
+                    <th>Grado</th>
+                    <th>Orden</th>
+                    <th>Grupos</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.NombreNivelEducativo</td>
+                        <td>@item.Nombre</td>
+                        <td>@item.Orden</td>
+                        <td>@item.CantidadGruposActivos</td>
+                        <td>
+                            @if (item.Activo)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="grados/editar/@item.Id" class="btn btn-sm btn-outline-info me-1">✏️</a>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => SolicitarEliminacion(item)">🗑️</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<SchoolSystem.Web.Shared.ConfirmacionModal @ref="modalEliminar" Titulo="Eliminar Grado" Mensaje="@mensajeConfirmacion" OnConfirm="ConfirmarEliminacionReal" />
+
+@code {
+    private List<GradoDto> lista;
+    private bool isLoading = true;
+    private string successMessage;
+
+    // Modal
+    private SchoolSystem.Web.Shared.ConfirmacionModal modalEliminar;
+    private int idEliminar;
+    private string mensajeConfirmacion;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UiService.HasMessage)
+            ToastService.ShowSuccess(UiService.GetSuccessMessage());
+        await Cargar();
+    }
+
+    private async Task Cargar()
+    {
+        isLoading = true;
+        var response = await GradoService.GetGradosAsync(1, 20); // Traemos 20 por defecto
+        if (response.Succeeded)
+            lista = response.Data.Items.ToList();
+        isLoading = false;
+    }
+
+    private void SolicitarEliminacion(GradoDto item)
+    {
+        idEliminar = item.Id;
+        mensajeConfirmacion = $"¿Eliminar el grado {item.NombreCompleto}?";
+        modalEliminar.Show();
+    }
+
+    private async Task ConfirmarEliminacionReal()
+    {
+        modalEliminar.Ocultar();
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            var response = await GradoService.DeleteAsync(idEliminar);
+            if (response.Succeeded)
+            {
+                ToastService.ShowSuccess("Grado eliminado.");
+                await Cargar();
+            }
+            else
+            {
+                ToastService.ShowError(response.Message ?? "No se pudo eliminar el registro.");
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError("Error: " + ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+}

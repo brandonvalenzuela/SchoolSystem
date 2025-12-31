@@ -80,6 +80,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
             // No hacemos SaveChanges aquí para permitir que el servicio controle la transacción
         }
 
+        public Task UpdateRangeAsync(IEnumerable<T> entities)
+        {
+            _context.UpdateRange(entities);
+            return Task.CompletedTask;
+        }
+
         public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
         {
             return await _context.Set<T>().CountAsync(predicate);

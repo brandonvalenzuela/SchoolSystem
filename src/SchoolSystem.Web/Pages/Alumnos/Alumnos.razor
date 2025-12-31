@@ -16,14 +16,6 @@
     </a>
 </div>
 
-@if (!string.IsNullOrEmpty(successMessage))
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="oi oi-check me-2"></i> @successMessage
-        <button type="button" class="btn-close" @onclick="() => successMessage = null"></button>
-    </div>
-}
-
 @if (isLoading)
 {
     <div class="d-flex justify-content-center">
@@ -32,18 +24,14 @@
         </div>
     </div>
 }
-else if (errorMessage != null)
-{
-    <div class="alert alert-danger">@errorMessage</div>
-}
 else if (alumnos == null || !alumnos.Any())
 {
     <div class="alert alert-info">No hay alumnos registrados.</div>
 }
 else
 {
-    <div class="table-responsive shadow-sm">
-        <table class="table table-hover table-bordered mb-0 bg-white">
+    <div class="table-responsive shadow-sm bg-white rounded">
+        <table class="table table-hover mb-0">
             <thead class="table-light">
                 <tr>
                     <th>Matrícula</th>

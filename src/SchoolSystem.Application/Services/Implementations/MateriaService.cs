@@ -46,6 +46,14 @@ namespace SchoolSystem.Application.Services.Implementations
 
         public async Task<int> CreateAsync(CreateMateriaDto dto)
         {
+            // REGLA: Clave única por escuela
+            var existeClave = (await _unitOfWork.Materias
+                .FindAsync(m => m.EscuelaId == dto.EscuelaId && m.Clave == dto.Clave && !m.IsDeleted))
+                .Any();
+
+            if (existeClave)
+                throw new InvalidOperationException($"Ya existe una materia con la clave '{dto.Clave}'.");
+
             var entity = _mapper.Map<Materia>(dto);
             await _unitOfWork.Materias.AddAsync(entity);
             await _unitOfWork.SaveChangesAsync();
@@ -65,11 +73,21 @@ namespace SchoolSystem.Application.Services.Implementations
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await _unitOfWork.Materias.GetByIdAsync(id);
-            if (entity == null)
-                throw new KeyNotFoundException($"Materia con ID {id} no encontrada");
+            var materia = await _unitOfWork.Materias.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Materia con ID {id} no encontrada.");
 
-            await _unitOfWork.Materias.DeleteAsync(entity);
+            // REGLA: Integridad Académica
+            var tieneCalificaciones = (await _unitOfWork.Calificaciones
+                .FindAsync(c => c.MateriaId == id && !c.IsDeleted))
+                .Any();
+
+            if (tieneCalificaciones)
+            {
+                throw new InvalidOperationException(
+                    "No se puede eliminar la materia porque existen calificaciones asociadas. " +
+                    "Esto dañaría el historial académico de los alumnos. Desactívela en su lugar.");
+            }
+
+            await _unitOfWork.Materias.DeleteAsync(materia);
 
             await _unitOfWork.SaveChangesAsync();
         }

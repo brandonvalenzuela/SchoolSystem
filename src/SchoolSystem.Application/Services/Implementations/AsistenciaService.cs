@@ -3,6 +3,7 @@ using SchoolSystem.Application.Common.Models;
 using SchoolSystem.Application.DTOs.Asistencias;
 using SchoolSystem.Application.Services.Interfaces;
 using SchoolSystem.Domain.Entities.Evaluacion;
+using SchoolSystem.Domain.Enums.Academico;
 using SchoolSystem.Domain.Enums.Asistencia;
 using SchoolSystem.Domain.Interfaces;
 using System;
@@ -24,17 +25,25 @@ namespace SchoolSystem.Application.Services.Implementations
             _mapper = mapper;
         }
 
+        // ==========================================
+        // CRUD BÁSICO
+        // ==========================================
         public async Task<AsistenciaDto> GetByIdAsync(int id)
         {
             var entity = await _unitOfWork.Asistencias.GetByIdAsync(id);
+            if (entity == null)
+                return null;
             return _mapper.Map<AsistenciaDto>(entity);
         }
 
         public async Task<PagedResult<AsistenciaDto>> GetPagedAsync(int pageNumber, int pageSize)
         {
-            var allItems = await _unitOfWork.Asistencias.GetAllAsync();
+            var allItems = await _unitOfWork.Asistencias.GetAllIncludingAsync(a => a.Alumno, a => a.Grupo);
             var total = allItems.Count();
-            var items = allItems.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            var items = allItems
+                .OrderByDescending(a => a.Fecha)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
 
             return new PagedResult<AsistenciaDto>
             {
@@ -47,7 +56,17 @@ namespace SchoolSystem.Application.Services.Implementations
 
         public async Task<int> CreateAsync(CreateAsistenciaDto dto)
         {
+            var existe = (await _unitOfWork.Asistencias.FindAsync(a =>
+               a.AlumnoId == dto.AlumnoId &&
+               a.Fecha.Date == dto.Fecha.Date &&
+               !a.IsDeleted)).Any();
+
+            if (existe)
+                throw new InvalidOperationException($"El alumno ya tiene asistencia registrada para la fecha {dto.Fecha:dd/MM/yyyy}.");
+
             var entity = _mapper.Map<Asistencia>(dto);
+            entity.FechaRegistro = DateTime.Now;
+
             await _unitOfWork.Asistencias.AddAsync(entity);
             await _unitOfWork.SaveChangesAsync();
             return entity.Id;
@@ -58,6 +77,10 @@ namespace SchoolSystem.Application.Services.Implementations
             var entity = await _unitOfWork.Asistencias.GetByIdAsync(id);
             if (entity == null)
                 throw new KeyNotFoundException($"Asistencia con ID {id} no encontrada");
+
+            // Si cambia el estatus, usamos el método de dominio Modificar
+            if (dto.Estatus != entity.Estatus)
+                entity.Modificar(dto.Estatus, "Corrección manual", dto.UsuarioModificoId);
 
             _mapper.Map(dto, entity);
             await _unitOfWork.Asistencias.UpdateAsync(entity);
@@ -71,25 +94,24 @@ namespace SchoolSystem.Application.Services.Implementations
                 throw new KeyNotFoundException($"Asistencia con ID {id} no encontrada");
 
             await _unitOfWork.Asistencias.DeleteAsync(entity);
-
             await _unitOfWork.SaveChangesAsync();
         }
 
-
+        // ==========================================
+        // A. REGISTRO MASIVO (PASE DE LISTA)
+        // ==========================================
         public async Task<int> CreateMasivoAsync(CreateAsistenciaMasivaDto dto)
         {
-            // 1. VALIDACIÓN DE NEGOCIO: Evitar duplicados
+            // 1.VALIDACIÓN DE NEGOCIO: Evitar duplicados
             // Verificamos si ya existen registros para este grupo en esta fecha exacta.
-            // Usamos el método FindAsync del repositorio genérico.
             var asistenciasExistentes = await _unitOfWork.Asistencias.FindAsync(a =>
                 a.GrupoId == dto.GrupoId &&
-                a.Fecha.Date == dto.Fecha.Date
+                a.Fecha.Date == dto.Fecha.Date &&
+                !a.IsDeleted
             );
 
             if (asistenciasExistentes.Any())
-            {
                 throw new InvalidOperationException($"Ya existe un registro de asistencia para el Grupo ID {dto.GrupoId} en la fecha {dto.Fecha:dd/MM/yyyy}. Debe usar la edición individual si desea corregir.");
-            }
 
             // 2. PROCESAMIENTO
             var nuevasAsistencias = new List<Asistencia>();
@@ -117,8 +139,8 @@ namespace SchoolSystem.Application.Services.Implementations
                     CreatedAt = DateTime.Now
                 };
 
-                // Validar regla de negocio de la entidad
-                if (asistencia.Estatus == Domain.Enums.Asistencia.EstadoAsistencia.Presente && !asistencia.HoraEntrada.HasValue)
+                // Validar regla de negocio de la entidad (si falta hora de entrada y está presente)
+                if (asistencia.Estatus == EstadoAsistencia.Presente && !asistencia.HoraEntrada.HasValue)
                 {
                     // Si falta hora de entrada, ponemos una por defecto o lanzamos error.
                     // Por ahora ponemos una hora laboral default para no romper el proceso masivo
@@ -130,13 +152,7 @@ namespace SchoolSystem.Application.Services.Implementations
             }
 
             // 3. PERSISTENCIA MASIVA
-            // Nota: Si tu repositorio genérico no tiene AddRangeAsync, deberás agregarlo o hacer un bucle.
-            // Suponiendo que tienes AddRangeAsync:
-            foreach (var asistencia in nuevasAsistencias)
-            {
-                await _unitOfWork.Asistencias.AddAsync(asistencia);
-            }
-
+            await _unitOfWork.Asistencias.AddRangeAsync(nuevasAsistencias);
             await _unitOfWork.SaveChangesAsync();
 
             return nuevasAsistencias.Count;
@@ -146,7 +162,7 @@ namespace SchoolSystem.Application.Services.Implementations
         {
             // Usamos FindAsync del repositorio genérico
             var entidades = await _unitOfWork.Asistencias.FindAsync(
-                a => a.GrupoId == grupoId && a.Fecha.Date == fecha.Date,
+                a => a.GrupoId == grupoId && a.Fecha.Date == fecha.Date && !a.IsDeleted,
                 a => a.Alumno
             );
 
@@ -161,15 +177,13 @@ namespace SchoolSystem.Application.Services.Implementations
             // 1. Obtener asistencias filtradas por alumno
             // Usamos tu repositorio actualizado que acepta includes
             var entidades = await _unitOfWork.Asistencias.FindAsync(
-                a => a.AlumnoId == alumnoId,
+                a => a.AlumnoId == alumnoId && !a.IsDeleted,
                 a => a.Grupo,   // Incluir Grupo para mostrar el nombre
                 a => a.Alumno   // Incluir Alumno para el nombre
             );
 
             // 2. Ordenar por fecha descendente (lo más reciente primero)
-            var historial = entidades.OrderByDescending(x => x.Fecha).ToList();
-
-            return _mapper.Map<List<AsistenciaDto>>(historial);
+            return _mapper.Map<List<AsistenciaDto>>(entidades.OrderByDescending(x => x.Fecha).ToList());
         }
 
         // ==========================================
@@ -188,7 +202,6 @@ namespace SchoolSystem.Application.Services.Implementations
 
             // Usamos el método de dominio que ya tienes en tu entidad
             asistencia.Justificar(dto.Motivo, dto.JustificanteUrl, usuarioAprobo: usuarioId);
-
             // Cambiamos el estatus visualmente a Justificada
             asistencia.Estatus = EstadoAsistencia.Justificada;
 
@@ -210,13 +223,13 @@ namespace SchoolSystem.Application.Services.Implementations
             // Necesitamos el repositorio de Inscripciones para saber quiénes pertenecen al grupo
             // Nota: Asumo que tienes _inscripcionRepository o accedes via unitOfWork
             var inscripciones = await _unitOfWork.Inscripciones.FindAsync(
-                i => i.GrupoId == grupoId && i.Estatus == SchoolSystem.Domain.Enums.Academico.EstatusInscripcion.Inscrito,
+                i => i.GrupoId == grupoId && i.Estatus == EstatusInscripcion.Inscrito && !i.IsDeleted,
                 i => i.Alumno
             );
 
             // 3. Obtener las asistencias del mes para ese grupo
             var asistencias = await _unitOfWork.Asistencias.FindAsync(
-                a => a.GrupoId == grupoId && a.Fecha >= fechaInicio && a.Fecha <= fechaFin
+                a => a.GrupoId == grupoId && a.Fecha >= fechaInicio && a.Fecha <= fechaFin && !a.IsDeleted
             );
 
             var reporte = new List<ReporteMensualDto>();
@@ -234,10 +247,10 @@ namespace SchoolSystem.Application.Services.Implementations
 
                 // Filtrar asistencias de este alumno
                 var asistenciasAlumno = asistencias.Where(a => a.AlumnoId == ins.AlumnoId).ToList();
-
                 int contadorAsistencias = 0;
 
                 // Iterar todos los días del mes
+                // Llenar los días del mes
                 for (int dia = 1; dia <= diasEnMes; dia++)
                 {
                     var fechaDia = new DateTime(anio, mes, dia);
@@ -276,6 +289,10 @@ namespace SchoolSystem.Application.Services.Implementations
                         }
                         nombreEstatus = asistenciaDia.Estatus.ToString();
                     }
+                    else if (fechaDia.DayOfWeek == DayOfWeek.Saturday || fechaDia.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        letraEstatus = "S/D"; // Fin de semana
+                    }
 
                     fila.Dias.Add(new DiaAsistenciaDto
                     {
@@ -284,24 +301,15 @@ namespace SchoolSystem.Application.Services.Implementations
                         Estatus = letraEstatus,
                         EstatusCompleto = nombreEstatus
                     });
-                }
 
-                // Calcular porcentaje sobre días hábiles (aproximado: días que sí hubo registro)
-                var diasConRegistro = asistenciasAlumno.Count;
-                fila.Asistencias = contadorAsistencias;
+                    fila.Asistencias = contadorAsistencias;
 
-                if (diasConRegistro > 0)
-                {
-                    fila.Porcentaje = Math.Round((decimal)contadorAsistencias / diasConRegistro * 100, 2);
+                    // Cálculo simple de porcentaje (sobre días registrados, no sobre días hábiles totales del mes para no castigar días futuros)
+                    var diasRegistrados = asistenciasAlumno.Count;
+                    fila.Porcentaje = diasRegistrados > 0 ? Math.Round((decimal)contadorAsistencias / diasRegistrados * 100, 2) : 100;
                 }
-                else
-                {
-                    fila.Porcentaje = 100; // Sin registros, asumimos bien
-                }
-
                 reporte.Add(fila);
             }
-
             return reporte;
         }
     }

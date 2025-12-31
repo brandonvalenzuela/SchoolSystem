@@ -177,12 +177,12 @@ namespace SchoolSystem.Domain.Entities.Academico
             get
             {
                 if (Grado?.NivelEducativo != null)
-                    return $"{Grado.Nombre} de {Grado.NivelEducativo.Nombre} - Grupo {Nombre}";
+                    return $"{Grado.Nombre} de {Grado.NivelEducativo.Nombre} - {Nombre}";
 
                 if (Grado != null)
-                    return $"{Grado.Nombre} - Grupo {Nombre}";
+                    return $"{Grado.Nombre} - {Nombre}";
 
-                return $"Grupo {Nombre}";
+                return $"{Nombre}";
             }
         }
 
