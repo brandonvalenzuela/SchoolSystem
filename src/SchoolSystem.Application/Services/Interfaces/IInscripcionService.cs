@@ -22,5 +22,6 @@ namespace SchoolSystem.Application.Services.Interfaces
         /// Cambia a un alumno de grupo, validando cupo y reglas de negocio.
         /// </summary>
         Task CambiarDeGrupoAsync(int inscripcionId, int nuevoGrupoId, string motivo, int usuarioId);
+        Task<List<InscripcionDto>> GetAlumnosPorGrupoAsync(int grupoId);
     }
 }

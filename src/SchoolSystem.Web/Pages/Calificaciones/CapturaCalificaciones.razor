@@ -1,0 +1,306 @@
+﻿@page "/calificaciones/captura"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@inject CalificacionService CalificacionService
+@inject InscripcionService InscripcionService
+@inject GrupoService GrupoService
+@inject MateriaService MateriaService
+@inject UiService UiService
+@inject NavigationManager Navigation
+@attribute [Authorize]
+
+<PageTitle>Captura de Calificaciones</PageTitle>
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="oi oi-pencil"></i> Captura de Calificaciones</h2>
+    </div>
+
+    <!-- SECCIÓN 1: FILTROS -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Selección de Grupo y Materia</h5>
+        </div>
+        <div class="card-body">
+            <EditForm Model="@modelo" OnValidSubmit="CargarAlumnos">
+                <DataAnnotationsValidator />
+                
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Grupo</label>
+                        <InputSelect class="form-select" @bind-Value="modelo.GrupoId">
+                            <option value="0">-- Seleccione --</option>
+                            @foreach (var g in grupos)
+                            {
+                                <option value="@g.Id">@g.NombreCompleto</option>
+                            }
+                        </InputSelect>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Materia</label>
+                        <InputSelect class="form-select" @bind-Value="modelo.MateriaId">
+                            <option value="0">-- Seleccione --</option>
+                            @foreach (var m in materias)
+                            {
+                                <option value="@m.Id">@m.Nombre</option>
+                            }
+                        </InputSelect>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Periodo</label>
+                        <!-- Aquí idealmente cargarías Periodos de la BD -->
+                        <InputSelect class="form-select" @bind-Value="modelo.PeriodoId">
+                            <option value="0">-- Seleccione --</option>
+                            <option value="1">Periodo 1</option>
+                            <option value="2">Periodo 2</option>
+                            <option value="3">Periodo 3</option>
+                        </InputSelect>
+                    </div>
+
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100" disabled="@(isLoading || isLoadingCatalogs)">
+                            @if (isLoadingCatalogs)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span><span>Cargando datos...</span>
+                            }
+                            else if (isLoading)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span><span>Buscando...</span>
+                            }
+                            else
+                            {
+                                <span><i class="oi oi-magnifying-glass"></i> Cargar Alumnos</span>
+                            }
+                        </button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: GRID DE CAPTURA -->
+    @if (modelo.Calificaciones != null && modelo.Calificaciones.Any())
+    {
+        <div class="card shadow border-0">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="text-primary mb-0">Listado de Alumnos</h5>
+                    <span class="badge bg-info text-dark">@modelo.Calificaciones.Count alumnos encontrados</span>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0 align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 15%">Matrícula</th>
+                                <th style="width: 35%">Nombre del Alumno</th>
+                                <th style="width: 15%" class="text-center">Calificación</th>
+                                <th style="width: 35%">Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in modelo.Calificaciones)
+                            {
+                                <tr>
+                                    <td>@item.Matricula</td>
+                                    <td class="fw-bold">@item.NombreAlumno</td>
+                                    <td>
+                                        <input type="number" 
+                                               class="form-control text-center fw-bold @GetClaseCalificacion(item.CalificacionNumerica)" 
+                                               @bind="item.CalificacionNumerica" 
+                                               min="0" max="10" step="0.1" />
+                                    </td>
+                                    <td>
+                                        <input type="text" 
+                                               class="form-control form-control-sm" 
+                                               @bind="item.Observaciones" 
+                                               placeholder="Opcional..." />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-light py-3 text-end">
+                <button class="btn btn-success px-4" @onclick="GuardarCalificaciones" disabled="@isSaving">
+                    @if (isSaving)
+                    {
+                        <span class="spinner-border spinner-border-sm"></span> <span>Guardando...</span>
+                    }
+                    else
+                    {
+                        <span><i class="oi oi-check"></i> Guardar Calificaciones</span>
+                    }
+                </button>
+            </div>
+        </div>
+    }
+    @if (isLoading)
+    {
+        <!-- ESTADO 1: CARGANDO -->
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">Buscando alumnos...</p>
+        </div>
+    }
+    else if (modelo.Calificaciones != null && modelo.Calificaciones.Any())
+    {
+        <!-- ESTADO 2: HAY DATOS (Mostrar la tabla) -->
+        <div class="card shadow border-0">
+            <!-- ... (Aquí va todo tu código de la tabla que ya tienes) ... -->
+             <div class="card-header bg-white">
+                <!-- ... contenido de la tabla ... -->
+             </div>
+             <!-- ... -->
+        </div>
+    }
+    else if (busquedaRealizada)
+    {
+        <!-- ESTADO 3: NO HAY DATOS (Y YA TERMINÓ DE CARGAR) -->
+        <div class="alert alert-warning text-center mt-4 shadow-sm">
+            <i class="oi oi-warning me-2"></i> No se encontraron alumnos inscritos en este grupo para la materia seleccionada.
+        </div>
+    }
+
+    <!-- Mensajes de error globales -->
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger mt-3">@errorMessage</div>
+    }
+</div>
+
+@code {
+    private CreateCalificacionMasivaDto modelo = new();
+    private List<GrupoDto> grupos = new();
+    private List<MateriaDto> materias = new();
+    
+    private bool isLoading = false;
+    private bool isLoadingCatalogs = true; // <--- EMPIEZA EN TRUE
+    private bool isSaving = false;
+    private bool busquedaRealizada = false;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoadingCatalogs = true; 
+        // Cargar catálogos
+        try
+        {
+            var t1 = GrupoService.GetGruposAsync(1, 100);
+            var t2 = MateriaService.GetAsync(1, 100);
+            
+            await Task.WhenAll(t1, t2);
+            
+            if (t1.Result.Succeeded) grupos = t1.Result.Data.Items.ToList();
+            if (t2.Result.Succeeded) materias = t2.Result.Data.Items.ToList();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Error cargando catálogos: " + ex.Message;
+        }
+        finally
+        {
+            isLoadingCatalogs = false; // Terminó la carga inicial
+        }
+    }
+
+    private async Task CargarAlumnos()
+    {
+        if (modelo.GrupoId == 0 || modelo.MateriaId == 0 || modelo.PeriodoId == 0)
+        {
+            errorMessage = "Seleccione Grupo, Materia y Periodo.";
+            return;
+        }
+
+        isLoading = true; 
+        busquedaRealizada = false;
+        errorMessage = null;
+        busquedaRealizada = false;
+        modelo.Calificaciones.Clear();
+
+        try
+        {
+            // 1. Obtenemos las inscripciones del grupo para saber quiénes son los alumnos
+            // Nota: Aquí estamos reusando GetInscripcionesAsync, pero lo ideal sería tener un endpoint
+            // "GetAlumnosPorGrupo" o filtrar en el cliente si son pocos.
+            // Para este ejemplo, traeremos las inscripciones paginadas (hack temporal: size grande)
+            // Lo correcto: Crear un endpoint GetByGrupoId en el servicio de Inscripciones.
+            
+            // Asumiendo que agregamos un filtro o método específico en InscripcionService
+            // Por ahora, simularemos que traemos todos y filtramos en memoria (solo para prototipo)
+            var response = await InscripcionService.GetAlumnosPorGrupoAsync(modelo.GrupoId); 
+            
+            if (response.Succeeded)
+            {
+                var alumnosDelGrupo = response.Data; // Esto ya es una List<InscripcionDto>
+
+                foreach (var ins in alumnosDelGrupo)
+                {
+                    modelo.Calificaciones.Add(new CalificacionAlumnoDto
+                    {
+                        AlumnoId = ins.AlumnoId,
+                        NombreAlumno = ins.NombreCompletoAlumno,
+                        Matricula = ins.Matricula, // Ahora sí viene del DTO
+                        CalificacionNumerica = 0 
+                    });
+                }
+            }
+            else
+            {
+                 errorMessage = response.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+            busquedaRealizada = true; // <--- AQUÍ ES EL LUGAR CORRECTO
+        }
+    }
+
+    private async Task GuardarCalificaciones()
+    {
+        isSaving = true;
+        errorMessage = null;
+
+        try
+        {
+            // Asignar el ID del usuario actual (quemado por ahora, luego usar AuthState)
+            modelo.CapturadoPor = 2; // ID de un maestro/admin de prueba
+
+            var response = await CalificacionService.CreateMasivoAsync(modelo);
+            
+            if (response.Succeeded)
+            {
+                UiService.ShowSuccess($"{response.Data} calificaciones registradas correctamente.");
+                Navigation.NavigateTo("/calificaciones"); // O recargar la misma página
+            }
+            else
+            {
+                errorMessage = response.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Error al guardar: " + ex.Message;
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private string GetClaseCalificacion(decimal calificacion)
+    {
+        if (calificacion < 6) return "text-danger";
+        if (calificacion >= 9) return "text-success";
+        return "";
+    }
+}

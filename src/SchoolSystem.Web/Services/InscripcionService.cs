@@ -35,5 +35,11 @@ namespace SchoolSystem.Web.Services
         {
             return await _apiService.DeleteAsync<object>($"api/Inscripciones/{id}");
         }
+        public async Task<ApiResponse<List<InscripcionDto>>> GetAlumnosPorGrupoAsync(int grupoId)
+        {
+            // Nota: GetAsync ahora debe soportar retornar List<T> directo, no paginado
+            return await _apiService.GetAsync<List<InscripcionDto>>($"api/Inscripciones/grupo/{grupoId}");
+        }
+
     }
 }

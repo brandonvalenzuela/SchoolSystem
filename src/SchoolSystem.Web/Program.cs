@@ -32,6 +32,7 @@ builder.Services.AddScoped<GradoService>();
 builder.Services.AddScoped<MateriaService>();
 builder.Services.AddScoped<GrupoService>();
 builder.Services.AddScoped<InscripcionService>();
+builder.Services.AddScoped<CalificacionService>();
 
 // 4. Servicios de la Aplicación
 builder.Services.AddScoped<ApiService>();

@@ -28,8 +28,9 @@ namespace SchoolSystem.Application.DTOs.Inscripciones
         public decimal? PromedioAcumulado { get; set; }
         public decimal? PorcentajeAsistencia { get; set; }
         public bool Becado { get; set; }
-        public string TipoBeca { get; set; }
+        public string? TipoBeca { get; set; }
         public decimal? PorcentajeBeca { get; set; }
         public bool Repetidor { get; set; }
+        public string Matricula { get; set; }
     }
 }

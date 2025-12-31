@@ -35,7 +35,7 @@ namespace SchoolSystem.Application.DTOs.Inscripciones
         public bool Becado { get; set; }
 
         [StringLength(100)]
-        public string TipoBeca { get; set; }
+        public string? TipoBeca { get; set; }
 
         [Range(0, 100)]
         public decimal? PorcentajeBeca { get; set; }
@@ -43,14 +43,14 @@ namespace SchoolSystem.Application.DTOs.Inscripciones
         public bool Repetidor { get; set; }
 
         [StringLength(1000)]
-        public string Observaciones { get; set; }
+        public string? Observaciones { get; set; }
 
         // Campos específicos para bajas
         [StringLength(500)]
-        public string MotivoBaja { get; set; }
+        public string? MotivoBaja { get; set; }
 
         // Campos específicos para cambio de grupo
         [StringLength(500)]
-        public string MotivoCambioGrupo { get; set; }
+        public string? MotivoCambioGrupo { get; set; }
     }
 }

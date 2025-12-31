@@ -99,6 +99,18 @@
                             </div>
                         </div>
 
+                        @if (modelo.Becado)
+                        {
+                            <div class="col-md-6 mt-3">
+                                <label class="form-label">Tipo de Beca</label>
+                                <InputText class="form-control" @bind-Value="modelo.TipoBeca" placeholder="Ej: Excelencia Académica" />
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label class="form-label">Porcentaje (%)</label>
+                                <InputNumber class="form-control" @bind-Value="modelo.PorcentajeBeca" />
+                            </div>
+                        }
+
                         <div class="col-12">
                             <label class="form-label">Observaciones</label>
                             <InputTextArea class="form-control" @bind-Value="modelo.Observaciones" rows="2" />

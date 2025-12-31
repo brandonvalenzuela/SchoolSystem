@@ -16,7 +16,8 @@ namespace SchoolSystem.Application.Mappings
             CreateMap<Inscripcion, InscripcionDto>()
                 .ForMember(dest => dest.NombreCompletoAlumno, opt => opt.MapFrom(src => src.Alumno.NombreCompleto))
                 .ForMember(dest => dest.NombreCompletoGrupo, opt => opt.MapFrom(src => src.Grupo.NombreCompleto))
-                .ForMember(dest => dest.Estatus, opt => opt.MapFrom(src => src.Estatus.HasValue ? src.Estatus.ToString() : "Desconocido"));
+                .ForMember(dest => dest.Estatus, opt => opt.MapFrom(src => src.Estatus.HasValue ? src.Estatus.ToString() : "Desconocido"))
+                .ForMember(dest => dest.Matricula, opt => opt.MapFrom(src => src.Alumno.Matricula));
 
             CreateMap<CreateInscripcionDto, Inscripcion>();
             CreateMap<UpdateInscripcionDto, Inscripcion>();

@@ -15,6 +15,6 @@ namespace SchoolSystem.Web.Models
         public int? NumeroLista { get; set; }
         public bool Becado { get; set; }
         public bool Repetidor { get; set; }
-        public string Observaciones { get; set; }
+        public string? Observaciones { get; set; }
     }
 }

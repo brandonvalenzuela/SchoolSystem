@@ -23,7 +23,7 @@ namespace SchoolSystem.Application.DTOs.Inscripciones
 
         [Required(ErrorMessage = "El ciclo escolar es obligatorio.")]
         [StringLength(20)]
-        public string CicloEscolar { get; set; }
+        public string? CicloEscolar { get; set; }
 
         public DateTime? FechaInicio { get; set; }
 
@@ -35,7 +35,7 @@ namespace SchoolSystem.Application.DTOs.Inscripciones
         public bool Becado { get; set; } = false;
 
         [StringLength(100)]
-        public string TipoBeca { get; set; }
+        public string? TipoBeca { get; set; }
 
         [Range(0, 100, ErrorMessage = "El porcentaje de beca debe estar entre 0 y 100.")]
         public decimal? PorcentajeBeca { get; set; }
@@ -43,6 +43,6 @@ namespace SchoolSystem.Application.DTOs.Inscripciones
         public bool Repetidor { get; set; } = false;
 
         [StringLength(1000)]
-        public string Observaciones { get; set; }
+        public string? Observaciones { get; set; }
     }
 }

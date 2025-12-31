@@ -179,5 +179,22 @@ namespace SchoolSystem.Application.Services.Implementations
             await _unitOfWork.Inscripciones.UpdateAsync(inscripcion);
             await _unitOfWork.SaveChangesAsync();
         }
+        public async Task<List<InscripcionDto>> GetAlumnosPorGrupoAsync(int grupoId)
+        {
+            // Usamos el repositorio (o UnitOfWork) para buscar:
+            // 1. Que coincida el GrupoId
+            // 2. Que el estatus sea Inscrito (ignoramos bajas)
+            // 3. Incluimos datos del Alumno (para nombre y matrícula)
+
+            var inscripciones = await _unitOfWork.Inscripciones.FindAsync(
+                // 1. El filtro (predicate)
+                i => i.GrupoId == grupoId &&
+                     i.Estatus == SchoolSystem.Domain.Enums.Academico.EstatusInscripcion.Inscrito,
+                // 2. Los includes (sin nombre de parámetro)
+                i => i.Alumno
+            );
+
+            return _mapper.Map<List<InscripcionDto>>(inscripciones.OrderBy(i => i.Alumno.ApellidoPaterno));
+        }
     }
 }
