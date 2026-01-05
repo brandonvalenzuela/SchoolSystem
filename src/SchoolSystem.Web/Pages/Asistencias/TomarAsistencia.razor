@@ -1,0 +1,205 @@
+﻿@page "/asistencias/tomar/{GrupoId:int}"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Enum
+@inject InscripcionService InscripcionService
+@inject AsistenciaService AsistenciaService
+@inject GrupoService GrupoService
+@inject UiService UiService
+@inject NavigationManager Navigation
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthStateProvider
+@attribute [Authorize(Roles = "Maestro,Director,SuperAdmin")]
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3><i class="oi oi-people"></i> Lista de Alumnos</h3>
+    <button class="btn btn-secondary" @onclick="Volver">Volver</button>
+</div>
+
+<!-- Control de Carga -->
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center my-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
+}
+else if (listaAlumnos == null || !listaAlumnos.Any())
+{
+    <div class="alert alert-warning">
+        No hay alumnos inscritos en este grupo o no se pudieron cargar los datos.
+    </div>
+}
+else
+{
+    <EditForm Model="@modelo" OnValidSubmit="GuardarAsistencia">
+        <DataAnnotationsValidator />
+
+        <div class="card shadow-sm border-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Alumno</th>
+                            <th class="text-center">Estado</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var asistencia in modelo.Asistencias)
+                        {
+                            <tr>
+                                <!-- SOLUCIÓN: Usamos un método helper en lugar de bloque de código -->
+                                <td class="fw-bold">@ObtenerNombreAlumno(asistencia.AlumnoId)</td>
+
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+
+                                        <!-- Presente -->
+                                        <input type="radio" class="btn-check" name="btn_@asistencia.AlumnoId" id="p_@asistencia.AlumnoId" autocomplete="off"
+                                               checked="@(asistencia.Estatus == EstadoAsistencia.Presente)"
+                                               @onclick="() => asistencia.Estatus = EstadoAsistencia.Presente">
+                                        <label class="btn btn-outline-success" for="p_@asistencia.AlumnoId">P</label>
+
+                                        <!-- Falta -->
+                                        <input type="radio" class="btn-check" name="btn_@asistencia.AlumnoId" id="f_@asistencia.AlumnoId" autocomplete="off"
+                                               checked="@(asistencia.Estatus == EstadoAsistencia.Falta)"
+                                               @onclick="() => asistencia.Estatus = EstadoAsistencia.Falta">
+                                        <label class="btn btn-outline-danger" for="f_@asistencia.AlumnoId">F</label>
+
+                                        <!-- Retardo -->
+                                        <input type="radio" class="btn-check" name="btn_@asistencia.AlumnoId" id="r_@asistencia.AlumnoId" autocomplete="off"
+                                               checked="@(asistencia.Estatus == EstadoAsistencia.Retardo)"
+                                               @onclick="() => asistencia.Estatus = EstadoAsistencia.Retardo">
+                                        <label class="btn btn-outline-warning" for="r_@asistencia.AlumnoId">R</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <InputText class="form-control form-control-sm" @bind-Value="asistencia.Observaciones" placeholder="Opcional..." />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card-footer bg-white text-end py-3">
+                <button type="submit" class="btn btn-primary btn-lg px-5" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                
+                        <span>Guardando...</span>
+                    }
+                    else
+                    {
+                        <span><i class="oi oi-check"></i> Guardar Asistencia</span>
+                    }
+                </button>
+            </div>
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int GrupoId { get; set; }
+
+    private CreateAsistenciaMasivaDto modelo = new() { Asistencias = new List<AsistenciaAlumnoDto>() };
+    private List<InscripcionDto> listaAlumnos = new();
+    private GrupoDto grupo;
+    private DateTime fechaAsistencia = DateTime.Now;
+
+    private bool isLoading = true;
+    private bool isSubmitting = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        try
+        {
+            var t1 = GrupoService.GetByIdAsync(GrupoId);
+            var t2 = InscripcionService.GetAlumnosPorGrupoAsync(GrupoId);
+
+            await Task.WhenAll(t1, t2);
+
+            var resGrupo = t1.Result;
+            var resAlumnos = t2.Result;
+
+            if (resGrupo.Succeeded)
+                grupo = resGrupo.Data;
+
+            // Aseguramos que la lista no sea null
+            listaAlumnos = resAlumnos.Data ?? new List<InscripcionDto>();
+
+            if (resAlumnos.Succeeded && listaAlumnos.Any())
+            {
+                modelo.GrupoId = GrupoId;
+                modelo.Fecha = fechaAsistencia;
+
+                modelo.Asistencias = listaAlumnos.Select(a => new AsistenciaAlumnoDto
+                {
+                    AlumnoId = a.AlumnoId,
+                    Estatus = EstadoAsistencia.Presente,
+                    Observaciones = ""
+                }).ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al inicializar: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    // --- MÉTODO HELPER PARA EVITAR EL ERROR DE RAZOR ---
+    private string ObtenerNombreAlumno(int alumnoId)
+    {
+        if (listaAlumnos == null)
+            return "Cargando...";
+        var alumno = listaAlumnos.FirstOrDefault(a => a.AlumnoId == alumnoId);
+        return alumno?.NombreCompletoAlumno ?? "Desconocido";
+    }
+
+    private async Task GuardarAsistencia()
+    {
+        isSubmitting = true;
+        try
+        {
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var userIdClaim = authState.User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int uid))
+            {
+                modelo.RegistradoPor = uid;
+            }
+
+            var response = await AsistenciaService.CreateMasivoAsync(modelo);
+
+            if (response.Succeeded)
+            {
+                UiService.ShowSuccess("Asistencia guardada correctamente.");
+                Navigation.NavigateTo("mi-clase");
+            }
+            else
+            {
+                Console.WriteLine(response.Message);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void Volver()
+    {
+        Navigation.NavigateTo("mi-clase");
+    }
+}

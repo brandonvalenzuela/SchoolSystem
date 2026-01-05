@@ -31,7 +31,11 @@ namespace SchoolSystem.Application.Services.Implementations
 
         public async Task<PagedResult<GradoDto>> GetPagedAsync(int pageNumber, int pageSize)
         {
-            var allItems = await _unitOfWork.Grados.GetAllAsync();
+            var allItems = await _unitOfWork.Grados.GetAllIncludingAsync(
+                g => g.NivelEducativo,
+                g => g.Grupos,
+                g => g.GradoMaterias
+                );
             var total = allItems.Count();
             var items = allItems.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 

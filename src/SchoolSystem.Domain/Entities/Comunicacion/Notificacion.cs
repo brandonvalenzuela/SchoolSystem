@@ -159,6 +159,25 @@ namespace SchoolSystem.Domain.Entities.Comunicacion
 
         #endregion
 
+        #region Soft Delete (ISoftDeletable)
+
+        /// <summary>
+        /// Indica si el alumno ha sido eliminado lógicamente
+        /// </summary>
+        public bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// Fecha de eliminación lógica
+        /// </summary>
+        public DateTime? DeletedAt { get; set; }
+
+        /// <summary>
+        /// ID del usuario que eliminó el registro
+        /// </summary>
+        public int? DeletedBy { get; set; }
+
+        #endregion
+
         #region Constructor
 
         public Notificacion()

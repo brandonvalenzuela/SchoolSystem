@@ -1,0 +1,121 @@
+﻿@page "/notificaciones"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@inject NotificacionService NotificacionService
+@attribute [Authorize]
+
+<PageTitle>Mis Notificaciones</PageTitle>
+
+<div class="container-fluid max-w-800">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="oi oi-bell"></i> Notificaciones</h2>
+        <button class="btn btn-outline-secondary btn-sm" @onclick="Cargar">
+            <i class="oi oi-reload"></i> Actualizar
+        </button>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+    }
+    else if (notificaciones == null || !notificaciones.Any())
+    {
+        <div class="text-center py-5 text-muted">
+            <i class="oi oi-inbox display-1"></i>
+            <p class="mt-3">No tienes notificaciones nuevas.</p>
+        </div>
+    }
+    else
+    {
+        <div class="list-group shadow-sm">
+            @foreach (var item in notificaciones)
+            {
+                <div class="list-group-item list-group-item-action p-3 @(item.Leida ? "bg-light" : "border-start border-5 border-primary")">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1 @(item.Leida ? "text-muted" : "fw-bold")">
+                            @item.Titulo
+                        </h5>
+                        <small class="text-muted">@item.FechaEnvio.ToShortDateString()</small>
+                    </div>
+                    <p class="mb-1">@item.Mensaje</p>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <small class="text-uppercase text-@GetColorPrioridad(item.Prioridad) fw-bold" style="font-size: 0.7rem;">
+                            @item.Tipo
+                        </small>
+
+                        <div>
+                            @if (!string.IsNullOrEmpty(item.UrlAccion))
+                            {
+                                <a href="@item.UrlAccion" class="btn btn-sm btn-link text-decoration-none">Ver detalles</a>
+                            }
+                            @if (!item.Leida)
+                            {
+                                <button class="btn btn-sm btn-outline-primary py-0" @onclick="() => MarcarLeida(item)">
+                                    Marcar leída
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Paginación Simple -->
+        <div class="mt-3 text-center">
+            <button class="btn btn-link" disabled="@(!hasNext)" @onclick="() => CargarMas()">Cargar más antiguas...</button>
+        </div>
+    }
+</div>
+
+@code {
+    private List<NotificacionDto> notificaciones;
+    private bool isLoading = true;
+    private int currentPage = 1;
+    private bool hasNext = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Cargar();
+    }
+
+    private async Task Cargar()
+    {
+        isLoading = true;
+        // Nota: Asegúrate de implementar el endpoint 'mis-notificaciones' en el Backend
+        // O usa el GetAll filtrando por usuario si es un MVP
+        var res = await NotificacionService.GetMisNotificacionesAsync(currentPage, 20);
+        if (res.Succeeded)
+        {
+            notificaciones = res.Data.Items.ToList();
+            hasNext = res.Data.HasNextPage;
+        }
+        isLoading = false;
+    }
+
+    private async Task CargarMas()
+    {
+        currentPage++;
+        var res = await NotificacionService.GetMisNotificacionesAsync(currentPage, 20);
+        if (res.Succeeded)
+        {
+            notificaciones.AddRange(res.Data.Items);
+            hasNext = res.Data.HasNextPage;
+        }
+    }
+
+    private async Task MarcarLeida(NotificacionDto item)
+    {
+        var res = await NotificacionService.MarcarComoLeida(item.Id);
+        if (res.Succeeded)
+        {
+            item.Leida = true; // Actualizar UI
+        }
+    }
+
+    private string GetColorPrioridad(string prioridad) => prioridad switch
+    {
+        "Alta" => "danger",
+        "Media" => "warning",
+        _ => "secondary"
+    };
+}

@@ -5,6 +5,7 @@ using SchoolSystem.Application.Common.Wrappers;
 using SchoolSystem.Application.DTOs.Grupos;
 using SchoolSystem.Application.Services.Interfaces;
 using SchoolSystem.Domain.Constants;
+using System.Security.Claims;
 
 namespace SchoolSystem.API.Controllers
 {
@@ -101,6 +102,18 @@ namespace SchoolSystem.API.Controllers
             await _service.DeleteAsync(id);
 
             return Ok(new ApiResponse<int>(id, "Grupo eliminado exitosamente."));
+        }
+
+        [HttpGet("mis-grupos")]
+        [Authorize(Roles = Roles.Staff)] // Maestros y Directores
+        public async Task<ActionResult<ApiResponse<List<GrupoDto>>>> GetMisGrupos()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                return Unauthorized();
+
+            var grupos = await _service.GetGruposPorUsuarioAsync(userId);
+            return Ok(new ApiResponse<List<GrupoDto>>(grupos, "Grupos asignados obtenidos."));
         }
     }
 }

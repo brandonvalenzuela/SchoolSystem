@@ -1,0 +1,175 @@
+﻿@page "/mi-clase"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@inject GrupoService GrupoService
+@inject NavigationManager Navigation
+@attribute [Authorize(Roles = "Maestro,Director,SuperAdmin")]
+
+<PageTitle>Mi Clase - Panel Docente</PageTitle>
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="oi oi-blackboard"></i> Mi Panel Docente</h2>
+        <span class="text-muted">@DateTime.Now.ToLongDateString()</span>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary"></div>
+            <p class="mt-2">Cargando tus grupos...</p>
+        </div>
+    }
+    else if (grupos == null || !grupos.Any())
+    {
+        <div class="alert alert-info text-center shadow-sm">
+            <h4><i class="oi oi-info"></i> No tienes grupos asignados.</h4>
+            <p>Contacta al administrador si crees que esto es un error.</p>
+        </div>
+    }
+    else
+    {
+        <!-- SELECTOR DE GRUPO -->
+        <div class="card shadow-sm mb-4 border-primary border-top border-4">
+            <div class="card-body">
+                <label class="form-label fw-bold text-primary">Selecciona el Grupo de Trabajo:</label>
+                <select class="form-select form-select-lg" @onchange="OnGrupoSeleccionado">
+                    <option value="0">-- Selecciona un Grupo --</option>
+                    @foreach (var g in grupos)
+                    {
+                        <option value="@g.Id" selected="@(g.Id == grupoSeleccionadoId)">@g.NombreCompleto (@g.CicloEscolar)</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <!-- ACCIONES DEL GRUPO -->
+        @if (grupoSeleccionado != null)
+        {
+            <div class="row g-4 animate__animated animate__fadeIn">
+                <!-- Tarjeta: Asistencia -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm hover-card text-center">
+                        <div class="card-body py-5">
+                            <div class="fs-1 text-success mb-3"><i class="oi oi-calendar"></i></div>
+                            <h4 class="card-title">Tomar Asistencia</h4>
+                            <p class="card-text text-muted">Registrar asistencia del día de hoy.</p>
+                            <!-- Nota: Aquí redirigiríamos a una pantalla de asistencia rápida -->
+                            <button class="btn btn-success stretched-link" @onclick="IrAAsistencia">Iniciar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta: Calificaciones -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm hover-card text-center">
+                        <div class="card-body py-5">
+                            <div class="fs-1 text-warning mb-3"><i class="oi oi-pencil"></i></div>
+                            <h4 class="card-title">Calificar</h4>
+                            <p class="card-text text-muted">Capturar notas de materias o periodos.</p>
+                            <!-- Redirige a la sábana que ya creamos, prellenando el grupo -->
+                            <button class="btn btn-warning text-dark stretched-link" @onclick="IrACalificaciones">Ir a Captura</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta: Lista de Alumnos -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm hover-card text-center">
+                        <div class="card-body py-5">
+                            <div class="fs-1 text-info mb-3"><i class="oi oi-people"></i></div>
+                            <h4 class="card-title">Ver Alumnos</h4>
+                            <p class="card-text text-muted">Consultar lista y detalles del grupo.</p>
+                            <button class="btn btn-info text-white stretched-link" @onclick="IrADetalles">Ver Lista</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumen Rápido (Placeholder) -->
+            <div class="card mt-4 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Resumen del Grupo: @grupoSeleccionado.NombreCompleto</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-4 border-end">
+                            <h3>@grupoSeleccionado.CantidadAlumnos</h3>
+                            <span class="text-muted">Alumnos Inscritos</span>
+                        </div>
+                        <div class="col-4 border-end">
+                            <h3>@grupoSeleccionado.Turno</h3>
+                            <span class="text-muted">Turno</span>
+                        </div>
+                        <div class="col-4">
+                            <h3>@grupoSeleccionado.Aula</h3>
+                            <span class="text-muted">Aula Asignada</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<style>
+    .hover-card {
+        transition: transform 0.2s;
+    }
+
+        .hover-card:hover {
+            transform: translateY(-5px);
+            border-color: #0d6efd;
+        }
+</style>
+
+@code {
+    private List<GrupoDto> grupos;
+    private GrupoDto grupoSeleccionado;
+    private int grupoSeleccionadoId;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var res = await GrupoService.GetMisGruposAsync();
+            if (res.Succeeded)
+            {
+                grupos = res.Data;
+            }
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void OnGrupoSeleccionado(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            grupoSeleccionadoId = id;
+            grupoSeleccionado = grupos.FirstOrDefault(g => g.Id == id);
+        }
+        else
+        {
+            grupoSeleccionado = null;
+        }
+    }
+
+    private void IrACalificaciones()
+    {
+        Navigation.NavigateTo($"calificaciones/captura?grupoId={grupoSeleccionadoId}");
+    }
+
+    private void IrAAsistencia()
+    {
+        Navigation.NavigateTo($"asistencias/tomar/{grupoSeleccionadoId}");
+    }
+
+    private void IrADetalles()
+    {
+        Navigation.NavigateTo($"grupos/detalles/{grupoSeleccionadoId}");
+    }
+}

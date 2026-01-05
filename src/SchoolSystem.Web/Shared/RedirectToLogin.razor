@@ -21,7 +21,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // 1. Verificar si el parámetro en cascada es nulo
+        // 1. Verificación de seguridad por si el CascadingParameter falla
         if (AuthStateTask == null)
         {
             // Si es nulo, algo falló en la configuración de seguridad.
@@ -34,12 +34,19 @@
         var authState = await AuthStateTask;
         var user = authState.User;
 
+        // 3. Verificamos si está logueado
         if (user.Identity == null || !user.Identity.IsAuthenticated)
         {
-            Navigation.NavigateTo("login");
+            // --- LÓGICA DE RETORNO (ReturnUrl) ---
+            // Capturamos la URL actual para regresar aquí después del login
+            var returnUrl = Uri.EscapeDataString(Navigation.Uri);
+
+            // Redirigimos
+            Navigation.NavigateTo($"login?returnUrl={returnUrl}");
         }
         else
         {
+            // 4. Si llegó aquí estando logueado, es porque el Router lo rebotó (Falta de Rol)
             noTienePermisos = true;
         }
     }

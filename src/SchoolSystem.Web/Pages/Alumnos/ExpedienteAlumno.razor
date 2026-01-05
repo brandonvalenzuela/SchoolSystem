@@ -1,0 +1,279 @@
+﻿@page "/alumnos/expediente/{AlumnoId:int}"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@inject MedicoService MedicoService
+@inject AlumnoService AlumnoService
+@inject UiService UiService
+@inject NavigationManager Navigation
+@attribute [Authorize]
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3><i class="oi oi-medical-cross text-danger"></i> Expediente Médico</h3>
+        <a href="alumnos" class="btn btn-outline-secondary">Volver</a>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="text-center py-5"><div class="spinner-border text-danger"></div></div>
+    }
+    else if (alumno == null)
+    {
+        <div class="alert alert-danger">Alumno no encontrado.</div>
+    }
+    else
+    {
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Alumno: <strong class="text-primary">@alumno.NombreCompleto</strong></h5>
+            </div>
+            <div class="card-body">
+                @if (expediente == null)
+                {
+                    <!-- MODO CREAR: No existe expediente -->
+                    <div class="alert alert-warning">
+                        Este alumno no tiene expediente médico registrado.
+                    </div>
+                    <h5 class="mt-4">Crear Expediente Nuevo</h5>
+                    <EditForm Model="@nuevoExpediente" OnValidSubmit="GuardarExpediente">
+                        <DataAnnotationsValidator />
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Tipo de Sangre</label>
+                                <InputSelect class="form-select" @bind-Value="nuevoExpediente.TipoSangre">
+                                    <option value="">Seleccione...</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                </InputSelect>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Peso (kg)</label>
+                                <InputNumber class="form-control" @bind-Value="nuevoExpediente.Peso" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Estatura (cm)</label>
+                                <InputNumber class="form-control" @bind-Value="nuevoExpediente.Estatura" />
+                            </div>
+
+                            <div class="col-12"><hr /><h6>Contacto de Emergencia</h6></div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Nombre Contacto</label>
+                                <InputText class="form-control" @bind-Value="nuevoExpediente.ContactoEmergenciaNombre" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Teléfono</label>
+                                <InputText class="form-control" @bind-Value="nuevoExpediente.ContactoEmergenciaTelefono" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Parentesco</label>
+                                <InputText class="form-control" @bind-Value="nuevoExpediente.ContactoEmergenciaParentesco" />
+                            </div>
+
+                            <div class="col-12"><hr /><h6>Información Médica</h6></div>
+
+                            <div class="col-12">
+                                <label class="form-label">Alergias / Condiciones</label>
+                                <InputTextArea class="form-control" @bind-Value="nuevoExpediente.Alergias" rows="3" />
+                            </div>
+                        </div>
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-success">Guardar Expediente</button>
+                        </div>
+                    </EditForm>
+                }
+                else
+                {
+                    <!-- MODO LECTURA: VISUALIZACIÓN COMPLETA -->
+                    <!-- 1. DATOS VITALES Y CONTACTO -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-3 text-center border-end">
+                            <h1 class="display-4 text-danger mb-0 fw-bold">@expediente.TipoSangre</h1>
+                            <small class="text-muted text-uppercase">Tipo de Sangre</small>
+                            <div class="mt-3 d-flex justify-content-center gap-2">
+                                <span class="badge bg-light text-dark border p-2">
+                                    <i class="oi oi-person"></i> @(expediente.Peso?.ToString("0.##") ?? "-") kg
+                                </span>
+                                <span class="badge bg-light text-dark border p-2">
+                                    <i class="oi oi-vertical-align-top"></i> @(expediente.Estatura?.ToString("0.##") ?? "-") cm
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-9">
+                            <div class="card bg-light border-0 h-100">
+                                <div class="card-body">
+                                    <h6 class="text-uppercase text-muted small fw-bold mb-3">
+                                        <i class="oi oi-phone me-1"></i> En caso de emergencia llamar a:
+                                    </h6>
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-auto">
+                                            <h4 class="mb-0">@expediente.ContactoEmergenciaNombre</h4>
+                                            <span class="text-muted">@expediente.ContactoEmergenciaParentesco</span>
+                                        </div>
+                                        <div class="text-end">
+                                            <a href="tel:@expediente.ContactoEmergenciaTelefono" class="btn btn-outline-primary btn-lg">
+                                                <i class="oi oi-phone"></i> @expediente.ContactoEmergenciaTelefono
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- 2. TABLA DE VACUNAS -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-success border-top border-4 shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="mb-0 text-success"><i class="oi oi-eyedropper"></i> Esquema de Vacunación</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    @if (expediente.Vacunas != null && expediente.Vacunas.Any())
+                                    {
+                                        <table class="table table-striped mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Vacuna</th>
+                                                    <th class="text-end">Fecha Aplicación</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var vacuna in expediente.Vacunas)
+                                                {
+                                                    <tr>
+                                                        <td class="fw-bold">@vacuna.NombreVacuna</td>
+                                                        <td class="text-end">@vacuna.FechaAplicacion.ToShortDateString()</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                                    else
+                                    {
+                                        <div class="p-4 text-center text-muted">
+                                            No hay vacunas registradas.
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. LISTA DETALLADA DE ALERGIAS -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-warning border-top border-4 shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="mb-0 text-warning"><i class="oi oi-warning"></i> Alergias y Condiciones</h5>
+                                </div>
+                                <div class="card-body">
+                                    @if (expediente.AlergiasDetalladas != null && expediente.AlergiasDetalladas.Any())
+                                    {
+                                        <div class="list-group list-group-flush">
+                                            @foreach (var alergia in expediente.AlergiasDetalladas)
+                                            {
+                                                <div class="list-group-item px-0">
+                                                    <div class="d-flex w-100 justify-content-between">
+                                                        <h6 class="mb-1 fw-bold @(alergia.EsGrave ? "text-danger" : "")">
+                                                            @if (alergia.EsGrave)
+                                                            {
+                                                                <i class="oi oi-fire me-1"></i>
+                                                            }
+                                                            @alergia.NombreAlergeno
+                                                        </h6>
+                                                        @if (alergia.EsGrave)
+                                                        {
+                                                            <span class="badge bg-danger">Grave</span>
+                                                        }
+                                                    </div>
+                                                    <p class="mb-1 small">@alergia.Sintomas</p>
+                                                    @if (!string.IsNullOrEmpty(alergia.TratamientoRecomendado))
+                                                    {
+                                                        <small class="text-muted"><i class="oi oi-medical-cross"></i> Tx: @alergia.TratamientoRecomendado</small>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    else if (!string.IsNullOrEmpty(expediente.Alergias))
+                                    {
+                                        // Fallback por si solo hay texto resumen y no lista detallada
+                                        <p class="mb-0">@expediente.Alergias</p>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-center text-muted py-4">
+                                            <i class="oi oi-thumb-up fs-2 mb-2"></i><br />
+                                            Sin alergias registradas.
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+@code {
+    [Parameter] public int AlumnoId { get; set; }
+
+    private AlumnoDto alumno;
+    private ExpedienteMedicoDto expediente;
+    private CreateExpedienteDto nuevoExpediente = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        try
+        {
+            // 1. Obtener datos del alumno (para el nombre)
+            var resAlumno = await AlumnoService.GetByIdAsync(AlumnoId);
+            if (resAlumno.Succeeded)
+                alumno = resAlumno.Data;
+
+            // 2. Intentar obtener el expediente
+            var resExp = await MedicoService.GetByAlumnoIdAsync(AlumnoId);
+            if (resExp.Succeeded && resExp.Data != null)
+            {
+                expediente = resExp.Data;
+            }
+            else
+            {
+                // Si no existe, preparamos el modelo para crear
+                nuevoExpediente.AlumnoId = AlumnoId;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task GuardarExpediente()
+    {
+        var res = await MedicoService.CreateAsync(nuevoExpediente);
+        if (res.Succeeded)
+        {
+            UiService.ShowSuccess("Expediente creado correctamente.");
+            // Recargar la página para ver el modo lectura
+            IrAExpediente();
+        }
+    }
+
+    void IrAExpediente()
+    {
+        Navigation.NavigateTo($"alumnos/expediente/{AlumnoId}", true);
+    }
+}

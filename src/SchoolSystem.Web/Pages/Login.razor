@@ -1,4 +1,5 @@
-﻿@page "/login"
+﻿@layout SchoolSystem.Web.Shared.AuthLayout
+@page "/login"
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
 @inject ClientAuthService AuthService
@@ -56,6 +57,9 @@
 </div>
 
 @code {
+    [SupplyParameterFromQuery]
+    public string? ReturnUrl { get; set; }
+
     private LoginDto loginModel = new LoginDto();
     private string errorMessage;
     private bool isLoading = false;
@@ -72,7 +76,7 @@
             if (response.Succeeded)
             {
                 // Redirigir al inicio o dashboard
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo(ReturnUrl ?? "/");
             }
             else
             {

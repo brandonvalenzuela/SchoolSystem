@@ -28,7 +28,25 @@ namespace SchoolSystem.Web.Auth
             {
                 try
                 {
-                    identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                    var claims = ParseClaimsFromJwt(token);
+
+                    var expClaim = claims.FirstOrDefault(c => c.Type == "exp");
+
+                    if (expClaim != null)
+                    {
+                        var expSeconds = long.Parse(expClaim.Value);
+                        var expDate = DateTimeOffset.FromUnixTimeSeconds(expSeconds).UtcDateTime;
+
+                        if (expDate <= DateTime.UtcNow)
+                        {
+                            // El token expiró. Lo borramos y no autenticamos.
+                            await _localStorage.RemoveItemAsync("authToken");
+                            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+                        }
+                    }
+
+                    identity = new ClaimsIdentity(claims, "jwt", "unique_name", "role");
+
                     _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
                 catch
@@ -51,7 +69,27 @@ namespace SchoolSystem.Web.Auth
             var payload = jwt.Split('.')[1];
             var jsonBytes = ParseBase64WithoutPadding(payload);
             var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-            return keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
+
+            var claims = new List<Claim>();
+
+            foreach (var kvp in keyValuePairs)
+            {
+                // Manejo especial para Roles: Si viene como arreglo (varios roles) o string (un rol)
+                if (kvp.Key == "role" && kvp.Value.ToString().Trim().StartsWith("["))
+                {
+                    var parsedRoles = JsonSerializer.Deserialize<string[]>(kvp.Value.ToString());
+                    foreach (var parsedRole in parsedRoles)
+                    {
+                        claims.Add(new Claim(kvp.Key, parsedRole));
+                    }
+                }
+                else
+                {
+                    claims.Add(new Claim(kvp.Key, kvp.Value.ToString()));
+                }
+            }
+
+            return claims;
         }
 
         private byte[] ParseBase64WithoutPadding(string base64)
@@ -67,5 +105,14 @@ namespace SchoolSystem.Web.Auth
             }
             return Convert.FromBase64String(base64);
         }
+
+        // Método nuevo para llamar desde ApiService
+        public void NotifyUserLogout()
+        {
+            var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
+            var authState = Task.FromResult(new AuthenticationState(anonymousUser));
+            NotifyAuthenticationStateChanged(authState);
+        }
+
     }
 }

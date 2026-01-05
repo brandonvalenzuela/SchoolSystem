@@ -5,6 +5,7 @@ using SchoolSystem.Application.Common.Wrappers;
 using SchoolSystem.Application.DTOs.Finanzas;
 using SchoolSystem.Application.Services.Interfaces;
 using SchoolSystem.Domain.Constants;
+using System.Security.Claims;
 
 namespace SchoolSystem.API.Controllers
 {
@@ -44,6 +45,15 @@ namespace SchoolSystem.API.Controllers
 
             try
             {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    return Unauthorized(new ApiResponse<int>("No se pudo identificar al usuario que realiza el cobro."));
+                }
+
+                dto.RecibidoPorId = userId;
+
                 var id = await _service.RegistrarPagoAsync(dto);
                 return Ok(new ApiResponse<int>(id, "Pago registrado correctamente."));
             }
@@ -53,7 +63,27 @@ namespace SchoolSystem.API.Controllers
             }
         }
 
-        // Endpoint para cancelar pago...
+        [HttpPost("{id}/cancelar")]
+        [Authorize(Roles = Roles.Admin)] // Solo Directores/SuperAdmin deberían cancelar pagos
+        public async Task<ActionResult<ApiResponse<bool>>> CancelarPago(int id, [FromBody] CancelarPagoDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse<bool>("Datos inválidos."));
+
+            try
+            {
+                // Obtener ID del usuario actual
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                int userId = int.Parse(userIdClaim?.Value ?? "0");
+
+                await _service.CancelarPagoAsync(id, dto.Motivo, userId);
+                return Ok(new ApiResponse<bool>(true, "Pago cancelado exitosamente."));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<bool>(ex.Message));
+            }
+        }
     }
 
 }

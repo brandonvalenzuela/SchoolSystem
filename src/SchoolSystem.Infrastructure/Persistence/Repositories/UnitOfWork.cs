@@ -1,11 +1,13 @@
 ﻿using Hangfire.Dashboard;
 using SchoolSystem.Domain.Entities.Academico;
 using SchoolSystem.Domain.Entities.Auditoria;
+using SchoolSystem.Domain.Entities.Comunicacion;
 using SchoolSystem.Domain.Entities.Conducta;
 using SchoolSystem.Domain.Entities.Configuracion;
 using SchoolSystem.Domain.Entities.Escuelas;
 using SchoolSystem.Domain.Entities.Evaluacion;
 using SchoolSystem.Domain.Entities.Finanzas;
+using SchoolSystem.Domain.Entities.Medico;
 using SchoolSystem.Domain.Entities.Usuarios;
 using SchoolSystem.Domain.Interfaces;
 using SchoolSystem.Infrastructure.Persistence.Configurations;
@@ -41,6 +43,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         private IRepository<ConceptoPago> _conceptoPagos;
         private IRepository<EstadoCuenta> _estadoCuentas;
         private IRepository<Pago> _pagos;
+        private IRepository<ExpedienteMedico> _expedienteMedicos;
+        private IRepository<Notificacion> _notificaciones;
 
         public UnitOfWork(SchoolSystemDbContext context)
         {
@@ -66,6 +70,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         public IRepository<ConceptoPago> ConceptoPagos => _conceptoPagos ??= new Repository<ConceptoPago>(_context);
         public IRepository<EstadoCuenta> EstadoCuentas => _estadoCuentas ??= new Repository<EstadoCuenta>(_context);
         public IRepository<Pago> Pagos => _pagos ??= new Repository<Pago>(_context);
+        public IRepository<ExpedienteMedico> ExpedienteMedicos => _expedienteMedicos ??= new Repository<ExpedienteMedico>(_context);
+        public IRepository<Notificacion> Notificaciones => _notificaciones ??= new Repository<Notificacion>(_context);
 
         public async Task<int> SaveChangesAsync()
         {

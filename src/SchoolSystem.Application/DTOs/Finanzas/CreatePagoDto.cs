@@ -26,9 +26,9 @@ namespace SchoolSystem.Application.DTOs.Finanzas
         [Required]
         public MetodoPago MetodoPago { get; set; }
 
-        public string Referencia { get; set; } // Para transferencia/cheque
-        public string Banco { get; set; }
-        public string Observaciones { get; set; }
+        public string? Referencia { get; set; } // Para transferencia/cheque
+        public string? Banco { get; set; }
+        public string? Observaciones { get; set; }
 
         [Required]
         public int RecibidoPorId { get; set; } // Usuario que cobra

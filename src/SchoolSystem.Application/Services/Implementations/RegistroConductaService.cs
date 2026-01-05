@@ -71,9 +71,24 @@ namespace SchoolSystem.Application.Services.Implementations
 
         public async Task<int> CreateAsync(CreateRegistroConductaDto dto)
         {
+            // 1. BUSCAR EL MAESTRO ASOCIADO AL USUARIO
+            // El DTO trae el UsuarioId en la propiedad MaestroId (porque así lo llenamos en el front)
+            var maestrosEncontrados = await _unitOfWork.Maestros.FindAsync(m => m.UsuarioId == dto.MaestroId);
+            var maestroReal = maestrosEncontrados.FirstOrDefault();
+
+            if (maestroReal == null)
+            {
+                throw new InvalidOperationException($"El usuario actual (ID: {dto.MaestroId}) no tiene un perfil de Maestro configurado.");
+            }
+
+            // 2. MAPEO
             var entity = _mapper.Map<RegistroConducta>(dto);
 
-            // Lógica de negocio por defecto
+            // 3. CORRECCIÓN DE ID
+            // Reemplazamos el ID de Usuario por el ID real de la tabla Maestros
+            entity.MaestroId = maestroReal.Id;
+
+            // Lógica de fechas
             if (entity.FechaHoraIncidente == default)
             {
                 entity.FechaHoraIncidente = DateTime.Now;

@@ -1,0 +1,340 @@
+﻿@page "/caja"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@inject PagoService PagoService
+@inject AlumnoService AlumnoService
+@inject UiService UiService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+@attribute [Authorize]
+
+<PageTitle>Caja - Cobros</PageTitle>
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="oi oi-dollar"></i> Caja y Cobranza</h2>
+    </div>
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            <i class="oi oi-check me-2"></i> @successMessage
+            <button type="button" class="btn-close" @onclick="() => successMessage = null"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- COLUMNA IZQUIERDA: BUSCADOR Y LISTA DE DEUDAS -->
+        <div class="col-md-7">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">1. Seleccionar Alumno</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Buscar Alumno:</label>
+                        <select class="form-select" value="@alumnoIdSeleccionado" @onchange="OnAlumnoSeleccionado">
+                            <option value="0">-- Seleccione un alumno --</option>
+                            @foreach (var alumno in listaAlumnos)
+                            {
+                                <option value="@alumno.Id">@alumno.NombreCompleto (@alumno.Matricula)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            @if (alumnoIdSeleccionado > 0)
+            {
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-primary">Cargos Pendientes</h5>
+                        <button class="btn btn-sm btn-outline-primary" @onclick="CargarCargos" title="Refrescar">
+                            <i class="oi oi-reload"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        @if (isLoadingCargos)
+                        {
+                            <div class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+                        }
+                        else if (cargosPendientes.Count == 0)
+                        {
+                            <div class="alert alert-success m-3 text-center">
+                                Este alumno no tiene adeudos pendientes.
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0 align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Concepto</th>
+                                            <th>Vencimiento</th>
+                                            <th class="text-end">Saldo</th>
+                                            <th class="text-center">Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var cargo in cargosPendientes)
+                                        {
+                                            <tr class="@(cargo.Id == pagoModelo.CargoId ? "table-active" : "")">
+                                                <td>
+                                                    <span class="fw-bold">@cargo.Concepto</span>
+                                                    @if (cargo.DiasRetraso > 0)
+                                                    {
+                                                        <br/>
+                                                        <span class="badge bg-danger">Vencido (@cargo.DiasRetraso días)</span>
+                                                    }
+                                                </td>
+                                                <td>@cargo.FechaVencimiento.ToShortDateString()</td>
+                                                <td class="text-end text-danger fw-bold">$@cargo.SaldoPendiente.ToString("N2")</td>
+                                                <td class="text-center">
+                                                    <button class="btn btn-sm btn-success" @onclick="() => SeleccionarCargo(cargo)">
+                                                        Pagar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- COLUMNA DERECHA: FORMULARIO DE PAGO -->
+        <div class="col-md-5">
+            <div class="card shadow border-0">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">2. Registrar Pago</h5>
+                </div>
+                <div class="card-body">
+                    @if (pagoModelo.CargoId == 0)
+                    {
+                        <div class="text-center py-5 text-muted">
+                            <i class="oi oi-arrow-thick-left fs-1"></i>
+                            <p class="mt-2">Seleccione un cargo de la lista para cobrar.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <strong>Cobrando:</strong> @cargoSeleccionadoDescripcion
+                        </div>
+
+                        <EditForm Model="@pagoModelo" OnValidSubmit="ProcesarPago">
+                            <DataAnnotationsValidator />
+                            @if (!string.IsNullOrEmpty(errorMessage)) { <div class="alert alert-danger">@errorMessage</div> }
+
+                            <div class="mb-3">
+                                <label class="form-label">Monto a Pagar</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <InputNumber class="form-control form-control-lg fw-bold" @bind-Value="pagoModelo.Monto" />
+                                </div>
+                                <ValidationMessage For="@(() => pagoModelo.Monto)" />
+                                <small class="text-muted">Saldo actual: $@maximoPagar.ToString("N2")</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Método de Pago</label>
+                                <InputSelect class="form-select" @bind-Value="pagoModelo.MetodoPago">
+                                    <option value="1">Efectivo</option>
+                                    <option value="2">Transferencia</option>
+                                    <option value="3">Tarjeta</option>
+                                    <option value="4">Cheque</option>
+                                </InputSelect>
+                            </div>
+
+                            @if (pagoModelo.MetodoPago != 1) // Si no es efectivo
+                            {
+                                <div class="mb-3">
+                                    <label class="form-label">Referencia / Folio</label>
+                                    <InputText class="form-control" @bind-Value="pagoModelo.Referencia" placeholder="Num. autorización o referencia" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Banco (Opcional)</label>
+                                    <InputText class="form-control" @bind-Value="pagoModelo.Banco"/>
+                                </div>
+                            }
+
+                            <div class="mb-3">
+                                <label class="form-label">Observaciones</label>
+                                <InputTextArea class="form-control" @bind-Value="pagoModelo.Observaciones" rows="2" />
+                            </div>
+
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-success btn-lg" disabled="@isProcesando">
+                                    @if (isProcesando)
+                                    {
+                                        <span class="spinner-border spinner-border-sm"></span> <span>Procesando...</span>
+                                    }
+                                    else
+                                    {
+                                        <span><i class="oi oi-check"></i> Registrar Cobro</span>
+                                    }
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" @onclick="CancelarSeleccion">Cancelar</button>
+                            </div>
+                        </EditForm>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // Listas
+    private List<AlumnoDto> listaAlumnos = new();
+    private List<CargoDto> cargosPendientes = new();
+
+    // Estado UI
+    private int alumnoIdSeleccionado;
+    private bool isLoadingAlumnos = true;
+    private bool isLoadingCargos = false;
+    private bool isProcesando = false;
+    private string errorMessage, successMessage;
+    
+    // Modelo Formulario
+    private CreatePagoDto pagoModelo = new CreatePagoDto();
+    
+    // Auxiliares
+    private string cargoSeleccionadoDescripcion;
+    private decimal maximoPagar;
+    private int currentUserId; // ID del usuario logueado (cajero)
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarUsuarioActual();
+        await CargarAlumnos();
+    }
+
+    private async Task CargarUsuarioActual()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            // Intentar obtener el ID del claim NameIdentifier (estándar JWT)
+            var idClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+            if (idClaim != null && int.TryParse(idClaim.Value, out int id))
+            {
+                currentUserId = id;
+            }
+        }
+    }
+
+    private async Task CargarAlumnos()
+    {
+        // Traemos los primeros 100 alumnos para el select.
+        // Mejora futura: Usar un componente "Typeahead" o buscador real.
+        var res = await AlumnoService.GetAlumnosAsync(1, 100);
+        if (res.Succeeded)
+        {
+            listaAlumnos = res.Data.Items.ToList();
+        }
+        isLoadingAlumnos = false;
+    }
+
+    private async Task OnAlumnoSeleccionado(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            alumnoIdSeleccionado = id;
+            CancelarSeleccion(); // Limpiar formulario derecho
+            if (id > 0)
+            {
+                await CargarCargos();
+            }
+            else
+            {
+                cargosPendientes.Clear();
+            }
+        }
+    }
+
+    private async Task CargarCargos()
+    {
+        isLoadingCargos = true;
+        cargosPendientes.Clear();
+        
+        var res = await PagoService.GetCargosPendientesAsync(alumnoIdSeleccionado);
+        if (res.Succeeded)
+        {
+            cargosPendientes = res.Data;
+        }
+        isLoadingCargos = false;
+    }
+
+    private void SeleccionarCargo(CargoDto cargo)
+    {
+        // Preparar el modelo para pagar este cargo específico
+        pagoModelo = new CreatePagoDto
+        {
+            EscuelaId = 1, // Default o sacar del usuario
+            AlumnoId = alumnoIdSeleccionado,
+            CargoId = cargo.Id,
+            Monto = cargo.SaldoPendiente, // Por defecto, pagar el total
+            MetodoPago = 1, // Efectivo
+            RecibidoPorId = currentUserId
+        };
+
+        cargoSeleccionadoDescripcion = $"{cargo.Concepto} (Vence: {cargo.FechaVencimiento.ToShortDateString()})";
+        maximoPagar = cargo.SaldoPendiente;
+        errorMessage = null;
+    }
+
+    private void CancelarSeleccion()
+    {
+        pagoModelo = new CreatePagoDto(); // Reset
+        cargoSeleccionadoDescripcion = null;
+        errorMessage = null;
+    }
+
+    private async Task ProcesarPago()
+    {
+        // Validación extra de frontend
+        if (pagoModelo.Monto > maximoPagar)
+        {
+            errorMessage = $"El monto no puede ser mayor al saldo pendiente (${maximoPagar:N2})";
+            return;
+        }
+
+        isProcesando = true;
+        errorMessage = null;
+
+        try
+        {
+            pagoModelo.RecibidoPorId = currentUserId; // Asegurar ID
+            
+            var res = await PagoService.RegistrarPagoAsync(pagoModelo);
+            
+            if (res.Succeeded)
+            {
+                successMessage = $"Pago registrado correctamente. ID: {res.Data}";
+                CancelarSeleccion(); // Limpiar formulario
+                await CargarCargos(); // Refrescar lista de deudas
+            }
+            else
+            {
+                errorMessage = res.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Error al procesar: " + ex.Message;
+        }
+        finally
+        {
+            isProcesando = false;
+        }
+    }
+}

@@ -138,6 +138,25 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(p => p.UpdatedBy)
                 .IsRequired(false);
 
+            #region Soft Delete
+
+            // Is Deleted
+            builder.Property(a => a.IsDeleted)
+                .HasDefaultValue(false)
+                .IsRequired();
+
+            // Deleted At
+            builder.Property(a => a.DeletedAt)
+                .HasColumnType("DATETIME");
+
+            // Deleted By
+            builder.Property(a => a.DeletedBy);
+
+            // Query Filter para Soft Delete (solo mostrar no eliminados por defecto)
+            builder.HasQueryFilter(a => !a.IsDeleted);
+
+            #endregion
+
             // Relaciones
             builder.HasOne(p => p.Cargo)
                 .WithMany(c => c.Pagos)

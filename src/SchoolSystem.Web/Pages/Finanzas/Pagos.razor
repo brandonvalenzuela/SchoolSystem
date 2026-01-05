@@ -1,0 +1,363 @@
+﻿@page "/pagos"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@inject PagoService PagoService
+@inject UiService UiService
+@inject IJSRuntime JSRuntime
+@attribute [Authorize(Roles = "SuperAdmin,Director,Subdirector,Administrativo")]
+
+<PageTitle>Historial de Pagos</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4 no-print">
+    <h1>Historial de Ingresos</h1>
+    <a href="caja" class="btn btn-success">
+        <i class="oi oi-dollar"></i> Ir a Caja
+    </a>
+</div>
+
+<!-- Alertas (No imprimir) -->
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show no-print">
+        @successMessage
+        <button type="button" class="btn-close" @onclick="() => successMessage = null"></button>
+    </div>
+}
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show no-print">
+        @errorMessage
+        <button type="button" class="btn-close" @onclick="() => errorMessage = null"></button>
+    </div>
+}
+
+@if (isLoading)
+{
+    <div class="text-center py-5 no-print"><div class="spinner-border text-primary"></div></div>
+}
+else if (lista == null || !lista.Any())
+{
+    <div class="alert alert-info no-print">No se han registrado pagos aún.</div>
+}
+else
+{
+    <div class="card shadow-sm border-0 no-print">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Folio</th>
+                            <th>Fecha</th>
+                            <th>Alumno</th>
+                            <th>Concepto</th>
+                            <th>Método</th>
+                            <th class="text-end">Monto</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in lista)
+                        {
+                            <tr class="@(item.Cancelado ? "table-danger text-muted" : "")">
+                                <td class="fw-bold">@item.FolioRecibo</td>
+                                <td>@item.FechaPago.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@item.NombreAlumno</td>
+                                <td>
+                                    @item.DescripcionCargo
+                                    @if (item.Cancelado)
+                                    {
+                                        <span class="badge bg-danger ms-2">CANCELADO</span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">@item.MetodoPago</span>
+                                </td>
+                                <td class="text-end fw-bold text-success">
+                                    @if (item.Cancelado)
+                                    {
+                                        <span class="text-decoration-line-through text-muted">$@item.Monto.ToString("N2")</span>
+                                    }
+                                    else
+                                    {
+                                        <span>$@item.Monto.ToString("N2")</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-outline-secondary" title="Ver Recibo" @onclick="() => VerRecibo(item)">
+                                        📄
+                                    </button>
+
+                                    @if (!item.Cancelado)
+                                    {
+                                        <button class="btn btn-sm btn-outline-danger ms-1" title="Cancelar Pago"
+                                                @onclick="() => AbrirModalCancelacion(item)">
+                                            ✕
+                                        </button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">Mostrando @lista.Count registros</small>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary" disabled="@(pageNumber == 1)" @onclick="() => Cargar(pageNumber - 1)">Anterior</button>
+                    <button class="btn btn-sm btn-outline-secondary" disabled="@(!hasNext)" @onclick="() => Cargar(pageNumber + 1)">Siguiente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- 1. MODAL VISUALIZACIÓN DE RECIBO -->
+@if (mostrarRecibo && pagoRecibo != null)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title"><i class="oi oi-document"></i> Detalle del Pago</h5>
+                    <button type="button" class="btn-close no-print" @onclick="CerrarRecibo"></button>
+                </div>
+                <div class="modal-body p-4" id="areaImpresion">
+                    <div class="text-center mb-4">
+                        <h4>School System</h4>
+                        <p class="text-muted mb-0">Comprobante de Pago</p>
+                        @if (pagoRecibo.Cancelado)
+                        {
+                            <h2 class="text-danger fw-bold border-2 border-danger border p-1 d-inline-block mt-2">CANCELADO</h2>
+                        }
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-6 text-muted">Folio:</div>
+                        <div class="col-6 fw-bold text-end">@pagoRecibo.FolioRecibo</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6 text-muted">Fecha:</div>
+                        <div class="col-6 text-end">@pagoRecibo.FechaPago.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+
+                    <hr />
+
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Alumno</small>
+                        <span class="fs-5">@pagoRecibo.NombreAlumno</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Concepto</small>
+                        <span class="fw-bold">@pagoRecibo.DescripcionCargo</span>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <small class="text-muted d-block">Método de Pago</small>
+                            <span>@pagoRecibo.MetodoPago</span>
+                        </div>
+                        <div class="col-6 text-end">
+                            <small class="text-muted d-block">Total Pagado</small>
+                            <span class="fs-4 fw-bold text-success">$@pagoRecibo.Monto.ToString("N2")</span>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(pagoRecibo.Observaciones))
+                    {
+                        <div class="alert alert-light border mt-3">
+                            <small class="text-muted">Notas:</small><br />
+                            @pagoRecibo.Observaciones
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer no-print">
+                    <button type="button" class="btn btn-secondary" @onclick="CerrarRecibo">Cerrar</button>
+                    <button type="button" class="btn btn-primary" @onclick="ImprimirRecibo">
+                        <i class="oi oi-print"></i> Imprimir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- 2. MODAL CANCELACIÓN -->
+@if (mostrarModalCancelacion)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Cancelar Pago</h5>
+                    <button type="button" class="btn-close btn-close-white" @onclick="CerrarModalCancelacion"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro de cancelar este pago por <strong>$@pagoParaCancelar?.Monto.ToString("N2")</strong>?</p>
+                    <p class="text-danger small">Esta acción revertirá el saldo al cargo del alumno.</p>
+
+                    <div class="mb-3">
+                        <label class="form-label">Motivo de cancelación (Requerido):</label>
+                        <textarea class="form-control" @bind="motivoCancelacion" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CerrarModalCancelacion">Cerrar</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmarCancelacion" disabled="@(string.IsNullOrWhiteSpace(motivoCancelacion) || isCancelling)">
+                        @if (isCancelling)
+                        {
+                            <span>Procesando...</span>
+                        }
+                        else
+                        {
+
+                            <span>Confirmar Cancelación</span>
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Estilos para impresión básica -->
+<style>
+    @@media print {
+        .no-print {
+            display: none !important;
+        }
+
+        body {
+            background-color: white;
+        }
+
+        .modal {
+            position: static;
+            overflow: visible;
+        }
+
+        .modal-dialog {
+            margin: 0;
+            padding: 0;
+            max-width: 100%;
+        }
+
+        .modal-content {
+            border: none;
+            box-shadow: none;
+        }
+    }
+</style>
+
+@code {
+    private List<PagoDto> lista;
+    private bool isLoading = true;
+    private int pageNumber = 1;
+    private bool hasNext = false;
+    private string errorMessage, successMessage;
+
+    // Estado Modal Recibo
+    private bool mostrarRecibo = false;
+    private PagoDto pagoRecibo;
+
+    // Estado Modal Cancelación
+    private bool mostrarModalCancelacion = false;
+    private PagoDto pagoParaCancelar;
+    private string motivoCancelacion;
+    private bool isCancelling = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Cargar(1);
+    }
+
+    private async Task Cargar(int page)
+    {
+        isLoading = true;
+        pageNumber = page;
+
+        var res = await PagoService.GetPagosAsync(page, 15);
+
+        if (res.Succeeded)
+        {
+            lista = res.Data.Items.ToList();
+            hasNext = res.Data.HasNextPage;
+        }
+        else
+            errorMessage = res.Message;
+
+        isLoading = false;
+    }
+
+    // --- LÓGICA DE RECIBO ---
+    private void VerRecibo(PagoDto pago)
+    {
+        pagoRecibo = pago;
+        mostrarRecibo = true;
+    }
+
+    private void CerrarRecibo()
+    {
+        mostrarRecibo = false;
+        pagoRecibo = null;
+    }
+
+    private async Task ImprimirRecibo()
+    {
+        await JSRuntime.InvokeVoidAsync("print");
+    }
+
+    // --- LÓGICA DE CANCELACIÓN ---
+    private void AbrirModalCancelacion(PagoDto pago)
+    {
+        pagoParaCancelar = pago;
+        motivoCancelacion = "";
+        mostrarModalCancelacion = true;
+    }
+
+    private void CerrarModalCancelacion()
+    {
+        mostrarModalCancelacion = false;
+        pagoParaCancelar = null;
+    }
+
+    private async Task ConfirmarCancelacion()
+    {
+        if (string.IsNullOrWhiteSpace(motivoCancelacion))
+            return;
+
+        isCancelling = true;
+        errorMessage = null;
+
+        try
+        {
+            var res = await PagoService.CancelarPagoAsync(pagoParaCancelar.Id, motivoCancelacion);
+
+            if (res.Succeeded)
+            {
+                successMessage = "Pago cancelado correctamente.";
+                CerrarModalCancelacion();
+                // Si el recibo estaba abierto, lo cerramos también
+                CerrarRecibo();
+                await Cargar(pageNumber);
+            }
+            else
+            {
+                errorMessage = res.Message;
+                CerrarModalCancelacion();
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+            CerrarModalCancelacion();
+        }
+        finally
+        {
+            isCancelling = false;
+        }
+    }
+}

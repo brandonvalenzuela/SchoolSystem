@@ -1,0 +1,149 @@
+﻿@page "/conducta/nuevo"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@using System.Security.Claims
+@inject ConductaService ConductaService
+@inject AlumnoService AlumnoService
+@inject UiService UiService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProvider
+@attribute [Authorize]
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white">
+            <h3>Nuevo Reporte de Conducta</h3>
+        </div>
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <p class="text-center">Cargando...</p>
+            }
+            else
+            {
+                <EditForm Model="@modelo" OnValidSubmit="Guardar">
+                    <DataAnnotationsValidator />
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger">@errorMessage</div>
+                    }
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Alumno</label>
+                            <InputSelect class="form-select" @bind-Value="modelo.AlumnoId">
+                                <option value="0">-- Seleccione --</option>
+                                @foreach (var a in alumnos)
+                                {
+                                    <option value="@a.Id">@a.NombreCompleto (@a.Matricula)</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => modelo.AlumnoId)" />
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Tipo</label>
+                            <InputSelect class="form-select" @bind-Value="modelo.Tipo">
+                                <option value="1">Positiva (Mérito)</option>
+                                <option value="2">Negativa (Incidente)</option>
+                            </InputSelect>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha</label>
+                            <InputDate class="form-control" @bind-Value="modelo.FechaHoraIncidente" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Categoría</label>
+                            <InputSelect class="form-select" @bind-Value="modelo.Categoria">
+                                <option value="1">Responsabilidad</option>
+                                <option value="2">Respeto</option>
+                                <option value="3">Colaboración</option>
+                                <option value="10">Indisciplina</option>
+                                <option value="11">Falta de Respeto</option>
+                                <option value="14">Impuntualidad</option>
+                            </InputSelect>
+                        </div>
+
+                        @if (modelo.Tipo == 2) // Si es Negativa
+                        {
+                            <div class="col-md-3">
+                                <label class="form-label">Gravedad</label>
+                                <InputSelect class="form-select" @bind-Value="modelo.Gravedad">
+                                    <option value="">-- N/A --</option>
+                                    <option value="1">Leve</option>
+                                    <option value="2">Moderada</option>
+                                    <option value="3">Grave</option>
+                                </InputSelect>
+                            </div>
+                        }
+
+                        <div class="col-md-3">
+                            <label class="form-label">Puntos (+/-)</label>
+                            <InputNumber class="form-control" @bind-Value="modelo.Puntos" />
+                            <small class="text-muted">Use negativos para restar</small>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Título Breve</label>
+                            <InputText class="form-control" @bind-Value="modelo.Titulo" placeholder="Ej: Ayuda a compañero / Falta de tarea" />
+                            <ValidationMessage For="@(() => modelo.Titulo)" />
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Descripción Detallada</label>
+                            <InputTextArea class="form-control" @bind-Value="modelo.Descripcion" rows="3" />
+                            <ValidationMessage For="@(() => modelo.Descripcion)" />
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-end">
+                        <a href="conducta" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success" disabled="@isSubmitting">Guardar Reporte</button>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private CreateRegistroConductaDto modelo = new CreateRegistroConductaDto();
+    private List<AlumnoDto> alumnos = new();
+    private bool isLoading = true, isSubmitting = false;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Cargar alumnos (simplificado 100)
+        var res = await AlumnoService.GetAlumnosAsync(1, 100);
+        if (res.Succeeded)
+            alumnos = res.Data.Items.ToList();
+        isLoading = false;
+    }
+
+    private async Task Guardar()
+    {
+        isSubmitting = true;
+        try
+        {
+            // Obtener ID del maestro actual
+            var state = await AuthStateProvider.GetAuthenticationStateAsync();
+            var idClaim = state.User.FindFirst(ClaimTypes.NameIdentifier);
+            if (idClaim != null)
+                modelo.MaestroId = int.Parse(idClaim.Value);
+
+            var res = await ConductaService.CreateAsync(modelo);
+            if (res.Succeeded)
+            {
+                UiService.ShowSuccess("Reporte registrado.");
+                Navigation.NavigateTo("conducta");
+            }
+            else
+                errorMessage = res.Message;
+        }
+        catch (Exception ex) { errorMessage = ex.Message; }
+        finally { isSubmitting = false; }
+    }
+}

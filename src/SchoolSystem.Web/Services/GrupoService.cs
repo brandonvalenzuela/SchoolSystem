@@ -35,5 +35,11 @@ namespace SchoolSystem.Web.Services
         {
             return await _apiService.DeleteAsync<object>($"api/Grupos/{id}");
         }
+
+        public async Task<ApiResponse<List<GrupoDto>>> GetMisGruposAsync()
+        {
+            // Endpoint que devuelve List<GrupoDto>
+            return await _apiService.GetAsync<List<GrupoDto>>("api/Grupos/mis-grupos");
+        }
     }
 }

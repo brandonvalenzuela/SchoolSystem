@@ -497,6 +497,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
                     b.Property<string>("Descripcion")
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
@@ -519,6 +525,11 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.Property<TimeSpan?>("HoraInicio")
                         .HasColumnType("time(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<int?>("MaestroTitularId")
                         .HasColumnType("int");
@@ -2724,6 +2735,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
                     b.Property<int>("EnviadoPorId")
                         .HasColumnType("int");
 
@@ -2745,6 +2762,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<string>("Icono")
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("Leida")
                         .ValueGeneratedOnAdd()
@@ -5823,6 +5845,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Descuento")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(10,2)")
@@ -5851,6 +5879,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("GeneradoAutomaticamente")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false);
@@ -6292,6 +6325,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<string>("DatosAdicionales")
                         .HasColumnType("LONGTEXT");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
                     b.Property<string>("DireccionIp")
                         .HasMaxLength(45)
                         .HasColumnType("varchar(45)");
@@ -6328,6 +6367,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("MetodoPago")
                         .IsRequired()

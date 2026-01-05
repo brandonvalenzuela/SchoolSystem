@@ -5,6 +5,7 @@ using SchoolSystem.Application.Common.Wrappers;
 using SchoolSystem.Application.DTOs.Conducta;
 using SchoolSystem.Application.Services.Interfaces;
 using SchoolSystem.Domain.Constants;
+using System.Security.Claims;
 
 namespace SchoolSystem.API.Controllers
 {
@@ -52,11 +53,33 @@ namespace SchoolSystem.API.Controllers
         [Authorize(Roles = Roles.Staff)] // Maestros y Admin pueden reportar
         public async Task<ActionResult<ApiResponse<int>>> Create([FromBody] CreateRegistroConductaDto dto)
         {
+            // 1. Obtener el ID del Usuario desde el Token (Seguridad)
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            // Validación de seguridad: Si no hay claim, no está autenticado correctamente
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return Unauthorized(new ApiResponse<int>("No se pudo identificar al usuario que realiza el reporte."));
+            }
+
+            // 2. Sobreescribir el MaestroId en el DTO con el ID del usuario real
+            // El servicio luego buscará el perfil de Maestro asociado a este UsuarioId
+            dto.MaestroId = userId;
+
             if (!ModelState.IsValid)
                 return BadRequest(new ApiResponse<int>("Datos inválidos."));
 
-            var id = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, new ApiResponse<int>(id, "Reporte de conducta registrado exitosamente."));
+            // 3. Llamar al servicio
+            try
+            {
+                var id = await _service.CreateAsync(dto);
+                return CreatedAtAction(nameof(GetById), new { id }, new ApiResponse<int>(id, "Reporte de conducta registrado exitosamente."));
+            }
+            catch (Exception ex)
+            {
+                // Capturar excepciones de negocio (ej. Usuario no es maestro)
+                return BadRequest(new ApiResponse<int>(ex.Message));
+            }
         }
 
         /// <summary>

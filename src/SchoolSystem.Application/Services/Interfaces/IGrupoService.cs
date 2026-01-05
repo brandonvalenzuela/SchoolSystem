@@ -16,5 +16,7 @@ namespace SchoolSystem.Application.Services.Interfaces
         Task<int> CreateAsync(CreateGrupoDto dto);
         Task UpdateAsync(int id, UpdateGrupoDto dto);
         Task DeleteAsync(int id);
+        Task<List<GrupoDto>> GetGruposPorUsuarioAsync(int usuarioId);
+
     }
 }

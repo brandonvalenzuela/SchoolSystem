@@ -118,5 +118,30 @@ namespace SchoolSystem.Application.Services.Implementations
 
             await _unitOfWork.SaveChangesAsync();
         }
+
+        public async Task<List<GrupoDto>> GetGruposPorUsuarioAsync(int usuarioId)
+        {
+            // 1. Encontrar el registro de Maestro asociado a este Usuario
+            var maestros = await _unitOfWork.Grupos.GetAllIncludingAsync(
+                g => g.Grado,
+                g => g.Grado.NivelEducativo,
+                g => g.MaestroTitular,
+                g => g.MaestroTitular.Usuario); // Necesitas inyectar IRepository<Maestro>
+
+            var maestro = maestros.FirstOrDefault();
+
+            if (maestro == null)
+                return new List<GrupoDto>(); // El usuario no es maestro
+
+            // 2. Buscar grupos donde es Titular O imparte alguna materia
+            // Nota: Necesitamos incluir Grado para que el DTO se vea bonito
+            var grupos = await _unitOfWork.Grupos.FindAsync(g =>
+                (g.MaestroTitularId == maestro.Id || g.GrupoMateriaMaestros.Any(gm => gm.MaestroId == maestro.Id)) &&
+                !g.IsDeleted && g.Activo,
+                g => g.Grado, g => g.Grado.NivelEducativo
+            );
+
+            return _mapper.Map<List<GrupoDto>>(grupos.OrderBy(g => g.Grado.Orden).ThenBy(g => g.Nombre));
+        }
     }
 }

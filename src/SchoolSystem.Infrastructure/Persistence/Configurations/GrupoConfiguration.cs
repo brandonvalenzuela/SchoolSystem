@@ -117,6 +117,25 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasForeignKey(c => c.GrupoId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            #region Soft Delete
+
+            // Is Deleted
+            builder.Property(a => a.IsDeleted)
+                .HasDefaultValue(false)
+                .IsRequired();
+
+            // Deleted At
+            builder.Property(a => a.DeletedAt)
+                .HasColumnType("DATETIME");
+
+            // Deleted By
+            builder.Property(a => a.DeletedBy);
+
+            // Query Filter para Soft Delete (solo mostrar no eliminados por defecto)
+            builder.HasQueryFilter(a => !a.IsDeleted);
+
+            #endregion
+
             // Índices
             builder.HasIndex(g => g.EscuelaId)
                 .HasDatabaseName("IX_Grupos_EscuelaId");

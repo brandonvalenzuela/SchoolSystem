@@ -1,11 +1,13 @@
 ﻿using Microsoft.VisualBasic;
 using SchoolSystem.Domain.Entities.Academico;
 using SchoolSystem.Domain.Entities.Auditoria;
+using SchoolSystem.Domain.Entities.Comunicacion;
 using SchoolSystem.Domain.Entities.Conducta;
 using SchoolSystem.Domain.Entities.Configuracion;
 using SchoolSystem.Domain.Entities.Escuelas;
 using SchoolSystem.Domain.Entities.Evaluacion;
 using SchoolSystem.Domain.Entities.Finanzas;
+using SchoolSystem.Domain.Entities.Medico;
 using SchoolSystem.Domain.Entities.Usuarios;
 using System;
 using System.Collections.Generic;
@@ -36,6 +38,8 @@ namespace SchoolSystem.Domain.Interfaces
         IRepository<ConceptoPago> ConceptoPagos { get; }
         IRepository<EstadoCuenta> EstadoCuentas { get; }
         IRepository<Pago> Pagos { get; }
+        IRepository<ExpedienteMedico> ExpedienteMedicos { get; }
+        IRepository<Notificacion> Notificaciones { get; }
 
         // Método para guardar todos los cambios
         Task<int> SaveChangesAsync();

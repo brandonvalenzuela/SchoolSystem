@@ -148,7 +148,6 @@ namespace SchoolSystem.Application.Services.Implementations
             // Verificamos en UNA SOLA consulta si ya existen calificaciones para estos alumnos
             // en esta materia/periodo para evitar duplicados.
             var calificacionesExistentes = await _unitOfWork.Calificaciones.FindAsync(c =>
-                c.GrupoId == dto.GrupoId &&
                 c.MateriaId == dto.MateriaId &&
                 c.PeriodoId == dto.PeriodoId &&
                 alumnosIdsEnDto.Contains(c.AlumnoId.Value) && // Uso de IN en SQL
@@ -187,7 +186,7 @@ namespace SchoolSystem.Application.Services.Implementations
                 nuevasCalificaciones.Add(calificacion);
             }
 
-            if (!nuevasCalificaciones.Any())
+            if (nuevasCalificaciones.Count == 0)
                 return 0;
 
             // ---------------------------------------------------------

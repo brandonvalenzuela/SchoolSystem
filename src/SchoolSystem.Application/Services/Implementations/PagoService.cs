@@ -56,7 +56,8 @@ namespace SchoolSystem.Application.Services.Implementations
             var cargos = await _unitOfWork.Cargos.FindAsync(c =>
                 c.AlumnoId == alumnoId &&
                 c.Estatus != EstatusCargo.Pagado &&
-                c.Estatus != EstatusCargo.Cancelado);
+                c.Estatus != EstatusCargo.Cancelado,
+                c => c.ConceptoPago);   
 
             // Nota: Aquí podrías incluir ConceptoPago si lo necesitas en el mapeo
 

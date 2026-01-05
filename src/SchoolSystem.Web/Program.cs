@@ -33,6 +33,12 @@ builder.Services.AddScoped<MateriaService>();
 builder.Services.AddScoped<GrupoService>();
 builder.Services.AddScoped<InscripcionService>();
 builder.Services.AddScoped<CalificacionService>();
+builder.Services.AddScoped<PagoService>();
+builder.Services.AddScoped<DashboardService>();
+builder.Services.AddScoped<AsistenciaService>();
+builder.Services.AddScoped<ConductaService>();
+builder.Services.AddScoped<MedicoService>();
+builder.Services.AddScoped<NotificacionService>();
 
 // 4. Servicios de la Aplicación
 builder.Services.AddScoped<ApiService>();

@@ -1,0 +1,181 @@
+﻿@page "/calificaciones"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@inject CalificacionService CalificacionService
+@inject UiService UiService
+@attribute [Authorize]
+
+<PageTitle>Historial de Calificaciones</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Historial de Calificaciones</h1>
+    <a href="calificaciones/captura" class="btn btn-primary">
+        <i class="oi oi-pencil"></i> Capturar Nuevas
+    </a>
+</div>
+
+<!-- Alertas -->
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @successMessage
+        <button type="button" class="btn-close" @onclick="() => successMessage = null"></button>
+    </div>
+}
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        @errorMessage
+        <button type="button" class="btn-close" @onclick="() => errorMessage = null"></button>
+    </div>
+}
+
+@if (isLoading)
+{
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary"></div>
+    </div>
+}
+else if (lista == null || !lista.Any())
+{
+    <div class="alert alert-info">No hay calificaciones registradas en el sistema.</div>
+}
+else
+{
+    <div class="table-responsive bg-white shadow-sm rounded">
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Alumno</th>
+                    <th>Grupo</th>
+                    <th>Materia</th>
+                    <th>Periodo</th>
+                    <th class="text-center">Nota</th>
+                    <th class="text-center">Estado</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td class="fw-bold">@item.NombreCompletoAlumno</td>
+                        <td>@item.NombreGrupo</td>
+                        <td>@item.NombreMateria</td>
+                        <td><small class="text-muted">@item.NombrePeriodo</small></td>
+                        <td class="text-center">
+                            <span class="fs-5 fw-bold @GetColorNota(item.CalificacionNumerica)">
+                                @item.CalificacionNumerica
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            @if (item.Aprobado)
+                            {
+                                <span class="badge bg-success">Aprobado</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Reprobado</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <!-- Nota: Aún no tenemos pantalla de edición individual, pero dejamos el botón -->
+                            <button class="btn btn-sm btn-outline-info me-1" title="Ver detalles/Editar" disabled>
+                                ✏️
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" title="Eliminar"
+                                    @onclick="() => SolicitarEliminacion(item)">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="mt-3 d-flex justify-content-between">
+        <span class="text-muted">Página @currentPage de @totalPages</span>
+        <div>
+            <button class="btn btn-outline-secondary btn-sm" disabled="@(!hasPrevious)" @onclick="() => Cargar(currentPage - 1)">Anterior</button>
+            <button class="btn btn-outline-secondary btn-sm" disabled="@(!hasNext)" @onclick="() => Cargar(currentPage + 1)">Siguiente</button>
+        </div>
+    </div>
+}
+
+<SchoolSystem.Web.Shared.ConfirmacionModal @ref="modalEliminar"
+                                           Titulo="Eliminar Calificación"
+                                           Mensaje="@mensajeConfirmacion"
+                                           OnConfirm="ConfirmarEliminacion" />
+
+@code {
+    private List<CalificacionDto> lista;
+    private bool isLoading = true;
+    private string errorMessage, successMessage, mensajeConfirmacion;
+    private int currentPage = 1, totalPages = 0;
+    private bool hasPrevious, hasNext;
+
+    private SchoolSystem.Web.Shared.ConfirmacionModal modalEliminar;
+    private int idEliminar;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UiService.HasMessage)
+            successMessage = UiService.GetSuccessMessage();
+        await Cargar(1);
+    }
+
+    private async Task Cargar(int page)
+    {
+        isLoading = true;
+        var res = await CalificacionService.GetCalificacionesAsync(page, 10);
+        if (res.Succeeded)
+        {
+            lista = res.Data.Items.ToList();
+            currentPage = res.Data.PageNumber;
+            totalPages = res.Data.TotalPages;
+            hasPrevious = res.Data.HasPreviousPage;
+            hasNext = res.Data.HasNextPage;
+        }
+        else
+            errorMessage = res.Message;
+
+        isLoading = false;
+    }
+
+    private void SolicitarEliminacion(CalificacionDto item)
+    {
+        idEliminar = item.Id;
+        mensajeConfirmacion = $"¿Eliminar la calificación de {item.CalificacionNumerica} para {item.NombreCompletoAlumno} en {item.NombreMateria}?";
+        modalEliminar.Show();
+    }
+
+    private async Task ConfirmarEliminacion()
+    {
+        modalEliminar.Ocultar();
+        isLoading = true;
+
+        var res = await CalificacionService.DeleteAsync(idEliminar);
+        if (res.Succeeded)
+        {
+            successMessage = "Calificación eliminada.";
+            await Cargar(currentPage);
+        }
+        else
+        {
+            errorMessage = res.Message ?? "No se pudo eliminar.";
+        }
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private string GetColorNota(decimal nota)
+    {
+        if (nota < 6)
+            return "text-danger";
+        if (nota >= 9)
+            return "text-success";
+        return "text-dark";
+    }
+}

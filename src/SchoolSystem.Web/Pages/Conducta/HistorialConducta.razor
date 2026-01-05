@@ -1,0 +1,99 @@
+﻿@page "/conducta"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@inject ConductaService ConductaService
+@inject UiService UiService
+@attribute [Authorize]
+
+<PageTitle>Historial de Conducta</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Reportes de Conducta</h1>
+    <a href="conducta/nuevo" class="btn btn-primary">
+        <i class="oi oi-plus"></i> Nuevo Reporte
+    </a>
+</div>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @successMessage
+        <button type="button" class="btn-close" @onclick="() => successMessage = null"></button>
+    </div>
+}
+
+@if (isLoading)
+{
+    <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+}
+else if (lista == null || !lista.Any())
+{
+    <div class="alert alert-info">No hay reportes de conducta registrados.</div>
+}
+else
+{
+    <div class="table-responsive bg-white shadow-sm rounded">
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Alumno</th>
+                    <th>Tipo</th>
+                    <th>Título</th>
+                    <th>Puntos</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.FechaHoraIncidente.ToShortDateString()</td>
+                        <td class="fw-bold">@item.NombreAlumno</td>
+                        <td>
+                            @if (item.Tipo == "Positiva")
+                            {
+                                <span class="badge bg-success">Positiva</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Negativa</span>
+                                @if (!string.IsNullOrEmpty(item.Gravedad))
+                                {
+                                    <small class="text-muted ms-1">(@item.Gravedad)</small>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @item.Titulo
+                            <br />
+                            <small class="text-muted">@item.Categoria</small>
+                        </td>
+                        <td class="fw-bold @(item.Puntos >= 0 ? "text-success" : "text-danger")">
+                            @(item.Puntos > 0 ? "+" : "")@item.Puntos
+                        </td>
+                        <td><span class="badge bg-light text-dark border">@item.Estado</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private List<RegistroConductaDto> lista;
+    private bool isLoading = true;
+    private string successMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UiService.HasMessage)
+            successMessage = UiService.GetSuccessMessage();
+
+        var res = await ConductaService.GetRegistrosAsync(1, 20);
+        if (res.Succeeded)
+            lista = res.Data.Items.ToList();
+
+        isLoading = false;
+    }
+}
