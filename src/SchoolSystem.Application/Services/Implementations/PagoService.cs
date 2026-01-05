@@ -57,7 +57,7 @@ namespace SchoolSystem.Application.Services.Implementations
                 c.AlumnoId == alumnoId &&
                 c.Estatus != EstatusCargo.Pagado &&
                 c.Estatus != EstatusCargo.Cancelado,
-                c => c.ConceptoPago);   
+                c => c.ConceptoPago);
 
             // Nota: Aquí podrías incluir ConceptoPago si lo necesitas en el mapeo
 
