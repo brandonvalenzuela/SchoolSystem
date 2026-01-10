@@ -1,9 +1,11 @@
 ﻿@page "/alumnos/expediente/{AlumnoId:int}"
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
 @inject MedicoService MedicoService
 @inject AlumnoService AlumnoService
 @inject UiService UiService
+@inject ToastService ToastService
 @inject NavigationManager Navigation
 @attribute [Authorize]
 
@@ -266,7 +268,7 @@
         var res = await MedicoService.CreateAsync(nuevoExpediente);
         if (res.Succeeded)
         {
-            UiService.ShowSuccess("Expediente creado correctamente.");
+            ToastService.ShowSuccess("Expediente creado correctamente.");
             // Recargar la página para ver el modo lectura
             IrAExpediente();
         }

@@ -7,6 +7,13 @@
 
         public List<ToastMessage> Toasts { get; private set; } = new List<ToastMessage>();
 
+
+        // Helpers rápidos
+        public void ShowSuccess(string message) => ShowToast(message, ToastLevel.Success);
+        public void ShowError(string message) => ShowToast(message, ToastLevel.Error);
+        public void ShowInfo(string message) => ShowToast(message, ToastLevel.Info);
+        public void ShowWarning(string message) => ShowToast(message, ToastLevel.Warning);
+
         // Método principal para mostrar mensajes
         public void ShowToast(string message, ToastLevel level)
         {
@@ -24,20 +31,15 @@
             StartTimer(toast, 5000);
         }
 
-        // Helpers rápidos
-        public void ShowSuccess(string message) => ShowToast(message, ToastLevel.Success);
-        public void ShowError(string message) => ShowToast(message, ToastLevel.Error);
-        public void ShowWarning(string message) => ShowToast(message, ToastLevel.Warning);
-        public void ShowInfo(string message) => ShowToast(message, ToastLevel.Info);
-
         // Método para eliminar manualmente (clic en la X)
         public void Remove(ToastMessage toast)
         {
-            if (Toasts.Contains(toast))
+            if (!Toasts.Contains(toast))
             {
-                Toasts.Remove(toast);
-                NotifyStateChanged();
+                return;
             }
+            Toasts.Remove(toast);
+            NotifyStateChanged();
         }
 
         private async void StartTimer(ToastMessage toast, int delay)

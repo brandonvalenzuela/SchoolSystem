@@ -2,6 +2,8 @@
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
 @using System.Security.Claims
+@using SchoolSystem.Web.Services.Toast
+@inject ToastService ToastService
 @inject ConductaService ConductaService
 @inject AlumnoService AlumnoService
 @inject UiService UiService
@@ -137,7 +139,7 @@
             var res = await ConductaService.CreateAsync(modelo);
             if (res.Succeeded)
             {
-                UiService.ShowSuccess("Reporte registrado.");
+                ToastService.ShowSuccess("Reporte registrado.");
                 Navigation.NavigateTo("conducta");
             }
             else

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SchoolSystem.Application.Common.Models;
 using SchoolSystem.Application.Common.Wrappers;
 using SchoolSystem.Application.DTOs.Alumnos;
+using SchoolSystem.Application.DTOs.Filtros;
 using SchoolSystem.Application.Services.Interfaces;
 using SchoolSystem.Domain.Constants;
 using System.Threading.Tasks;
@@ -29,11 +30,10 @@ namespace SchoolSystem.API.Controllers
         /// <returns>Lista paginada envuelta en ApiResponse</returns>
         [HttpGet]
         [Authorize(Roles = Roles.Staff)]
-        public async Task<ActionResult<ApiResponse<PagedResult<AlumnoDto>>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10)
+        public async Task<ActionResult<ApiResponse<PagedResult<AlumnoDto>>>> GetAll([FromQuery] AlumnoFilterDto filter)
         {
-            var result = await _service.GetPagedAsync(page, size);
-            var response = new ApiResponse<PagedResult<AlumnoDto>>(result, "Lista de alumnos obtenida exitosamente.");
-            return Ok(response);
+            var result = await _service.GetPagedAsync(filter);
+            return Ok(new ApiResponse<PagedResult<AlumnoDto>>(result, "Lista de alumnos obtenida exitosamente."));
         }
 
         /// <summary>

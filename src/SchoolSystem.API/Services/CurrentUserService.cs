@@ -16,8 +16,8 @@ namespace SchoolSystem.API.Services
         {
             get
             {
-                var claim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
-                return claim != null && int.TryParse(claim.Value, out int id) ? id : null;
+                var idClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
+                return idClaim != null && int.TryParse(idClaim.Value, out int userId) ? userId : null;
             }
         }
 
@@ -25,15 +25,23 @@ namespace SchoolSystem.API.Services
         {
             get
             {
-                // Busca el claim personalizado "EscuelaId" que pusimos en el token
-                var claim = _httpContextAccessor.HttpContext?.User?.FindFirst("EscuelaId");
-                return claim != null && int.TryParse(claim.Value, out int id) ? id : null;
+                // Asumiendo que guardaste "EscuelaId" en el token al hacer login
+                var escuelaClaim = _httpContextAccessor.HttpContext?.User?.FindFirst("EscuelaId");
+                return escuelaClaim != null && int.TryParse(escuelaClaim.Value, out int id) ? id : null;
             }
         }
 
         public bool IsInRole(string role)
         {
             return _httpContextAccessor.HttpContext?.User?.IsInRole(role) ?? false;
+        }
+
+        public string Role
+        {
+            get
+            {
+                return _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
+            }
         }
     }
 }

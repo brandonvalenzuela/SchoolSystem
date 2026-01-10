@@ -2,6 +2,8 @@
 @page "/grupos/editar/{Id:int}"
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
+@inject ToastService ToastService
 @inject GradoService GradoService   // Necesario para el Select
 @inject MaestroService MaestroService // Necesario para el Select
 @inject GrupoService GrupoService // Necesario para el Select
@@ -167,7 +169,7 @@
                 var res = await GrupoService.CreateAsync(modelo);
                 if (res.Succeeded)
                 {
-                    UiService.ShowSuccess("Grupo creado.");
+                    ToastService.ShowSuccess("Grupo creado.");
                     Navigation.NavigateTo("grupos");
                 }
                 else
@@ -191,7 +193,7 @@
                 var res = await GrupoService.UpdateAsync(Id, updateDto);
                 if (res.Succeeded)
                 {
-                    UiService.ShowSuccess("Grupo actualizado.");
+                    ToastService.ShowSuccess("Grupo actualizado.");
                     Navigation.NavigateTo("grupos");
                 }
                 else

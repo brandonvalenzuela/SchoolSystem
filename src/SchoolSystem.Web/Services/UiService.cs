@@ -5,12 +5,6 @@
         // Propiedad para guardar el mensaje temporalmente
         private string? _successMessage;
 
-        // Método para guardar el mensaje (lo usa el Formulario antes de irse)
-        public void ShowSuccess(string message)
-        {
-            _successMessage = message;
-        }
-
         // Método para obtener y limpiar el mensaje (lo usa la Lista al llegar)
         public string GetSuccessMessage()
         {

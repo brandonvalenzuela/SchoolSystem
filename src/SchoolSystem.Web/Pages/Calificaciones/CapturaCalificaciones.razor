@@ -1,6 +1,8 @@
 ﻿@page "/calificaciones/captura"
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
+@inject ToastService ToastService
 @inject CalificacionService CalificacionService
 @inject InscripcionService InscripcionService
 @inject GrupoService GrupoService
@@ -290,7 +292,7 @@
             
             if (response.Succeeded)
             {
-                UiService.ShowSuccess($"{response.Data} calificaciones registradas correctamente.");
+                ToastService.ShowSuccess($"{response.Data} calificaciones registradas correctamente.");
                 Navigation.NavigateTo("/calificaciones"); // O recargar la misma página
             }
             else

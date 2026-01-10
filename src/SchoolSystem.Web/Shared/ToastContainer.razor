@@ -21,9 +21,11 @@
 </div>
 
 @code {
+    private List<ToastMessage> toasts = new List<ToastMessage>();
+
     protected override void OnInitialized()
     {
-        // Nos suscribimos al evento del servicio
+        // Nos suscribimos al evento del servicio para repintar cuando cambie la lista
         ToastService.OnChange += StateHasChanged;
     }
 

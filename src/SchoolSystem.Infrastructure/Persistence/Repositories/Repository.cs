@@ -90,5 +90,16 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         {
             return await _context.Set<T>().CountAsync(predicate);
         }
+
+        public IQueryable<T> GetQueryable()
+        {
+            // Retornamos el DbSet como IQueryable para encadenar Where, OrderBy, etc.
+            return _context.Set<T>().AsQueryable();
+        }
+
+        public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().FirstOrDefaultAsync(predicate);
+        }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using SchoolSystem.Web.Models;
+using System;
+using System.Net.NetworkInformation;
 
 namespace SchoolSystem.Web.Services
 {
@@ -11,10 +13,17 @@ namespace SchoolSystem.Web.Services
             _apiService = apiService;
         }
 
-        public async Task<ApiResponse<PagedResult<AlumnoDto>>> GetAlumnosAsync(int page, int size)
+        public async Task<ApiResponse<PagedResult<AlumnoDto>>> GetAlumnosAsync(int page, int size, string? busqueda = null, string? estatus = null)
         {
-            // Llama al endpoint: GET api/Alumnos?page=1&size=10
-            return await _apiService.GetPagedAsync<AlumnoDto>($"api/Alumnos?page={page}&size={size}");
+            var url = $"api/Alumnos?PageNumber={page}&PageSize={size}";
+
+            if (!string.IsNullOrEmpty(busqueda))
+                url += $"&TerminoBusqueda={Uri.EscapeDataString(busqueda)}";
+
+            if (!string.IsNullOrEmpty(estatus))
+                url += $"&Estatus={estatus}";
+
+            return await _apiService.GetPagedAsync<AlumnoDto>(url);
         }
 
         public async Task<ApiResponse<AlumnoDto>> GetByIdAsync(int id)

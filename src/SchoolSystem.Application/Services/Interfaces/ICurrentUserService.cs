@@ -11,5 +11,6 @@ namespace SchoolSystem.Application.Services.Interfaces
         int? UserId { get; }
         int? EscuelaId { get; } // <--- Agrega esto
         bool IsInRole(string role); // <--- Agrega esto para facilitar la validación
+        string Role { get; }
     }
 }

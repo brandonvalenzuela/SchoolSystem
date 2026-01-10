@@ -2,6 +2,8 @@
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
 @using SchoolSystem.Web.Enum
+@using SchoolSystem.Web.Services.Toast
+@inject ToastService ToastService
 @inject InscripcionService InscripcionService
 @inject AsistenciaService AsistenciaService
 @inject GrupoService GrupoService
@@ -180,7 +182,7 @@ else
 
             if (response.Succeeded)
             {
-                UiService.ShowSuccess("Asistencia guardada correctamente.");
+                ToastService.ShowSuccess("Asistencia guardada correctamente.");
                 Navigation.NavigateTo("mi-clase");
             }
             else

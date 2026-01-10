@@ -16,12 +16,70 @@
     </a>
 </div>
 
+<div class="card mb-3 shadow-sm border-0">
+    <div class="card-body p-2">
+        <div class="row g-2">
+            <!-- Buscador -->
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                        @if (isSearching)
+                        {
+                            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                        }
+                        else
+                        {
+                            <i class="oi oi-magnifying-glass text-muted"></i>
+                        }
+                    </span>
+
+                    <input type="text"
+                           class="form-control border-start-0"
+                           placeholder="Buscar por nombre, apellidos o matrícula..."
+                           @bind-value="terminoBusqueda"
+                           @bind-value:event="oninput"
+                           @onkeyup="ReiniciarTimerBusqueda" />
+
+                    @if (!string.IsNullOrEmpty(terminoBusqueda))
+                    {
+                        <button class="btn btn-outline-secondary border-start-0"
+                                type="button"
+                                @onclick="LimpiarFiltros"
+                                title="Borrar búsqueda">
+                            <i class="oi oi-x"></i>
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <!-- Filtro Estatus -->
+            <div class="col-md-3">
+                <select class="form-select" value="@filtroEstatus" @onchange="OnEstatusChanged">
+                    <option value="">Todos los Estatus</option>
+                    <option value="Activo">Activos</option>
+                    <option value="Baja">Baja</option>
+                    <option value="Egresado">Egresados</option>
+                </select>
+            </div>
+
+            <!-- Botón Limpiar -->
+            <div class="col-md-3 text-end">
+                @if (!string.IsNullOrEmpty(terminoBusqueda) || !string.IsNullOrEmpty(filtroEstatus))
+                {
+                    <button class="btn btn-outline-secondary w-100" @onclick="LimpiarFiltros">
+                        <i class="oi oi-x"></i> Limpiar Filtros
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
 @if (isLoading)
 {
-    <div class="d-flex justify-content-center">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Cargando...</span>
-        </div>
+    <div class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-flex justify-content-center align-items-center"
+         style="z-index: 10;">
+        <div class="spinner-border text-primary" role="status"></div>
     </div>
 }
 else if (alumnos == null || !alumnos.Any())
@@ -30,7 +88,7 @@ else if (alumnos == null || !alumnos.Any())
 }
 else
 {
-    <div class="table-responsive shadow-sm bg-white rounded">
+    <div class="table-responsive bg-white shadow-sm rounded @(isLoading ? "opacity-50" : "")">
         <table class="table table-hover mb-0">
             <thead class="table-light">
                 <tr>
@@ -88,6 +146,15 @@ else
             </button>
         </div>
     </div>
+
+
+    <!-- Contador de resultados (Debajo de la tabla o arriba) -->
+    @if (!isLoading && alumnos != null)
+    {
+        <div class="text-muted small mt-2 ms-1">
+            <i class="oi oi-info"></i> Se encontraron <strong>@totalItems</strong> resultados.
+        </div>
+    }
 }
 
 <SchoolSystem.Web.Shared.ConfirmacionModal @ref="modalEliminar"
@@ -96,6 +163,15 @@ else
                                            OnConfirm="ConfirmarEliminacionReal" />
 
 @code {
+    private string terminoBusqueda = "";
+    private System.Threading.Timer? timerBusqueda;
+    private string filtroEstatus = ""; // Vacío = Todos
+    private bool isSearching = false;
+    private int totalItems = 0; // <--- FALTABA ESTA
+
+
+    // Timer para "Debounce" (esperar a que el usuario termine de escribir)
+
     private List<AlumnoDto> alumnos;
     private bool isLoading = true;
     private string errorMessage;
@@ -126,13 +202,13 @@ else
         isLoading = true;
         try
         {
-            var response = await AlumnoService.GetAlumnosAsync(page, pageSize);
-
+            var response = await AlumnoService.GetAlumnosAsync(page, pageSize, terminoBusqueda, filtroEstatus);
             if (response.Succeeded)
             {
                 alumnos = response.Data.Items.ToList();
                 currentPage = response.Data.PageNumber;
                 totalPages = response.Data.TotalPages;
+                totalItems = response.Data.TotalItems;
                 hasPrevious = response.Data.HasPreviousPage;
                 hasNext = response.Data.HasNextPage;
                 errorMessage = null;
@@ -206,4 +282,44 @@ else
             _ => "bg-secondary"
         };
     }
+
+    private async Task OnEstatusChanged(ChangeEventArgs e)
+    {
+        filtroEstatus = e.Value.ToString();
+        await CargarAlumnos(1);
+    }
+
+    private async Task LimpiarFiltros()
+    {
+        terminoBusqueda = "";
+        filtroEstatus = "";
+        await CargarAlumnos(1);
+    }
+
+    private void ReiniciarTimerBusqueda()
+    {
+        // Activar indicador visual inmediato al teclear
+        isSearching = true;
+        StateHasChanged();
+
+        // 1. Detener el timer anterior si existe
+        timerBusqueda?.Dispose();
+        // 2. Iniciar un nuevo timer de 500ms (Debounce)
+        timerBusqueda = new System.Threading.Timer(async _ =>
+        {
+            // 3. Volver al hilo principal de Blazor para actualizar la UI
+            await InvokeAsync(async () =>
+            {
+                // Resetear a página 1 cuando se busca
+                currentPage = 1;
+                await CargarAlumnos(currentPage);
+
+                // Desactivar indicador al terminar
+                isSearching = false;
+                // Forzar repintado de la interfaz por si acaso
+                StateHasChanged();
+            });
+        }, null, 500, System.Threading.Timeout.Infinite);
+    }
+
 }

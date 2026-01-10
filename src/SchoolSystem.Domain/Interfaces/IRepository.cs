@@ -19,5 +19,11 @@ namespace SchoolSystem.Domain.Interfaces
         Task AddRangeAsync(IEnumerable<T> entities);
         Task UpdateRangeAsync(IEnumerable<T> entities);
         Task<int> CountAsync(Expression<Func<T, bool>> predicate);
+
+        // Para consultas flexibles
+        IQueryable<T> GetQueryable();
+
+        // Para buscar con condiciones complejas
+        Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
     }
 }
