@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SchoolSystem.Domain.Entities.Common;
 using SchoolSystem.Domain.Interfaces;
 using SchoolSystem.Infrastructure.Persistence.Context;
 using System;
@@ -39,7 +40,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         public async Task<T> AddAsync(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
-            await SaveChangesAsync();
+            //await SaveChangesAsync();
             return entity;
         }
 
@@ -100,6 +101,35 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
             return await _context.Set<T>().FirstOrDefaultAsync(predicate);
+        }
+
+        public async Task<IEnumerable<T>> GetAllDeletedAsync()
+        {
+            // IgnoreQueryFilters permite ver los Soft Deleted
+            return await _context.Set<T>().IgnoreQueryFilters()
+                               .Where(x => EF.Property<bool>(x, "IsDeleted"))
+                               .ToListAsync();
+        }
+
+        public async Task RestaurarAsync(int id)
+        {
+            var entity = await _context.Set<T>().IgnoreQueryFilters()
+                                     .FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
+
+            if (entity != null)
+            {
+                // Usamos reflexión o acceso directo si la entidad implementa ISoftDeletable
+                var softDeletable = entity as ISoftDeletable;
+                if (softDeletable != null)
+                {
+                    softDeletable.IsDeleted = false;
+                    softDeletable.DeletedAt = null;
+                    softDeletable.DeletedBy = null;
+
+                    _context.Set<T>().Update(entity);
+                    await _context.SaveChangesAsync();
+                }
+            }
         }
     }
 }

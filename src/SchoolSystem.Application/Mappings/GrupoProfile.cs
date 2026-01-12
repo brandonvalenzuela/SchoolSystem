@@ -19,7 +19,8 @@ namespace SchoolSystem.Application.Mappings
                 .ForMember(dest => dest.Turno, opt => opt.MapFrom(src => src.Turno.HasValue ? src.Turno.ToString() : "No definido"));
 
             CreateMap<CreateGrupoDto, Grupo>();
-            CreateMap<UpdateGrupoDto, Grupo>();
+            CreateMap<UpdateGrupoDto, Grupo>()
+                  .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

@@ -1241,7 +1241,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("DireccionTrabajo")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
@@ -1249,36 +1248,29 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("EstadoCivil")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("LugarTrabajo")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("NivelEstudios")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("LONGTEXT");
 
                     b.Property<string>("Ocupacion")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("Puesto")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
                     b.Property<string>("TelefonoTrabajo")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
@@ -7495,7 +7487,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("ApellidoMaterno")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 

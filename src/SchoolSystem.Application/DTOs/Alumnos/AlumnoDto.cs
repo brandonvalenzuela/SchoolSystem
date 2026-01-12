@@ -91,5 +91,11 @@ namespace SchoolSystem.Application.DTOs.Alumnos
         /// Fecha de ingreso a la institución.
         /// </summary>
         public DateTime FechaIngreso { get; set; }
+
+
+        /// <summary>
+        /// Fecha de eliminacion.
+        /// </summary>
+        public DateTime DeletedAt { get; set; }
     }
 }

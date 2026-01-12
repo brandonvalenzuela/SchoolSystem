@@ -22,17 +22,17 @@ namespace SchoolSystem.Application.DTOs.Asistencias
         public bool Justificado { get; set; }
 
         [StringLength(1000)]
-        public string Motivo { get; set; }
+        public string? Motivo { get; set; }
 
         [Url]
         [StringLength(500)]
-        public string JustificanteUrl { get; set; }
+        public string? JustificanteUrl { get; set; }
 
         [Required(ErrorMessage = "Se requiere el ID del usuario que aprueba la justificación.")]
         public int AproboJustificanteId { get; set; }
 
         [StringLength(1000)]
-        public string Observaciones { get; set; }
+        public string? Observaciones { get; set; }
 
         [Required(ErrorMessage = "Se requiere el ID del usuario que realiza la modificación.")]
         public int UsuarioModificoId { get; set; }

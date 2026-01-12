@@ -113,5 +113,12 @@ namespace SchoolSystem.API.Controllers
             var lista = await _service.GetAlumnosPorGrupoAsync(grupoId);
             return Ok(new ApiResponse<List<InscripcionDto>>(lista, "Alumnos del grupo obtenidos."));
         }
+
+        [HttpGet("historial/alumno/{alumnoId}")]
+        public async Task<ActionResult<ApiResponse<List<InscripcionDto>>>> GetHistorial(int alumnoId)
+        {
+            var result = await _service.GetHistorialPorAlumnoAsync(alumnoId);
+            return Ok(new ApiResponse<List<InscripcionDto>>(result, "Historial académico obtenido."));
+        }
     }
 }

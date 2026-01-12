@@ -23,7 +23,7 @@ namespace SchoolSystem.Application.DTOs.Padres
         // --- Campos actualizables del Usuario ---
         [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
         [StringLength(100, MinimumLength = 4)]
-        public string Username { get; set; }
+        public string? Username { get; set; }
 
         [Required(ErrorMessage = "El correo electrónico es obligatorio.")]
         [EmailAddress]
@@ -51,28 +51,28 @@ namespace SchoolSystem.Application.DTOs.Padres
 
         // --- Campos actualizables del Padre ---
         [StringLength(100)]
-        public string Ocupacion { get; set; }
+        public string? Ocupacion { get; set; }
 
         [StringLength(200)]
-        public string LugarTrabajo { get; set; }
+        public string? LugarTrabajo { get; set; }
 
         [StringLength(20)]
-        public string TelefonoTrabajo { get; set; }
+        public string? TelefonoTrabajo { get; set; }
 
         [StringLength(300)]
-        public string DireccionTrabajo { get; set; }
+        public string? DireccionTrabajo { get; set; }
 
         [StringLength(100)]
-        public string Puesto { get; set; }
+        public string? Puesto { get; set; }
 
         [StringLength(100)]
-        public string NivelEstudios { get; set; }
+        public string? NivelEstudios { get; set; }
 
         [StringLength(200)]
-        public string Carrera { get; set; }
+        public string? Carrera { get; set; }
 
         [StringLength(50)]
-        public string EstadoCivil { get; set; }
+        public string? EstadoCivil { get; set; }
 
         // --- Preferencias de Notificación ---
         public bool AceptaSMS { get; set; }

@@ -61,9 +61,6 @@ namespace SchoolSystem.Application.Services.Implementations
         {
             var entity = _mapper.Map<Usuario>(dto);
 
-            // IMPORTANTE: Aquí deberías hashear la contraseña
-            // entity.PasswordHash = _passwordHasher.Hash(dto.Password);
-            // Por ahora, mapeo simple para el ejemplo (NO HACER EN PRODUCCIÓN SIN HASH)
             entity.PasswordHash = _passwordHasher.HashPassword(dto.Password);
 
             await _unitOfWork.Usuarios.AddAsync(entity);
@@ -140,6 +137,51 @@ namespace SchoolSystem.Application.Services.Implementations
                 RolUsuario.Alumno => "Alumnos",
                 _ => "General"
             };
+        }
+
+        public async Task SolicitarActivacionAppAsync(string email)
+        {
+            var usuario = await _unitOfWork.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
+
+            // Solo permitimos activar si el usuario existe y no ha sido activado aún
+            if (usuario == null || usuario.Activo)
+                throw new InvalidOperationException("El correo no es válido para activación.");
+
+            // 1. Generamos un código de 6 dígitos
+            string codigo = new Random().Next(100000, 999999).ToString();
+
+            // 2. Reusamos tus campos existentes
+            usuario.TokenRecuperacion = codigo;
+            usuario.TokenExpiracion = DateTime.UtcNow.AddMinutes(15); // Tiempo corto para seguridad
+
+            await _unitOfWork.Usuarios.UpdateAsync(usuario);
+            await _unitOfWork.SaveChangesAsync();
+
+            // 3. Enviar por email (Opcional por ahora)
+            // _emailService.Send(email, "Tu código de activación es: " + codigo);
+        }
+
+        public async Task CompletarActivacionAppAsync(string email, string codigo, string newUsername, string newPassword)
+        {
+            var usuario = await _unitOfWork.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
+
+            // Validar el token reusado
+            if (usuario == null || usuario.TokenRecuperacion != codigo || usuario.TokenExpiracion < DateTime.UtcNow)
+            {
+                throw new InvalidOperationException("Código inválido o expirado.");
+            }
+
+            // 4. Activación final
+            usuario.Username = newUsername;
+            usuario.PasswordHash = _passwordHasher.HashPassword(newPassword); // Ya hasheado
+            usuario.Activo = true;
+
+            // Limpiar el token para que no se pueda reusar
+            usuario.TokenRecuperacion = null;
+            usuario.TokenExpiracion = null;
+
+            await _unitOfWork.Usuarios.UpdateAsync(usuario);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

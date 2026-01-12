@@ -1,0 +1,186 @@
+﻿@page "/padres/crear"
+@page "/padres/editar/{Id:int}"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
+@inject PadreService PadreService
+@inject AlumnoService AlumnoService
+@inject ToastService ToastService
+@inject NavigationManager Navigation
+@attribute [Authorize]
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-warning text-dark">
+            <h4 class="mb-0">@(Id == 0 ? "Pre-registro de Padre/Tutor" : "Editar Información")</h4>
+        </div>
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <div class="text-center py-4"><div class="spinner-border text-warning"></div></div>
+            }
+            else
+            {
+                <EditForm Model="@modelo" OnValidSubmit="Guardar">
+                    <DataAnnotationsValidator />
+
+                    <div class="alert alert-light border-warning mb-4">
+                        <small class="text-muted">
+                            <i class="oi oi-info"></i> El sistema creará una cuenta inactiva. El tutor podrá definir su contraseña al descargar la App Móvil usando su correo electrónico.
+                        </small>
+                    </div>
+
+                    <div class="row g-3">
+                        @if (Id == 0) // Solo al crear pedimos el alumno
+                        {
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">Vincular a Alumno *</label>
+                                <InputSelect class="form-select border-primary" @bind-Value="modelo.AlumnoId">
+                                    <option value="0">-- Seleccione un alumno --</option>
+                                    @foreach (var a in listaAlumnos)
+                                    {
+                                        <option value="@a.Id">@a.NombreCompleto (@a.Matricula)</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => modelo.AlumnoId)" />
+                            </div>
+                        }
+
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre(s) *</label>
+                            <InputText class="form-control" @bind-Value="modelo.Nombre" />
+                            <ValidationMessage For="@(() => modelo.Nombre)" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Apellido Paterno *</label>
+                            <InputText class="form-control" @bind-Value="modelo.ApellidoPaterno" />
+                            <ValidationMessage For="@(() => modelo.ApellidoPaterno)" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Email Institucional *</label>
+                            <InputText class="form-control" @bind-Value="modelo.Email" />
+                            <ValidationMessage For="@(() => modelo.Email)" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Parentesco *</label>
+                            <InputSelect class="form-select" @bind-Value="modelo.Relacion">
+                                <option value="Padre">Padre</option>
+                                <option value="Madre">Madre</option>
+                                <option value="Tutor">Tutor Legal</option>
+                                <option value="Abuelo">Abuelo/a</option>
+                            </InputSelect>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Ocupación</label>
+                            <InputText class="form-control" @bind-Value="modelo.Ocupacion" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Teléfono</label>
+                            <InputText class="form-control" @bind-Value="modelo.Telefono" />
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex justify-content-end gap-2">
+                        <a href="padres" class="btn btn-light">Cancelar</a>
+                        <button type="submit" class="btn btn-warning px-4" disabled="@isSubmitting">
+                            @if (isSubmitting)
+                            {
+                                <span class="spinner-border spinner-border-sm"></span>
+                            }
+                            else
+                            {
+
+                                <span>Registrar Tutor</span>
+                            }
+                        </button>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private CreatePadreDto modelo = new();
+    private List<AlumnoDto> listaAlumnos = new();
+    private bool isLoading = true, isSubmitting = false;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        // Cargar lista de alumnos para el vínculo
+        var resAlumnos = await AlumnoService.GetAlumnosAsync(1, 200); // Traemos 200 para el select
+        if (resAlumnos.Succeeded)
+            listaAlumnos = resAlumnos.Data.Items.ToList();
+
+        if (Id > 0)
+        {
+            // Lógica de carga para edición (mapear datos existentes)
+            var res = await PadreService.GetByIdAsync(Id);
+            if (res.Succeeded)
+            {
+                var p = res.Data;
+                modelo.Nombre = p.Nombre;
+                modelo.ApellidoPaterno = p.ApellidoPaterno;
+                modelo.Email = p.Email;
+                modelo.Ocupacion = p.Ocupacion;
+                modelo.Telefono = p.Telefono;
+                modelo.Relacion = "Tutor"; // Se debería traer de la tabla AlumnoPadre
+            }
+        }
+        isLoading = false;
+    }
+
+    private async Task Guardar()
+    {
+        isSubmitting = true;
+        errorMessage = null;
+        try
+        {
+            var res = await PadreService.CreateAsync(modelo);
+
+            if (res.Succeeded)
+            {
+                ToastService.ShowSuccess("Pre-registro exitoso.");
+                Navigation.NavigateTo("padres");
+            }
+            else
+            {
+                // --- MEJORA DE CAPTURA DE ERROR ---
+                // 1. Buscamos si hay errores detallados en la lista
+                if (res.Errors != null && res.Errors.Any())
+                {
+                    errorMessage = res.Errors.First();
+                }
+                // 2. Si no, buscamos el mensaje principal
+                else if (!string.IsNullOrEmpty(res.Message))
+                {
+                    errorMessage = res.Message;
+                }
+                // 3. Fallback final
+                else
+                {
+                    errorMessage = "No se pudo procesar la solicitud.";
+                }
+
+                ToastService.ShowError(errorMessage);
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Error de conexión con el servidor.";
+            ToastService.ShowError(errorMessage);
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

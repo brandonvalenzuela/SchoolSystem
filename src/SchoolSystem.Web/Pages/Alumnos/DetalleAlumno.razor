@@ -1,0 +1,389 @@
+﻿@page "/alumnos/detalle/{Id:int}"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@inject AlumnoService AlumnoService
+@inject RelacionService RelacionService
+@inject MedicoService MedicoService
+@inject InscripcionService InscripcionService
+@inject PagoService PagoService
+@inject UiService UiService
+@inject NavigationManager Navigation
+@attribute [Authorize]
+
+@if (isLoading)
+{
+    <div class="text-center py-5 mt-5">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+        <p class="mt-3 text-muted">Cargando expediente...</p>
+    </div>
+}
+else if (alumno == null)
+{
+    <div class="alert alert-danger m-4">No se encontró la información del alumno.</div>
+}
+else
+{
+    <div class="container-fluid mt-3 mb-5">
+        <!-- HEADER DEL ALUMNO -->
+        <div class="card border-0 shadow-sm mb-4 bg-white">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center">
+                    <div class="me-4 position-relative">
+                        @if (!string.IsNullOrEmpty(alumno.FotoUrl))
+                        {
+                            <img src="@alumno.FotoUrl" class="rounded-circle border border-3 border-light shadow-sm" style="width: 100px; height: 100px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-secondary border" style="width: 100px; height: 100px; font-size: 2.5rem;">
+                                <i class="oi oi-person"></i>
+                            </div>
+                        }
+                        <span class="position-absolute bottom-0 end-0 badge rounded-pill bg-@(alumno.Estatus == "Activo" ? "success" : "secondary") border border-white">
+                            @alumno.Estatus
+                        </span>
+                    </div>
+                    <div>
+                        <h2 class="mb-0 fw-bold text-dark">@alumno.NombreCompleto</h2>
+                        <div class="text-muted mb-2">@alumno.Matricula | @(alumno.Edad) años</div>
+                        <div class="d-flex gap-2">
+                            <a href="alumnos/editar/@alumno.Id" class="btn btn-sm btn-outline-secondary">
+                                <i class="oi oi-pencil"></i> Editar
+                            </a>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="EliminarAlumno">
+                                <i class="oi oi-trash"></i> Baja
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ms-auto text-end d-none d-md-block">
+                        <small class="text-muted d-block">Promedio General</small>
+                        <h3 class="fw-bold text-primary mb-0">@(promedioGeneral > 0 ? promedioGeneral.ToString("F1") : "-")</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑAS DE NAVEGACIÓN -->
+        <ul class="nav nav-tabs nav-fill mb-3" id="myTab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link @(activeTab == "general" ? "active fw-bold" : "")" @onclick='() => activeTab = "general"'>
+                    <i class="oi oi-info me-2"></i> General
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link @(activeTab == "familia" ? "active fw-bold" : "")" @onclick='() => activeTab = "familia"'>
+                    <i class="oi oi-people me-2"></i> Familia
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link @(activeTab == "academico" ? "active fw-bold" : "")" @onclick='() => activeTab = "academico"'>
+                    <i class="oi oi-book me-2"></i> Académico
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link @(activeTab == "salud" ? "active fw-bold" : "")" @onclick='() => activeTab = "salud"'>
+                    <i class="oi oi-medical-cross me-2"></i> Salud
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link @(activeTab == "finanzas" ? "active fw-bold" : "")" @onclick='() => activeTab = "finanzas"'>
+                    <i class="oi oi-dollar me-2"></i> Finanzas
+                </button>
+            </li>
+        </ul>
+
+        <!-- CONTENIDO DE LAS PESTAÑAS -->
+        <div class="tab-content bg-white p-4 shadow-sm rounded border-top-0">
+
+            <!-- 1. GENERAL -->
+            @if (activeTab == "general")
+            {
+                <div class="row g-4 fade-in">
+                    <div class="col-md-6">
+                        <h5 class="text-primary mb-3">Información Personal</h5>
+                        <dl class="row">
+                            <dt class="col-sm-4 text-muted">CURP</dt>
+                            <dd class="col-sm-8">@alumno.CURP</dd>
+
+                            <dt class="col-sm-4 text-muted">Fecha Nacimiento</dt>
+                            <dd class="col-sm-8">@alumno.FechaNacimiento?.ToString("dd/MM/yyyy")</dd>
+
+                            <dt class="col-sm-4 text-muted">Género</dt>
+                            <dd class="col-sm-8">@alumno.Genero</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="text-primary mb-3">Contacto</h5>
+                        <dl class="row">
+                            <dt class="col-sm-4 text-muted">Email</dt>
+                            <dd class="col-sm-8">
+                                @if (!string.IsNullOrEmpty(alumno.Email))
+                                {
+                                    <a href="mailto:@alumno.Email">@alumno.Email</a>
+                                }
+                                else
+                                {
+
+                                    <span class="text-muted">-</span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-4 text-muted">Teléfono</dt>
+                            <dd class="col-sm-8">@alumno.Telefono</dd>
+
+                            <dt class="col-sm-4 text-muted">Dirección</dt>
+                            <dd class="col-sm-8">@alumno.Direccion</dd>
+                        </dl>
+                    </div>
+                </div>
+            }
+
+            <!-- 2. FAMILIA -->
+            @if (activeTab == "familia")
+            {
+                <div class="d-flex justify-content-between mb-3 fade-in">
+                    <h5 class="text-primary">Tutores Registrados</h5>
+                    <a href="alumnos/familia/@Id" class="btn btn-sm btn-outline-primary">Administrar Tutores</a>
+                </div>
+
+                @if (tutores != null && tutores.Any())
+                {
+                    <div class="row g-3">
+                        @foreach (var tutor in tutores)
+                        {
+                            <div class="col-md-6">
+                                <div class="card h-100 border-start border-4 border-info">
+                                    <div class="card-body">
+                                        <h6 class="card-title fw-bold">@tutor.NombrePadre</h6>
+                                        <span class="badge bg-light text-dark border">@tutor.Relacion</span>
+                                        @if (tutor.EsTutorPrincipal)
+                                        {
+                                            <span class="badge bg-warning text-dark ms-1">Principal</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-light text-center border">No hay tutores registrados.</div>
+                }
+            }
+
+            <!-- 3. ACADÉMICO -->
+            @if (activeTab == "academico")
+            {
+                <div class="fade-in">
+                    <h5 class="text-primary mb-3">Historial de Inscripciones</h5>
+                    @if (inscripciones != null && inscripciones.Any())
+                    {
+                        <table class="table table-hover table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ciclo</th>
+                                    <th>Grupo</th>
+                                    <th>Estado</th>
+                                    <th class="text-center">Promedio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var ins in inscripciones)
+                                {
+                                    <tr>
+                                        <td>@ins.CicloEscolar</td>
+                                        <td>@ins.NombreCompletoGrupo</td>
+                                        <td><span class="badge bg-light text-dark border">@ins.Estatus</span></td>
+                                        <td class="text-center fw-bold">@(ins.PromedioAcumulado?.ToString("F1") ?? "-")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="alert alert-light text-center border">Sin inscripciones registradas.</div>
+                        <div class="text-center"><a href="inscripciones/crear" class="btn btn-primary btn-sm">Inscribir Ahora</a></div>
+                    }
+                </div>
+            }
+
+            <!-- 4. SALUD -->
+            @if (activeTab == "salud")
+            {
+                <div class="fade-in">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5 class="text-primary">Expediente Médico</h5>
+                        <a href="alumnos/expediente/@Id" class="btn btn-sm btn-outline-danger">Ver Detalle Completo</a>
+                    </div>
+
+                    @if (expediente != null)
+                    {
+                        <div class="row text-center">
+                            <div class="col-4 border-end">
+                                <h3 class="text-danger mb-0">@expediente.TipoSangre</h3>
+                                <small class="text-muted">Sangre</small>
+                            </div>
+                            <div class="col-4 border-end">
+                                <h3 class="text-dark mb-0">@expediente.AlergiasDetalladas.Count</h3>
+                                <small class="text-muted">Alergias</small>
+                            </div>
+                            <div class="col-4">
+                                <h3 class="text-success mb-0">@expediente.Vacunas.Count</h3>
+                                <small class="text-muted">Vacunas</small>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(expediente.Alergias))
+                        {
+                            <div class="alert alert-warning mt-3 mb-0">
+                                <i class="oi oi-warning me-2"></i> <strong>Alergias:</strong> @expediente.Alergias
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-light text-center border">Sin expediente médico. <a href="alumnos/expediente/@Id">Crear uno</a>.</div>
+                    }
+                </div>
+            }
+
+            <!-- 5. FINANZAS -->
+            @if (activeTab == "finanzas")
+            {
+                <div class="fade-in">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5 class="text-primary">Estado de Cuenta</h5>
+                        <a href="caja" class="btn btn-sm btn-success">Ir a Caja</a>
+                    </div>
+
+                    @if (cargosPendientes != null && cargosPendientes.Any())
+                    {
+                        <div class="alert alert-danger d-flex justify-content-between align-items-center">
+                            <span>
+                                <i class="oi oi-warning me-2"></i> <strong>Tiene @cargosPendientes.Count cargos pendientes.</strong>
+                            </span>
+                            <span class="fs-5 fw-bold">$@cargosPendientes.Sum(c => c.SaldoPendiente).ToString("N2")</span>
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+                            @foreach (var cargo in cargosPendientes)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div>
+                                        <span>@cargo.Concepto</span>
+                                        <br />
+                                        <small class="text-danger">Vence: @cargo.FechaVencimiento.ToShortDateString()</small>
+                                    </div>
+                                    <span class="fw-bold">$@cargo.SaldoPendiente.ToString("N2")</span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="alert alert-success text-center">
+                            <i class="oi oi-check-circle fs-3 d-block mb-2"></i>
+                            El alumno está al corriente con sus pagos.
+                        </div>
+                    }
+                </div>
+            }
+
+        </div>
+    </div>
+}
+
+<style>
+    .fade-in {
+        animation: fadeIn 0.3s;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .nav-tabs .nav-link {
+        color: #6c757d;
+        cursor: pointer;
+    }
+
+        .nav-tabs .nav-link.active {
+            color: #0d6efd;
+            border-bottom: 3px solid #0d6efd;
+            background: transparent;
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+        }
+</style>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private string activeTab = "general";
+    private bool isLoading = true;
+
+    // Modelos
+    private AlumnoDto alumno;
+    private List<AlumnoPadreDto> tutores;
+    private ExpedienteMedicoDto expediente;
+    private List<InscripcionDto> inscripciones; // Necesitamos endpoint para historial
+    private List<CargoDto> cargosPendientes;
+
+    private decimal promedioGeneral = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            // Carga paralela de datos clave
+            var t1 = AlumnoService.GetByIdAsync(Id);
+            var t2 = RelacionService.GetPadresPorAlumno(Id);
+            var t3 = MedicoService.GetByAlumnoIdAsync(Id);
+            var t4 = PagoService.GetCargosPendientesAsync(Id);
+            // --- AHORA SÍ: CARGAR HISTORIAL REAL ---
+            var t5 = InscripcionService.GetHistorialAlumnoAsync(Id);
+
+            await Task.WhenAll(t1, t2, t3, t4, t5);
+
+            if (t1.Result.Succeeded)
+                alumno = t1.Result.Data;
+            if (t2.Result.Succeeded)
+                tutores = t2.Result.Data;
+            if (t3.Result.Succeeded)
+                expediente = t3.Result.Data;
+            if (t4.Result.Succeeded)
+                cargosPendientes = t4.Result.Data;
+            if (t5.Result.Succeeded)
+                inscripciones = t5.Result.Data; // <--- ASIGNAR
+
+
+            // Simulación de historial hasta que tengas el endpoint
+            inscripciones = new List<InscripcionDto>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void EliminarAlumno()
+    {
+        // Redirigir a la lista con parámetro para abrir modal (o implementar lógica aquí)
+        Navigation.NavigateTo("alumnos");
+    }
+}

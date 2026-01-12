@@ -18,5 +18,7 @@ namespace SchoolSystem.Application.Services.Interfaces
 
         // Método específico extra
         Task<UsuarioDto> GetByUsernameAsync(string username);
+        Task SolicitarActivacionAppAsync(string email);
+        Task CompletarActivacionAppAsync(string email, string codigo, string newUsername, string newPassword);
     }
 }

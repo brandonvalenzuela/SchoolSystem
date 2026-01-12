@@ -128,26 +128,41 @@ namespace SchoolSystem.Web.Services
         // --- HELPER PARA DESERIALIZAR ---
         private async Task<T> ProcessResponseAsync<T>(HttpResponseMessage response)
         {
+            // 1. Leer el contenido como string primero (Evita errores de stream)
+            var content = await response.Content.ReadAsStringAsync();
             try
             {
-                // Lee el contenido. Si es null o vacío, devuelve default.
-                var result = await response.Content.ReadFromJsonAsync<T>(_jsonOptions);
-                return result;
-            }
-            catch
-            {
-                // Si falla la deserialización o el body está vacío en un error 400/500
-                if (!response.IsSuccessStatusCode)
+                if (string.IsNullOrWhiteSpace(content))
                 {
-                    // Intentar leer como string para ver el error (opcional para debug)
-                    // var error = await response.Content.ReadAsStringAsync();
-
-                    // Retornamos un objeto "fallido" genérico. 
-                    // Nota: Esto asume que T es ApiResponse<Something>
-                    // Si T fuera otro tipo, esto podría fallar, pero en tu arquitectura siempre es ApiResponse.
                     return Activator.CreateInstance<T>();
                 }
-                throw;
+
+                // 2. Deserializar usando las opciones de minúsculas/mayúsculas
+                var result = JsonSerializer.Deserialize<T>(content, _jsonOptions);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Si falla la deserialización (ej: Data es null pero T es int)
+                // Intentamos al menos devolver un objeto con el mensaje de error si existe
+                Console.WriteLine($"Error de Deserialización: {ex.Message}");
+
+                var errorFallback = Activator.CreateInstance<T>();
+
+                // Intentamos extraer el mensaje manualmente del string si es posible
+                if (content.Contains("\"Message\":"))
+                {
+                    // Un truco rápido para extraer el mensaje sin fallar por el tipo de Data
+                    using var doc = JsonDocument.Parse(content);
+                    if (doc.RootElement.TryGetProperty("Message", out var msgProp))
+                    {
+                        var message = msgProp.GetString();
+                        // Asignamos el mensaje al objeto creado vía reflexión
+                        typeof(T).GetProperty("Message")?.SetValue(errorFallback, message);
+                    }
+                }
+
+                return errorFallback;
             }
         }
     }

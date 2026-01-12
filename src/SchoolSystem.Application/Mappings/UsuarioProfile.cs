@@ -27,7 +27,8 @@ namespace SchoolSystem.Application.Mappings
                 .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));
 
             // UpdateDTO -> Entity
-            CreateMap<UpdateUsuarioDto, Usuario>();
+            CreateMap<UpdateUsuarioDto, Usuario>()
+                  .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

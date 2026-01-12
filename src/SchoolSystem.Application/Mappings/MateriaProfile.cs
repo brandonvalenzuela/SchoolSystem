@@ -19,7 +19,8 @@ namespace SchoolSystem.Application.Mappings
                 .ForMember(dest => dest.Icono, opt => opt.MapFrom(src => src.Icono.HasValue ? src.Icono.ToString() : "Default"));
 
             CreateMap<CreateMateriaDto, Materia>();
-            CreateMap<UpdateMateriaDto, Materia>();
+            CreateMap<UpdateMateriaDto, Materia>()
+                  .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

@@ -20,10 +20,10 @@ namespace SchoolSystem.Application.DTOs.Grados
 
         [Required(ErrorMessage = "El nombre del grado es obligatorio.")]
         [StringLength(50, ErrorMessage = "El nombre no puede exceder los 50 caracteres.")]
-        public string Nombre { get; set; }
+        public string? Nombre { get; set; }
 
         [StringLength(500)]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         [Required(ErrorMessage = "El orden es obligatorio.")]
         [Range(0, 100, ErrorMessage = "El orden debe ser un número positivo.")]
@@ -40,6 +40,6 @@ namespace SchoolSystem.Application.DTOs.Grados
         [Range(1, 100)]
         public int? HorasSemanales { get; set; }
 
-        public string Requisitos { get; set; }
+        public string? Requisitos { get; set; }
     }
 }

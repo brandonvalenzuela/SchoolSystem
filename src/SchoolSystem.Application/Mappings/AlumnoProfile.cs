@@ -15,10 +15,9 @@ namespace SchoolSystem.Application.Mappings
         {
             // Entidad → DTO de lectura
             CreateMap<Alumno, AlumnoDto>()
-                .ForMember(dest => dest.Estatus,
-                           opt => opt.MapFrom(src => src.Estatus.ToString()))
-                .ForMember(dest => dest.Genero,
-                           opt => opt.MapFrom(src => src.Genero.ToString()));
+                .ForMember(dest => dest.Estatus,opt => opt.MapFrom(src => src.Estatus.ToString()))
+                .ForMember(dest => dest.Genero, opt => opt.MapFrom(src => src.Genero.ToString()))
+                .ForMember(dest => dest.DeletedAt, opt => opt.MapFrom(src => src.DeletedAt.ToString()));
 
             // DTO de creación → Entidad
             CreateMap<CreateAlumnoDto, Alumno>();

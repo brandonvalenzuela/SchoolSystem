@@ -45,6 +45,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         private IRepository<Pago> _pagos;
         private IRepository<ExpedienteMedico> _expedienteMedicos;
         private IRepository<Notificacion> _notificaciones;
+        private IRepository<AlumnoPadre> _alumnoPadres;
 
         public UnitOfWork(SchoolSystemDbContext context)
         {
@@ -72,6 +73,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         public IRepository<Pago> Pagos => _pagos ??= new Repository<Pago>(_context);
         public IRepository<ExpedienteMedico> ExpedienteMedicos => _expedienteMedicos ??= new Repository<ExpedienteMedico>(_context);
         public IRepository<Notificacion> Notificaciones => _notificaciones ??= new Repository<Notificacion>(_context);
+        public IRepository<AlumnoPadre> AlumnoPadres => _alumnoPadres ??= new Repository<AlumnoPadre>(_context);
+
 
         public async Task<int> SaveChangesAsync()
         {

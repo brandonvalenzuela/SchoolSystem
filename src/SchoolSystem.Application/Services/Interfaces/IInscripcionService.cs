@@ -23,5 +23,6 @@ namespace SchoolSystem.Application.Services.Interfaces
         /// </summary>
         Task CambiarDeGrupoAsync(int inscripcionId, int nuevoGrupoId, string motivo, int usuarioId);
         Task<List<InscripcionDto>> GetAlumnosPorGrupoAsync(int grupoId);
+        Task<List<InscripcionDto>> GetHistorialPorAlumnoAsync(int alumnoId);
     }
 }

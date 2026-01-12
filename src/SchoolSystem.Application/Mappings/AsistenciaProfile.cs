@@ -25,7 +25,9 @@ namespace SchoolSystem.Application.Mappings
             CreateMap<CreateAsistenciaDto, Asistencia>();
 
             // UpdateDTO -> Entity
-            CreateMap<UpdateAsistenciaDto, Asistencia>();
+            CreateMap<UpdateAsistenciaDto, Asistencia>()
+                  .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
         }
     }
 }

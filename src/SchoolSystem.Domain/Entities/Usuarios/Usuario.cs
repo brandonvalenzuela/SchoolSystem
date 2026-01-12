@@ -68,7 +68,7 @@ namespace SchoolSystem.Domain.Entities.Usuarios
         /// <summary>
         /// Apellido materno
         /// </summary>
-        public string ApellidoMaterno { get; set; }
+        public string? ApellidoMaterno { get; set; }
 
         /// <summary>
         /// Teléfono principal de contacto

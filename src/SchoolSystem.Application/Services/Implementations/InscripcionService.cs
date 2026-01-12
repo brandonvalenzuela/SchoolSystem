@@ -196,5 +196,17 @@ namespace SchoolSystem.Application.Services.Implementations
 
             return _mapper.Map<List<InscripcionDto>>(inscripciones.OrderBy(i => i.Alumno.ApellidoPaterno));
         }
+
+        public async Task<List<InscripcionDto>> GetHistorialPorAlumnoAsync(int alumnoId)
+        {
+            var historial = await _unitOfWork.Inscripciones.GetAllIncludingAsync(
+                i => i.Grupo,
+                i => i.Grupo.Grado,
+                i => i.Grupo.Grado.NivelEducativo
+            );
+
+            var filtrado = historial.Where(i => i.AlumnoId == alumnoId).OrderByDescending(i => i.CicloEscolar).ToList();
+            return _mapper.Map<List<InscripcionDto>>(filtrado);
+        }
     }
 }

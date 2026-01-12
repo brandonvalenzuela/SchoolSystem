@@ -107,5 +107,21 @@ namespace SchoolSystem.API.Controllers
             // Usamos Ok en lugar de NoContent para poder devolver el mensaje de éxito
             return Ok(new ApiResponse<bool>(true, "Alumno eliminado exitosamente."));
         }
+
+        [HttpGet("eliminados")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<ActionResult<ApiResponse<List<AlumnoDto>>>> GetEliminados()
+        {
+            var lista = await _service.GetEliminadosAsync();
+            return Ok(new ApiResponse<List<AlumnoDto>>(lista, "Registros eliminados obtenidos."));
+        }
+
+        [HttpPut("{id}/restaurar")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<ActionResult<ApiResponse<bool>>> Restaurar(int id)
+        {
+            await _service.RestaurarAlumnoAsync(id);
+            return Ok(new ApiResponse<bool>(true, "Alumno restaurado correctamente."));
+        }
     }
 }

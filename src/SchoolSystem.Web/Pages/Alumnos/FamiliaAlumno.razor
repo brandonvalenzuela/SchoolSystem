@@ -1,0 +1,255 @@
+﻿@page "/alumnos/familia/{AlumnoId:int}"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
+@inject RelacionService RelacionService
+@inject AlumnoService AlumnoService
+@inject PadreService PadreService
+@inject ToastService ToastService
+@inject UiService UiService
+@attribute [Authorize]
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Familia de <span class="text-primary">@nombreAlumno</span></h3>
+        <a href="alumnos" class="btn btn-outline-secondary">Volver</a>
+    </div>
+
+    <!-- 1. LISTA DE TUTORES ACTUALES (TARJETAS) -->
+    <div class="row g-3 mb-5">
+        @if (tutores != null && tutores.Any())
+        {
+            @foreach (var tutor in tutores)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-start border-4 border-primary shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="card-title fw-bold">@tutor.NombrePadre</h5>
+                                    <span class="badge bg-light text-dark border">@tutor.Relacion</span>
+                                    @if (tutor.EsTutorPrincipal)
+                                    {
+                                        <span class="badge bg-warning text-dark ms-1">Principal</span>
+                                    }
+                                </div>
+                                <button class="btn btn-outline-danger btn-sm" @onclick="() => Desvincular(tutor)" title="Desvincular">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                            <hr class="my-2" />
+                            <small class="text-muted d-block"><i class="oi oi-home"></i> Vive con alumno: <strong>@(tutor.ViveConAlumno ? "Sí" : "No")</strong></small>
+                            <small class="text-muted d-block"><i class="oi oi-person"></i> Puede recoger: <strong>@(tutor.AutorizadoRecoger ? "Sí" : "No")</strong></small>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-warning text-center">No tiene tutores asignados.</div>
+            </div>
+        }
+    </div>
+
+    <!-- 2. SECCIÓN PARA AGREGAR NUEVO TUTOR -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+            <h5 class="mb-0 text-secondary"><i class="oi oi-plus"></i> Vincular Nuevo Familiar</h5>
+        </div>
+        <div class="card-body">
+
+            <!-- PASO A: BUSCADOR DE PADRES -->
+            @if (padreSeleccionado == null)
+            {
+                <div class="mb-4">
+                    <label class="form-label">Buscar Padre/Tutor por nombre:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" @bind="terminoBusqueda" placeholder="Ej: Juan Perez" @onkeyup="@(e => { if (e.Key == "Enter") BuscarPadres(); })" />
+                        <button class="btn btn-primary" @onclick="BuscarPadres" disabled="@isSearching">
+                            @if (isSearching)
+                            {
+                                <span class="spinner-border spinner-border-sm"></span>
+                            }
+                            else
+                            {
+
+                                <i class="oi oi-magnifying-glass"></i>
+                            }
+     Buscar
+                        </button>
+                    </div>
+
+                    <!-- Resultados de la búsqueda -->
+                    @if (resultadosBusqueda != null && resultadosBusqueda.Any())
+                    {
+                        <div class="list-group mt-2">
+                            @foreach (var p in resultadosBusqueda)
+                            {
+                                <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                                        @onclick="() => SeleccionarPadre(p)">
+                                    <div>
+                                        <strong>@p.NombreCompleto</strong>
+                                        <br />
+                                        <small class="text-muted">@p.Email - @p.Telefono</small>
+                                    </div>
+                                    <span class="btn btn-sm btn-outline-primary">Seleccionar</span>
+                                </button>
+                            }
+                        </div>
+                    }
+                    else if (busquedaRealizada && (resultadosBusqueda == null || !resultadosBusqueda.Any()))
+                    {
+                        <div class="mt-2 text-muted fst-italic">
+                            No se encontraron padres. <a href="/padres/crear">¿Crear nuevo registro?</a>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <!-- PASO B: FORMULARIO DE RELACIÓN (Solo aparece al seleccionar un padre) -->
+                <div class="alert alert-success d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="oi oi-check-circle"></i> Seleccionado: <strong>@padreSeleccionado.NombreCompleto</strong>
+                    </span>
+                    <button class="btn btn-sm btn-outline-success" @onclick="CancelarSeleccion">Cambiar</button>
+                </div>
+
+                <EditForm Model="@modelo" OnValidSubmit="VincularPadre">
+                    <DataAnnotationsValidator />
+
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Relación</label>
+                            <InputSelect class="form-select" @bind-Value="modelo.Relacion">
+                                <option value="Padre">Padre</option>
+                                <option value="Madre">Madre</option>
+                                <option value="Tutor">Tutor</option>
+                                <option value="Abuelo">Abuelo</option>
+                                <option value="Abuela">Abuela</option>
+                                <option value="Tio">Tío/a</option>
+                                <option value="Hermano">Hermano/a</option>
+                            </InputSelect>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-check mt-4">
+                                <InputCheckbox class="form-check-input" @bind-Value="modelo.EsTutorPrincipal" id="chkPrinc" />
+                                <label class="form-check-label" for="chkPrinc">Es Tutor Principal</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check mt-4">
+                                <InputCheckbox class="form-check-input" @bind-Value="modelo.ViveConAlumno" id="chkVive" />
+                                <label class="form-check-label" for="chkVive">Vive con Alumno</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-end mt-4">
+                            <button type="submit" class="btn btn-success w-100">Confirmar Vínculo</button>
+                        </div>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int AlumnoId { get; set; }
+
+    private string nombreAlumno;
+    private List<AlumnoPadreDto> tutores;
+
+    // Variables para búsqueda
+    private string terminoBusqueda;
+    private List<PadreDto> resultadosBusqueda;
+    private PadreDto padreSeleccionado;
+    private bool isSearching = false;
+    private bool busquedaRealizada = false;
+
+    private CreateAlumnoPadreDto modelo = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        modelo.AlumnoId = AlumnoId;
+        modelo.ViveConAlumno = true;
+        modelo.AutorizadoRecoger = true;
+
+        var resAlumno = await AlumnoService.GetByIdAsync(AlumnoId);
+        if (resAlumno.Succeeded)
+            nombreAlumno = resAlumno.Data.NombreCompleto;
+
+        await CargarRelaciones();
+    }
+
+    private async Task CargarRelaciones()
+    {
+        var res = await RelacionService.GetPadresPorAlumno(AlumnoId);
+        if (res.Succeeded)
+            tutores = res.Data;
+    }
+
+    private async Task BuscarPadres()
+    {
+        if (string.IsNullOrWhiteSpace(terminoBusqueda))
+            return;
+
+        isSearching = true;
+        busquedaRealizada = false;
+        resultadosBusqueda = null;
+
+        // Llamamos al servicio con el término de búsqueda
+        var res = await PadreService.GetPadresAsync(1, 10, terminoBusqueda);
+
+        if (res.Succeeded)
+        {
+            // Filtramos visualmente los que ya están vinculados para no duplicar
+            var idsVinculados = tutores?.Select(t => t.PadreId).ToList() ?? new List<int>();
+            resultadosBusqueda = res.Data.Items.Where(p => !idsVinculados.Contains(p.Id)).ToList();
+        }
+
+        busquedaRealizada = true;
+        isSearching = false;
+    }
+
+    private void SeleccionarPadre(PadreDto padre)
+    {
+        padreSeleccionado = padre;
+        modelo.PadreId = padre.Id;
+        // Limpiamos resultados para limpiar la vista
+        resultadosBusqueda = null;
+    }
+
+    private void CancelarSeleccion()
+    {
+        padreSeleccionado = null;
+        modelo.PadreId = 0;
+    }
+
+    private async Task VincularPadre()
+    {
+        if (modelo.PadreId == 0)
+            return;
+
+        var res = await RelacionService.Vincular(modelo);
+        if (res.Succeeded)
+        {
+            ToastService.ShowSuccess("Tutor vinculado correctamente.");
+            padreSeleccionado = null; // Reset form
+            modelo = new CreateAlumnoPadreDto { AlumnoId = AlumnoId, Relacion = "Padre", ViveConAlumno = true, AutorizadoRecoger = true };
+            await CargarRelaciones();
+        }
+    }
+
+    private async Task Desvincular(AlumnoPadreDto relacion)
+    {
+        var res = await RelacionService.Desvincular(relacion.Id);
+        if (res.Succeeded)
+        {
+            ToastService.ShowSuccess("Tutor desvinculado.");
+            await CargarRelaciones();
+        }
+    }
+}

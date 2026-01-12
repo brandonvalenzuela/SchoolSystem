@@ -174,5 +174,17 @@ namespace SchoolSystem.Application.Services.Implementations
 
             await _unitOfWork.SaveChangesAsync();
         }
+
+        public async Task<List<AlumnoDto>> GetEliminadosAsync()
+        {
+            var eliminados = await _unitOfWork.Alumnos.GetAllDeletedAsync();
+            return _mapper.Map<List<AlumnoDto>>(eliminados);
+        }
+
+        public async Task RestaurarAlumnoAsync(int id)
+        {
+            await _unitOfWork.Alumnos.RestaurarAsync(id);
+            // Opcional: Reactivar usuario asociado si fuera maestro
+        }
     }
 }

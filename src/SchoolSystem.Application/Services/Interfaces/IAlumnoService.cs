@@ -17,5 +17,7 @@ namespace SchoolSystem.Application.Services.Interfaces
         Task<int> CreateAsync(CreateAlumnoDto dto);
         Task UpdateAsync(int id, UpdateAlumnoDto dto);
         Task DeleteAsync(int id);
+        Task<List<AlumnoDto>> GetEliminadosAsync();
+        Task RestaurarAlumnoAsync(int id);
     }
 }

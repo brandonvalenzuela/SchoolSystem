@@ -17,7 +17,8 @@ namespace SchoolSystem.Application.Mappings
                 .ForMember(dest => dest.NombreNivelEducativo, opt => opt.MapFrom(src => src.NivelEducativo.Nombre));
 
             CreateMap<CreateGradoDto, Grado>();
-            CreateMap<UpdateGradoDto, Grado>();
+            CreateMap<UpdateGradoDto, Grado>()
+                  .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

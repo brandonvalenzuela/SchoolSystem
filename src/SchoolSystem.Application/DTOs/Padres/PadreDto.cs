@@ -18,6 +18,7 @@ namespace SchoolSystem.Application.DTOs.Padres
 
         // --- Datos del Usuario ---
 
+        public string Username { get; set; }
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }

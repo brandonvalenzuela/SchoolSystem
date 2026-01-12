@@ -46,5 +46,15 @@ namespace SchoolSystem.Web.Services
         {
             return await _apiService.DeleteAsync<object>($"api/Alumnos/{id}");
         }
+
+        public async Task<ApiResponse<List<AlumnoDto>>> GetEliminadosAsync()
+        {
+            return await _apiService.GetAsync<List<AlumnoDto>>("api/Alumnos/eliminados");
+        }
+
+        public async Task<ApiResponse<bool>> RestaurarAsync(int id)
+        {
+            return await _apiService.PutAsync<object, bool>($"api/Alumnos/{id}/restaurar", null);
+        }
     }
 }

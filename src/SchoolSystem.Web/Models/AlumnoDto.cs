@@ -9,6 +9,8 @@
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
         public string NombreCompleto { get; set; }
+        public string Direccion { get; set; }
+
         public string CURP { get; set; }
         public DateTime? FechaNacimiento { get; set; }
         public int Edad { get; set; }
@@ -19,5 +21,6 @@
 
         public string Telefono { get; set; }
         public DateTime FechaIngreso { get; set; }
+        public DateTime DeletedAt { get; set; }
     }
 }

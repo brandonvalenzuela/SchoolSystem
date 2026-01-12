@@ -1,0 +1,96 @@
+﻿@page "/papelera"
+@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Services
+@using SchoolSystem.Web.Services.Toast
+@inject AlumnoService AlumnoService
+@inject UiService UiService
+@inject ToastService ToastService
+@attribute [Authorize(Roles = "SuperAdmin,Director")]
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="oi oi-trash text-danger"></i> Papelera de Reciclaje</h2>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Alumnos Eliminados</a>
+                </li>
+                <!-- Aquí agregarías pestañas para Maestros, etc -->
+            </ul>
+        </div>
+        <div class="card-body p-0">
+            @if (isLoading)
+            {
+                <div class="text-center py-5"><div class="spinner-border"></div></div>
+            }
+            else if (alumnosEliminados == null || !alumnosEliminados.Any())
+            {
+                <div class="alert alert-info m-3">La papelera está vacía.</div>
+            }
+            else
+            {
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Matrícula</th>
+                            <th>Fecha Eliminación</th> <!-- Necesitarías traer este dato en el DTO si lo quieres mostrar -->
+                            <th class="text-end">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in alumnosEliminados)
+                        {
+                            <tr>
+                                <td>@item.NombreCompleto</td>
+                                <td>@item.Matricula</td>
+                                <td class="text-muted">@item.DeletedAt.ToString("dd/MM/yyyy")</td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-success" @onclick="() => Restaurar(item)">
+                                        <i class="oi oi-action-undo"></i> Restaurar
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<AlumnoDto> alumnosEliminados;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Cargar();
+    }
+
+    private async Task Cargar()
+    {
+        isLoading = true;
+        var res = await AlumnoService.GetEliminadosAsync();
+        if (res.Succeeded)
+            alumnosEliminados = res.Data;
+        isLoading = false;
+    }
+
+    private async Task Restaurar(AlumnoDto item)
+    {
+        var res = await AlumnoService.RestaurarAsync(item.Id);
+        if (res.Succeeded)
+        {
+            ToastService.ShowSuccess($"Alumno {item.NombreCompleto} restaurado.");
+            await Cargar();
+        }
+        else
+        {
+            ToastService.ShowError(res.Message);
+        }
+    }
+}

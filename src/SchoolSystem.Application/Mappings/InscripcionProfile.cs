@@ -20,7 +20,8 @@ namespace SchoolSystem.Application.Mappings
                 .ForMember(dest => dest.Matricula, opt => opt.MapFrom(src => src.Alumno.Matricula));
 
             CreateMap<CreateInscripcionDto, Inscripcion>();
-            CreateMap<UpdateInscripcionDto, Inscripcion>();
+            CreateMap<UpdateInscripcionDto, Inscripcion>()
+                  .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

@@ -22,7 +22,8 @@ namespace SchoolSystem.Application.Mappings
             CreateMap<Vacuna, VacunaDto>();
 
             CreateMap<CreateExpedienteDto, ExpedienteMedico>();
-            CreateMap<UpdateExpedienteDto, ExpedienteMedico>();
+            CreateMap<UpdateExpedienteDto, ExpedienteMedico>()
+                  .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

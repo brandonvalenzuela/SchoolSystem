@@ -18,56 +18,56 @@ namespace SchoolSystem.Application.DTOs.Escuelas
 
         [Required(ErrorMessage = "El código de la escuela es obligatorio.")]
         [StringLength(50, ErrorMessage = "El código no puede exceder los 50 caracteres.")]
-        public string Codigo { get; set; }
+        public string? Codigo { get; set; }
 
         [Required(ErrorMessage = "El nombre de la escuela es obligatorio.")]
         [StringLength(200, ErrorMessage = "El nombre no puede exceder los 200 caracteres.")]
-        public string Nombre { get; set; }
+        public string? Nombre { get; set; }
 
         [StringLength(300)]
-        public string RazonSocial { get; set; }
+        public string? RazonSocial { get; set; }
 
         [StringLength(13, ErrorMessage = "El RFC debe tener entre 12 y 13 caracteres.")]
-        public string RFC { get; set; }
+        public string? RFC { get; set; }
 
         // Contacto
         [Required(ErrorMessage = "La dirección es obligatoria.")]
         [StringLength(500)]
-        public string Direccion { get; set; }
+        public string? Direccion { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string Ciudad { get; set; }
+        public string? Ciudad { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string Estado { get; set; }
+        public string? Estado { get; set; }
 
         [Required]
         [StringLength(20)]
-        public string CodigoPostal { get; set; }
+        public string? CodigoPostal { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string Pais { get; set; }
+        public string? Pais { get; set; }
 
         [Required]
         [Phone]
         [StringLength(20)]
-        public string Telefono { get; set; }
+        public string? Telefono { get; set; }
 
         [Required]
         [EmailAddress]
         [StringLength(200)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Url]
         [StringLength(300)]
-        public string SitioWeb { get; set; }
+        public string? SitioWeb { get; set; }
 
         [Url]
         [StringLength(500)]
-        public string LogoUrl { get; set; }
+        public string? LogoUrl { get; set; }
 
         // Suscripción
         [Required]

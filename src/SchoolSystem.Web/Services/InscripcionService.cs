@@ -41,5 +41,10 @@ namespace SchoolSystem.Web.Services
             return await _apiService.GetAsync<List<InscripcionDto>>($"api/Inscripciones/grupo/{grupoId}");
         }
 
+        public async Task<ApiResponse<List<InscripcionDto>>> GetHistorialAlumnoAsync(int alumnoId)
+        {
+            // Llama al nuevo endpoint que creamos en el Backend
+            return await _apiService.GetAsync<List<InscripcionDto>>($"api/Inscripciones/historial/alumno/{alumnoId}");
+        }
     }
 }

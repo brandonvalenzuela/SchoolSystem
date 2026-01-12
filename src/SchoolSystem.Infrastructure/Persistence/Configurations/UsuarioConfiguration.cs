@@ -78,7 +78,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             // Apellido Materno
             builder.Property(u => u.ApellidoMaterno)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             // Teléfono
             builder.Property(u => u.Telefono)

@@ -20,7 +20,7 @@ namespace SchoolSystem.Application.DTOs.Usuarios
 
         [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
         [StringLength(100, MinimumLength = 4, ErrorMessage = "El nombre de usuario debe tener entre 4 y 100 caracteres.")]
-        public string Username { get; set; }
+        public string? Username { get; set; }
 
         [Required(ErrorMessage = "El correo electrónico es obligatorio.")]
         [EmailAddress(ErrorMessage = "El formato del correo electrónico no es válido.")]
@@ -32,7 +32,7 @@ namespace SchoolSystem.Application.DTOs.Usuarios
 
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [StringLength(100)]
-        public string Nombre { get; set; }
+        public string? Nombre { get; set; }
 
         [Required(ErrorMessage = "El apellido paterno es obligatorio.")]
         [StringLength(100)]
@@ -46,11 +46,11 @@ namespace SchoolSystem.Application.DTOs.Usuarios
         public string Telefono { get; set; }
 
         [StringLength(20)]
-        public string TelefonoEmergencia { get; set; }
+        public string? TelefonoEmergencia { get; set; }
 
         [Url]
         [StringLength(500)]
-        public string FotoUrl { get; set; }
+        public string? FotoUrl { get; set; }
 
         public DateTime? FechaNacimiento { get; set; }
 

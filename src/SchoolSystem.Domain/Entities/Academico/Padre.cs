@@ -46,27 +46,27 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Ocupación o profesión del padre/tutor
         /// </summary>
-        public string Ocupacion { get; set; }
+        public string? Ocupacion { get; set; }
 
         /// <summary>
         /// Nombre del lugar donde trabaja
         /// </summary>
-        public string LugarTrabajo { get; set; }
+        public string? LugarTrabajo { get; set; }
 
         /// <summary>
         /// Teléfono del trabajo
         /// </summary>
-        public string TelefonoTrabajo { get; set; }
+        public string? TelefonoTrabajo { get; set; }
 
         /// <summary>
         /// Dirección del trabajo
         /// </summary>
-        public string DireccionTrabajo { get; set; }
+        public string? DireccionTrabajo { get; set; }
 
         /// <summary>
         /// Puesto o cargo que desempeña
         /// </summary>
-        public string Puesto { get; set; }
+        public string? Puesto { get; set; }
 
         #endregion
 
@@ -76,12 +76,12 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// Nivel de estudios del padre/tutor
         /// (Primaria, Secundaria, Preparatoria, Licenciatura, Posgrado, etc.)
         /// </summary>
-        public string NivelEstudios { get; set; }
+        public string? NivelEstudios { get; set; }
 
         /// <summary>
         /// Carrera o especialidad (si aplica)
         /// </summary>
-        public string Carrera { get; set; }
+        public string? Carrera { get; set; }
 
         #endregion
 
@@ -90,12 +90,12 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// <summary>
         /// Estado civil del padre/tutor
         /// </summary>
-        public string EstadoCivil { get; set; }
+        public string? EstadoCivil { get; set; }
 
         /// <summary>
         /// Observaciones generales sobre el padre/tutor
         /// </summary>
-        public string Observaciones { get; set; }
+        public string? Observaciones { get; set; }
 
         /// <summary>
         /// Indica si el padre/tutor acepta recibir notificaciones por SMS

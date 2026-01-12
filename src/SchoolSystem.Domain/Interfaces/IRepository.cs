@@ -25,5 +25,7 @@ namespace SchoolSystem.Domain.Interfaces
 
         // Para buscar con condiciones complejas
         Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> GetAllDeletedAsync();
+        Task RestaurarAsync(int id);
     }
 }

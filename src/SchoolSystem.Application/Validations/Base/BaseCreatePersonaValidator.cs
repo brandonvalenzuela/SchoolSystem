@@ -33,7 +33,6 @@ namespace SchoolSystem.Application.Validations.Base
                 .MaximumLength(20);
 
             RuleFor(p => p.FechaNacimiento)
-                .NotEmpty().WithMessage("{PropertyName} de requerida.")
                 .LessThan(DateTime.Now.AddYears(-3)).WithMessage("El alumno debe tener al menos 3 años.");
         }
     }

@@ -112,6 +112,8 @@ builder.Services.AddScoped<IPagoService, PagoService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IMedicoService, MedicoService>();
 builder.Services.AddScoped<INotificacionService, NotificacionService>();
+builder.Services.AddScoped<IRelacionService, RelacionService>();
+
 
 // --- 4. SWAGGER CON SOPORTE PARA JWT ---
 

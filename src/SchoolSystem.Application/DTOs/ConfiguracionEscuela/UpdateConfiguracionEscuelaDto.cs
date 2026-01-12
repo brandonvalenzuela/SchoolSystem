@@ -13,13 +13,13 @@ namespace SchoolSystem.Application.DTOs.ConfiguracionEscuela
         public int EscuelaId { get; set; }
 
         [StringLength(300)]
-        public string NombreInstitucion { get; set; }
+        public string? NombreInstitucion { get; set; }
 
         [StringLength(500)]
-        public string LogoUrl { get; set; }
+        public string? LogoUrl { get; set; }
 
         [RegularExpression("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Formato de color inválido")]
-        public string ColorPrimario { get; set; }
+        public string? ColorPrimario { get; set; }
 
         [Range(0, 100)]
         public decimal? CalificacionMinimaAprobatoria { get; set; }

@@ -18,29 +18,9 @@ namespace SchoolSystem.Application.Validations.Padres
             RuleFor(x => x.EscuelaId)
                .GreaterThan(0).WithMessage("La escuela es obligatoria.");
 
-            RuleFor(x => x.Ocupacion)
-                .MaximumLength(100);
-
-            RuleFor(x => x.LugarTrabajo)
-                .MaximumLength(200);
-
-            RuleFor(x => x.TelefonoTrabajo)
-                .MaximumLength(20);
-
-            RuleFor(x => x.DireccionTrabajo)
-                .MaximumLength(200);
-
-            RuleFor(x => x.Puesto)
-                .MaximumLength(100);
-
-            RuleFor(x => x.NivelEstudios)
-                .MaximumLength(100);
-
-            RuleFor(x => x.Carrera)
-                .MaximumLength(100);
-
-            RuleFor(x => x.EstadoCivil)
-                .MaximumLength(20);
+            RuleFor(x => x.FechaNacimiento)
+                .LessThan(DateTime.Now).WithMessage("La fecha de nacimiento no puede ser futura.")
+                .When(x => x.FechaNacimiento.HasValue); // Solo valida si el usuario puso una fecha
 
             // Parentesco (si existe)
             // RuleFor(x => x.Parentesco)

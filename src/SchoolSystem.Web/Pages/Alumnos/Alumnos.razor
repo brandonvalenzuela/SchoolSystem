@@ -115,6 +115,9 @@ else
                             <a href="alumnos/editar/@alumno.Id" class="btn btn-sm btn-outline-info me-1" title="Editar">
                                 ✏️
                             </a>
+                            <a href="alumnos/detalle/@alumno.Id" class="btn btn-sm btn-outline-primary me-1" title="Ver Expediente">
+                                👁️
+                            </a>
                             <button class="btn btn-sm btn-outline-danger"
                                     title="Eliminar"
                                     @onclick="() => SolicitarEliminacion(alumno.Id, alumno.NombreCompleto)">
@@ -122,6 +125,9 @@ else
                             </button>
                             <a href="alumnos/expediente/@alumno.Id" class="btn btn-sm btn-outline-danger me-1" title="Salud">
                                 ❤️
+                            </a>
+                            <a href="alumnos/familia/@alumno.Id" class="btn btn-sm btn-outline-warning" title="Familia">
+                                👪
                             </a>
                         </td>
                     </tr>
