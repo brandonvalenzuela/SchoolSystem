@@ -1,132 +1,21 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">SchoolSystem.Web</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿@using MudBlazor
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+<MudNavMenu Class="mud-width-full">
+    <MudText Typo="Typo.subtitle2" Class="px-4 mt-4 mb-2 text-muted">PRINCIPAL</MudText>
+    
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+    
+    <MudText Typo="Typo.subtitle2" Class="px-4 mt-4 mb-2 text-muted">ACADÉMICO</MudText>
+    <MudNavLink Href="alumnos" Icon="@Icons.Material.Filled.School">Alumnos</MudNavLink>
+    <MudNavLink Href="maestros" Icon="@Icons.Material.Filled.Person">Maestros</MudNavLink>
+    <MudNavLink Href="grupos" Icon="@Icons.Material.Filled.Class">Grupos</MudNavLink>
+    <MudNavLink Href="materias" Icon="@Icons.Material.Filled.Book">Materias</MudNavLink>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="alumnos">
-                <span class="oi oi-people" aria-hidden="true"></span> Alumnos
-            </NavLink>
-        </div>
+    <MudText Typo="Typo.subtitle2" Class="px-4 mt-4 mb-2 text-muted">ADMINISTRACIÓN</MudText>
+    <MudNavLink Href="inscripciones" Icon="@Icons.Material.Filled.HowToReg">Inscripciones</MudNavLink>
+    <MudNavLink Href="pagos" Icon="@Icons.Material.Filled.AttachMoney">Finanzas</MudNavLink>
+    
+    <MudText Typo="Typo.subtitle2" Class="px-4 mt-4 mb-2 text-muted">HERRAMIENTAS</MudText>
+    <MudNavLink Href="mi-clase" Icon="@Icons.Material.Filled.AssignmentInd">Mi Clase</MudNavLink>
+</MudNavMenu>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="maestros">
-                <span class="oi oi-briefcase" aria-hidden="true"></span> Maestros
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="usuarios">
-                <span class="oi oi-book" aria-hidden="true"></span> Usuarios
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="materias">
-                <span class="oi oi-book" aria-hidden="true"></span> Materias
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="grados">
-                <span class="oi oi-book" aria-hidden="true"></span> Grados
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="grupos">
-                <span class="oi oi-book" aria-hidden="true"></span> Grupos
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="inscripciones">
-                <span class="oi oi-book" aria-hidden="true"></span> Inscripciones
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="calificaciones/captura">
-                <span class="oi oi-pencil" aria-hidden="true"></span> Calificar
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="calificaciones">
-                <span class="oi oi-pencil" aria-hidden="true"></span> Calificaciones
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="caja">
-                <span class="oi oi-dollar" aria-hidden="true"></span> Caja
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="pagos">
-                <span class="oi oi-spreadsheet" aria-hidden="true"></span> Historial Pagos
-            </NavLink>
-        </div>
-
-        <AuthorizeView Roles="Maestro,Director,SuperAdmin">
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="mi-clase">
-                    <span class="oi oi-blackboard" aria-hidden="true"></span> Mi Clase
-                </NavLink>
-            </div>
-        </AuthorizeView>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="asistencias/reporte">
-                <span class="oi oi-spreadsheet" aria-hidden="true"></span> Reporte Asistencia
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="conducta">
-                <span class="oi oi-star" aria-hidden="true"></span> Conducta
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="notificaciones">
-                <span class="oi oi-bell" aria-hidden="true"></span> Notificaciones
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="padres">
-                <span class="oi oi-people" aria-hidden="true"></span> Padres
-            </NavLink>
-        </div>
-
-        <AuthorizeView Roles="SuperAdmin,Director">
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="papelera">
-                    <span class="oi oi-trash" aria-hidden="true"></span> Papelera
-                </NavLink>
-            </div>
-        </AuthorizeView>
-    </nav>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}

@@ -1,0 +1,136 @@
+﻿@using System.Globalization
+@using MudBlazor
+
+<div class="horizontal-calendar-container">
+    <!-- Encabezado -->
+    <div class="d-flex justify-space-between align-center mb-4">
+        <MudText Typo="Typo.subtitle2" Class="fw-bold text-dark">
+            @CurrentWeekStart.ToString("MMMM, yyyy", CultureInfo.CurrentCulture)
+        </MudText>
+        
+        <div class="d-flex gap-1">
+            <MudIconButton Icon="@Icons.Material.Filled.ChevronLeft" Size="Size.Small" OnClick="PreviousWeek" />
+            <MudIconButton Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" OnClick="NextWeek" />
+        </div>
+    </div>
+
+    <!-- Carrusel de Días -->
+    <div class="calendar-track @animationClass">
+        <div class="d-flex justify-space-between">
+            @foreach (var date in WeekDays)
+            {
+                bool isSelected = date.Date == SelectedDate.Date;
+                bool isToday = date.Date == DateTime.Today;
+
+                <div @onclick="() => SelectDate(date)" 
+                     class="day-card d-flex flex-column align-center justify-center rounded-lg cursor-pointer transition-all @(isSelected ? "selected shadow-md" : "")">
+                    
+                    <span class="day-name @(isSelected ? "text-white-50" : "text-muted")">
+                        @date.ToString("ddd", CultureInfo.CurrentCulture).Substring(0,3)
+                    </span>
+                    
+                    <span class="day-number @(isSelected ? "text-white" : "text-dark")">
+                        @date.Day
+                    </span>
+
+                    @if (isToday && !isSelected)
+                    {
+                        <div class="today-dot mt-1"></div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .horizontal-calendar-container {
+        overflow: hidden; /* Oculta el desbordamiento durante la animación */
+    }
+
+    .day-card {
+        width: 45px;
+        height: 65px;
+        background-color: #F8F9FA;
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+    }
+
+    .day-card:hover {
+        background-color: #E9ECEF;
+    }
+
+    .day-card.selected {
+        background-color: var(--mud-palette-primary) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .day-name { font-size: 0.75rem; text-transform: uppercase; font-weight: 600; margin-bottom: 2px; }
+    .day-number { font-size: 1.1rem; font-weight: 700; }
+    .today-dot { width: 4px; height: 4px; background-color: var(--mud-palette-primary); border-radius: 50%; }
+
+    /* Animaciones de Carrusel */
+    .slide-in-right { animation: slideInRight 0.3s ease-out forwards; }
+    .slide-in-left { animation: slideInLeft 0.3s ease-out forwards; }
+
+    @@keyframes slideInRight {
+        from { transform: translateX(20px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @@keyframes slideInLeft {
+        from { transform: translateX(-20px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+</style>
+
+@code {
+    [Parameter] public DateTime SelectedDate { get; set; } = DateTime.Today;
+    [Parameter] public EventCallback<DateTime> SelectedDateChanged { get; set; }
+
+    private DateTime CurrentWeekStart;
+    private List<DateTime> WeekDays = new();
+    private string animationClass = "";
+
+    protected override void OnInitialized()
+    {
+        CurrentWeekStart = SelectedDate.AddDays(-(int)SelectedDate.DayOfWeek + 1);
+        GenerateWeek();
+    }
+
+    private void GenerateWeek()
+    {
+        WeekDays.Clear();
+        for (int i = 0; i < 5; i++)
+        {
+            WeekDays.Add(CurrentWeekStart.AddDays(i));
+        }
+    }
+
+    private async Task SelectDate(DateTime date)
+    {
+        SelectedDate = date;
+        await SelectedDateChanged.InvokeAsync(date);
+    }
+
+    private async Task PreviousWeek()
+    {
+        // Efecto visual
+        animationClass = ""; 
+        await Task.Delay(1); // Pequeño tick para reiniciar la clase CSS
+        animationClass = "slide-in-left";
+        
+        CurrentWeekStart = CurrentWeekStart.AddDays(-7);
+        GenerateWeek();
+    }
+
+    private async Task NextWeek()
+    {
+        animationClass = "";
+        await Task.Delay(1);
+        animationClass = "slide-in-right";
+
+        CurrentWeekStart = CurrentWeekStart.AddDays(7);
+        GenerateWeek();
+    }
+}

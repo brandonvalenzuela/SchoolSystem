@@ -1,0 +1,63 @@
+﻿@using MudBlazor
+
+<MudPaper Outlined="true" Class="pa-4 rounded-lg h-100" Elevation="0">
+    <div class="d-flex flex-column">
+        
+        <!-- ENCABEZADO: Icono pequeño y Texto gris -->
+        <div class="d-flex align-center gap-3 mb-4"> <!-- mb-7 del HTML original es aprox 1.75rem, aquí usamos mb-4 que es 1rem para balancear en Mud -->
+            
+            <!-- 
+                ICONO: Replicando "size-7" (28px) y "rounded-md" (6px) 
+                Usamos Style directo porque MudAvatar por defecto es 40px
+            -->
+            <div class="d-flex justify-center align-center" 
+                 style="@($"width: 28px; height: 28px; border-radius: 6px; background-color: var(--mud-palette-{Color.ToString().ToLower()}); color: white;")">
+                <MudIcon Icon="@Icon" Style="font-size: 16px;" /> <!-- size-5 del svg es 20px, aquí 16px se ve mejor en caja de 28 -->
+            </div>
+            
+            <!-- TEXTO: Replicando "text-gray-500" -->
+            <MudText Typo="Typo.body2" Class="mud-text-secondary" Style="font-size: 0.875rem;">
+                @Title
+            </MudText>
+        </div>
+
+        <!-- VALOR: Replicando "h5" y "border-b-2" -->
+        <!-- border-b-2 son 2px. -bottom-1 es un pequeño padding negativo o padding-bottom -->
+        <div style="@($"border-bottom: 2px solid var(--mud-palette-{Color.ToString().ToLower()}); width: fit-content; padding-bottom: 2px;")">
+            <MudText Typo="Typo.h5" Class="fw-bold text-dark" Style="font-weight: 700; line-height: 1.2;">
+                @Value
+            </MudText>
+        </div>
+
+        <!-- TENDENCIA (Opcional, mantenemos el estilo muy compacto) -->
+        @if (!string.IsNullOrEmpty(TrendValue))
+        {
+            <div class="d-flex align-center mt-2">
+                @if (!string.IsNullOrEmpty(TrendIcon))
+                {
+                    <MudIcon Icon="@TrendIcon" Color="@TrendColor" Style="font-size: 14px;" Class="mr-1"/>
+                }
+                
+                <MudText Typo="Typo.caption" Color="@TrendColor" Class="fw-bold" Style="font-size: 0.75rem;">
+                    @TrendValue
+                </MudText>
+                
+                <MudText Typo="Typo.caption" Class="mud-text-secondary ml-1" Style="font-size: 0.75rem;">
+                    @TrendLabel
+                </MudText>
+            </div>
+        }
+    </div>
+</MudPaper>
+
+@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string Value { get; set; }
+    [Parameter] public string Icon { get; set; }
+    [Parameter] public Color Color { get; set; } = Color.Primary;
+
+    [Parameter] public string TrendValue { get; set; }
+    [Parameter] public string TrendLabel { get; set; }
+    [Parameter] public string TrendIcon { get; set; }
+    [Parameter] public Color TrendColor { get; set; } = Color.Default;
+}

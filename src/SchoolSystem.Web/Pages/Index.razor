@@ -1,144 +1,296 @@
 ﻿@page "/"
+@using MudBlazor
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
 @inject DashboardService DashboardService
 @inject AuthenticationStateProvider AuthStateProvider
 @attribute [Authorize]
 
-<PageTitle>Dashboard - SchoolSystem</PageTitle>
+<PageTitle>Dashboard</PageTitle>
 
-<div class="container-fluid">
-    <h1 class="mb-4">Bienvenido, @userName</h1>
-
-    @if (isLoading)
-    {
-        <div class="text-center py-5">
-            <div class="spinner-border text-primary" role="status"></div>
-            <p>Cargando indicadores...</p>
-        </div>
-    }
-    else if (stats != null)
-    {
-        <div class="row g-4 mb-4">
-            <!-- Tarjeta: Alumnos -->
-            <div class="col-md-4">
-                <div class="card shadow-sm border-0 border-start border-4 border-primary h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted text-uppercase mb-1">Alumnos Activos</h6>
-                                <h2 class="mb-0 fw-bold">@stats.TotalAlumnos</h2>
-                            </div>
-                            <div class="fs-1 text-primary">
-                                <i class="oi oi-people"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tarjeta: Maestros -->
-            <div class="col-md-4">
-                <div class="card shadow-sm border-0 border-start border-4 border-info h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted text-uppercase mb-1">Maestros</h6>
-                                <h2 class="mb-0 fw-bold">@stats.TotalMaestros</h2>
-                            </div>
-                            <div class="fs-1 text-info">
-                                <i class="oi oi-briefcase"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tarjeta: Grupos -->
-            <div class="col-md-4">
-                <div class="card shadow-sm border-0 border-start border-4 border-warning h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted text-uppercase mb-1">Grupos</h6>
-                                <h2 class="mb-0 fw-bold">@stats.TotalGrupos</h2>
-                            </div>
-                            <div class="fs-1 text-warning">
-                                <i class="oi oi-people"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <h4 class="mb-3 mt-5">Finanzas del Mes</h4>
-        <div class="row g-4">
-            <!-- Tarjeta: Ingresos -->
-            <div class="col-md-6">
-                <div class="card shadow border-0 bg-success text-white h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-white-50 text-uppercase mb-1">Ingresos (Mes Actual)</h6>
-                                <h2 class="mb-0 fw-bold">$@stats.IngresosMesActual.ToString("N2")</h2>
-                                <small>@stats.PagosRealizadosHoy pagos registrados hoy</small>
-                            </div>
-                            <div class="fs-1 text-white-50">
-                                <i class="oi oi-dollar"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tarjeta: Pendiente -->
-            <div class="col-md-6">
-                <div class="card shadow border-0 bg-danger text-white h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-white-50 text-uppercase mb-1">Por Cobrar (Total)</h6>
-                                <h2 class="mb-0 fw-bold">$@stats.CargosPendientesTotal.ToString("N2")</h2>
-                                <small>Saldo pendiente total</small>
-                            </div>
-                            <div class="fs-1 text-white-50">
-                                <i class="oi oi-warning"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-5 text-center">
-            <a href="caja" class="btn btn-outline-primary btn-lg px-5">Ir a Caja</a>
-        </div>
-    }
+<div class="mb-4">
+    <MudText Typo="Typo.h5" Class="fw-bold text-dark">School Dashboard</MudText>
 </div>
 
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center mt-12">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+    </div>
+}
+else if (stats != null)
+{
+    <MudGrid Spacing="4">
+        
+        <!-- ============================================================== -->
+        <!-- COLUMNA 1 (IZQUIERDA - 50% ANCHO)                              -->
+        <!-- Contiene: KPIs, Gráfica Principal, Tabla Estudiantes           -->
+        <!-- ============================================================== -->
+        <MudItem xs="12" lg="6">
+            <MudGrid Spacing="3">
+                
+                <!-- SECCIÓN KPIs (Anidados aquí dentro) -->
+                <!-- Fila 1 -->
+                <MudItem xs="12" sm="4">
+                    <SchoolSystem.Web.Shared.Components.KpiCard Title="Total Students" Value="@stats.TotalAlumnos.ToString()" Icon="@Icons.Material.Filled.School" Color="Color.Primary" 
+                                                                TrendValue="+12%"
+                                                                TrendLabel="vs mes pasado"
+                                                                TrendIcon="@Icons.Material.Filled.TrendingUp"
+                                                                TrendColor="Color.Success" />
+
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <SchoolSystem.Web.Shared.Components.KpiCard Title="Total Teachers" Value="@stats.TotalMaestros.ToString()" Icon="@Icons.Material.Filled.Person" Color="Color.Warning" 
+                                                                TrendValue="Activos"
+                                                                TrendLabel=""
+                                                                TrendIcon="@Icons.Material.Filled.CheckCircle"
+                                                                TrendColor="Color.Success" />
+
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <SchoolSystem.Web.Shared.Components.KpiCard Title="Total Courses" Value="@stats.TotalGrupos.ToString()" Icon="@Icons.Material.Filled.Book" Color="Color.Info"
+                                                                TrendValue="Hoy:"
+                                                                TrendLabel="@stats.PagosRealizadosHoy.ToString()"
+                                                                TrendIcon="@Icons.Material.Filled.Today"
+                                                                TrendColor="Color.Success" />
+
+                </MudItem>
+
+                <!-- Fila 2 -->
+                <MudItem xs="12" sm="4">
+                    <SchoolSystem.Web.Shared.Components.KpiCard Title="Class Rooms" Value="65" Icon="@Icons.Material.Filled.MeetingRoom" Color="Color.Warning" 
+                                                                TrendValue="Cartera"
+                                                                TrendLabel="vencida"
+                                                                TrendIcon="@Icons.Material.Filled.Warning"
+                                                                TrendColor="Color.Error" />
+
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <SchoolSystem.Web.Shared.Components.KpiCard Title="Total Earnings" Value="@($"${(stats.IngresosMesActual / 1000).ToString("0")}M")" Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Secondary" />
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <SchoolSystem.Web.Shared.Components.KpiCard Title="Awards" Value="30+" Icon="@Icons.Material.Filled.EmojiEvents" Color="Color.Success" />
+                </MudItem>
+
+                <!-- GRÁFICA DE BARRAS (Total Students) -->
+                <MudItem xs="12">
+                    <MudPaper Outlined="true" Class="pa-4 rounded-lg d-flex flex-column" Elevation="0" Style="height: 420px;">
+                        <div class="d-flex justify-space-between align-center mb-4">
+                            <MudText Typo="Typo.h6" Class="fw-bold">Total Students</MudText>
+                            <MudIconButton Icon="@Icons.Material.Filled.MoreHoriz" />
+                        </div>
+                        <div class="flex-grow-1">
+                             <MudChart ChartType="ChartType.Bar" ChartSeries="@SeriesStudents" XAxisLabels="@LabelsAnios" Width="100%" Height="320px"></MudChart>
+                        </div>
+                    </MudPaper>
+                </MudItem>
+
+                <!-- TABLA DE NUEVOS ESTUDIANTES -->
+                <MudItem xs="12">
+                     <MudPaper Outlined="true" Class="rounded-lg overflow-hidden d-flex flex-column" Elevation="0" Style="height: 500px;">
+                        <div class="pa-4 border-b mud-border-lines-default d-flex justify-space-between align-center">
+                            <MudText Typo="Typo.h6" Class="fw-bold">New Students</MudText>
+                            <MudIconButton Icon="@Icons.Material.Filled.MoreHoriz" Color="Color.Default" />
+                        </div>
+                        <div class="flex-grow-1 overflow-auto">
+                            <MudSimpleTable Hover="true" Dense="true" Elevation="0" Style="width: 100%;">
+                                <tbody>
+                                    @foreach(var st in estudiantesDummy)
+                                    {
+                                        <tr>
+                                            <td style="width: 50px;">
+                                                <MudAvatar Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium">@st.Nombre.Substring(0,1)</MudAvatar>
+                                            </td>
+                                            <td>
+                                                <MudText Typo="Typo.subtitle2" Class="fw-bold">@st.Nombre</MudText>
+                                                <MudText Typo="Typo.caption" Class="text-muted">@st.Matricula</MudText>
+                                            </td>
+                                            <td><MudText Typo="Typo.body2">@st.Grado</MudText></td>
+                                            <td class="text-end">
+                                                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" />
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </MudSimpleTable>
+                        </div>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        </MudItem>
+
+        <!-- ============================================================== -->
+        <!-- COLUMNA 2 (CENTRO - 25% ANCHO)                                 -->
+        <!-- Contiene: Gráfica Dona, Lista Tests                            -->
+        <!-- ============================================================== -->
+        <MudItem xs="12" md="6" lg="3">
+            <MudGrid Spacing="3">
+
+                <!-- GRÁFICA DONA (Course Activities) -->
+                <!-- AJUSTE: Aumentamos a 300px para igualar las 2 filas de KPIs -->
+                <MudItem xs="12">
+                    <MudPaper Outlined="true" Class="pa-4 rounded-lg d-flex flex-column" Elevation="0" Style="height: 290px;">
+                        <div class="d-flex justify-space-between align-center mb-1">
+                            <MudText Typo="Typo.subtitle1" Class="fw-bold">Course Activities</MudText>
+                            <MudIconButton Icon="@Icons.Material.Filled.MoreHoriz" Size="Size.Small" />
+                        </div>
+                        <div class="flex-grow-1 d-flex justify-center align-center">
+                            <!-- Aumentamos un poco la gráfica también -->
+                            <MudChart ChartType="ChartType.Donut" Width="170px" Height="170px"
+                                      InputData="@dataActivities" InputLabels="@labelsActivities"
+                                      LegendPosition="Position.Right">
+                            </MudChart>
+                        </div>
+                    </MudPaper>
+                </MudItem>
+
+                <!-- LISTA UPCOMING TEST -->
+                <!-- Mantenemos 420px para alinearse con la gráfica de barras de la izquierda -->
+                <MudItem xs="12">
+                    <MudPaper Outlined="true" Class="pa-4 rounded-lg d-flex flex-column" Elevation="0" Style="height: 420px;">
+                        <div class="d-flex justify-space-between align-center mb-4">
+                            <MudText Typo="Typo.subtitle1" Class="fw-bold">Upcoming Test</MudText>
+                            <MudIconButton Icon="@Icons.Material.Filled.MoreHoriz" Size="Size.Small" />
+                        </div>
+
+                        <div class="flex-grow-1 overflow-auto d-flex flex-column gap-4 pr-2">
+                            <!-- Items de la lista... -->
+                            <div class="d-flex align-center gap-3">
+                                <MudAvatar Rounded="true" Color="Color.Info" Variant="Variant.Outlined">
+                                    <MudIcon Icon="@Icons.Material.Filled.Computer" Size="Size.Small" />
+                                </MudAvatar>
+                                <div class="flex-grow-1">
+                                    <MudText Typo="Typo.body2" Class="fw-bold">Basic Computer</MudText>
+                                    <MudText Typo="Typo.caption" Class="text-muted">Class 9</MudText>
+                                </div>
+                                <MudText Typo="Typo.caption" Color="Color.Error" Class="fw-bold">26 Dec</MudText>
+                            </div>
+                            <MudDivider />
+                            <div class="d-flex align-center gap-3">
+                                <MudAvatar Rounded="true" Color="Color.Error" Variant="Variant.Outlined">
+                                    <MudIcon Icon="@Icons.Material.Filled.Science" Size="Size.Small" />
+                                </MudAvatar>
+                                <div class="flex-grow-1">
+                                    <MudText Typo="Typo.body2" Class="fw-bold">Science Part 2</MudText>
+                                    <MudText Typo="Typo.caption" Class="text-muted">Class 11</MudText>
+                                </div>
+                                <MudText Typo="Typo.caption" Color="Color.Error" Class="fw-bold">21 Dec</MudText>
+                            </div>
+                            <MudDivider />
+                            <div class="d-flex align-center gap-3">
+                                <MudAvatar Rounded="true" Color="Color.Warning" Variant="Variant.Outlined">
+                                    <MudIcon Icon="@Icons.Material.Filled.Book" Size="Size.Small" />
+                                </MudAvatar>
+                                <div class="flex-grow-1">
+                                    <MudText Typo="Typo.body2" Class="fw-bold">English Grammar</MudText>
+                                    <MudText Typo="Typo.caption" Class="text-muted">Class 12</MudText>
+                                </div>
+                                <MudText Typo="Typo.caption" Color="Color.Error" Class="fw-bold">15 Dec</MudText>
+                            </div>
+                            <MudDivider />
+                            <div class="d-flex align-center gap-3">
+                                <MudAvatar Rounded="true" Color="Color.Success" Variant="Variant.Outlined">
+                                    <MudIcon Icon="@Icons.Material.Filled.Calculate" Size="Size.Small" />
+                                </MudAvatar>
+                                <div class="flex-grow-1">
+                                    <MudText Typo="Typo.body2" Class="fw-bold">Mathematics</MudText>
+                                    <MudText Typo="Typo.caption" Class="text-muted">Class 10</MudText>
+                                </div>
+                                <MudText Typo="Typo.caption" Color="Color.Error" Class="fw-bold">10 Dec</MudText>
+                            </div>
+                        </div>
+                    </MudPaper>
+                </MudItem>
+
+            </MudGrid>
+        </MudItem>
+
+        <!-- ============================================================== -->
+        <!-- COLUMNA 3 (DERECHA - 25% ANCHO) - PANEL UNIFICADO              -->
+        <!-- ============================================================== -->
+        <MudItem xs="12" md="6" lg="3">
+            <MudPaper Outlined="true" Class="pa-4 rounded-lg h-100" Elevation="0">
+                <!-- CALENDARIO -->
+                <div class="mb-2">
+                    <SchoolSystem.Web.Shared.Components.HorizontalCalendar @bind-SelectedDate="fechaSeleccionadaDashboard" />
+                </div>
+                <div class="text-center mb-6">
+                    <MudText Typo="Typo.caption" Class="text-muted">
+                        Eventos del: <strong>@fechaSeleccionadaDashboard.ToShortDateString()</strong>
+                    </MudText>
+                </div>
+                <MudDivider Class="my-6" />
+                <!-- HOLIDAY LISTS -->
+                <SchoolSystem.Web.Shared.Components.HolidayList />
+                <MudDivider Class="my-6" />
+                <!-- NOTICE BOARD -->
+                <div>
+                    <MudText Typo="Typo.subtitle2" Class="fw-bold mb-4">Notice Board</MudText>
+                    <div class="d-flex flex-column gap-4">
+                        <div class="d-flex gap-3">
+                            <MudAvatar Rounded="true" Color="Color.Primary" Size="Size.Medium">EL</MudAvatar>
+                            <div>
+                                <MudText Typo="Typo.body2" Class="fw-bold" Style="line-height: 1.2;">School year start</MudText>
+                                <MudText Typo="Typo.caption" Class="text-muted">By Erwin Legros</MudText>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <MudAvatar Rounded="true" Color="Color.Secondary" Size="Size.Medium">AB</MudAvatar>
+                            <div>
+                                <MudText Typo="Typo.body2" Class="fw-bold" Style="line-height: 1.2;">Inspirational quotes</MudText>
+                                <MudText Typo="Typo.caption" Class="text-muted">By Ardith Bode</MudText>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+}
+
+<style>
+    /* Diseño Mobile First: Una sola columna */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px; /* Spacing */
+    }
+
 @code {
+    // ... El bloque @code permanece IGUAL que antes ...
     private DashboardDto stats;
     private bool isLoading = true;
     private string userName;
+    private DateTime fechaSeleccionadaDashboard = DateTime.Today;
+
+    public List<ChartSeries> SeriesStudents = new List<ChartSeries>()
+    {
+        new ChartSeries() { Name = "New Students", Data = new double[] { 100, 40, 100, 10, 10, 120, 240 } },
+        new ChartSeries() { Name = "Leave Students", Data = new double[] { 240, 150, 210, 200, 100, 190, 150 } }
+    };
+    public string[] LabelsAnios = { "2018", "2019", "2020", "2021", "2022", "2023", "2024" };
+
+    public double[] dataActivities = { 65, 35 };
+    public string[] labelsActivities = { "Process", "In Process" };
+    
+    class EstudianteDummy { public string Nombre {get;set;} public string Matricula {get;set;} public string Grado {get;set;} }
+    List<EstudianteDummy> estudiantesDummy = new List<EstudianteDummy>
+    {
+        new EstudianteDummy { Nombre = "Ana García", Matricula = "A2024001", Grado = "3° A" },
+        new EstudianteDummy { Nombre = "Luis Rodriguez", Matricula = "A2024055", Grado = "1° B" },
+        new EstudianteDummy { Nombre = "Sofia Martinez", Matricula = "A2024012", Grado = "5° C" },
+        new EstudianteDummy { Nombre = "Carlos Lopez", Matricula = "A2024089", Grado = "2° A" },
+        new EstudianteDummy { Nombre = "Elena Torres", Matricula = "A2024033", Grado = "6° B" },
+    };
 
     protected override async Task OnInitializedAsync()
     {
-        // Obtener nombre del usuario
         var state = await AuthStateProvider.GetAuthenticationStateAsync();
         userName = state.User.Identity?.Name ?? "Usuario";
-
         try
         {
             var res = await DashboardService.GetStatsAsync();
-            if (res.Succeeded)
-            {
-                stats = res.Data;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
+            if (res.Succeeded) stats = res.Data;
         }
         finally
         {

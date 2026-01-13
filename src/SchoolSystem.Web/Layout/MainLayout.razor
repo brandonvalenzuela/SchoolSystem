@@ -1,40 +1,98 @@
-﻿@inherits LayoutComponentBase
-@using Microsoft.AspNetCore.Components.Authorization
-@using SchoolSystem.Web.Services
-@inject ClientAuthService AuthService
+﻿@using MudBlazor
+@inherits LayoutComponentBase
 @inject NavigationManager Navigation
 
-<div class="page">
-    <div class="sidebar">
+<MudThemeProvider Theme="_domiexTheme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudPopoverProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="0" Color="Color.Surface" Fixed="true" 
+               Style="border-bottom: 1px solid var(--mud-palette-lines-default); height: 75px;"> <!-- Un poco más alta -->
+        <!-- Logo más grande y estilizado -->
+        <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Primary" Size="Size.Large" Class="ml-3 mr-2"/>
+        <MudText Typo="Typo.h5" Class="text-primary fw-bold" Style="letter-spacing: -0.5px;">SchoolSystem</MudText>
+        
+        <MudSpacer />
+        
+        <MudIconButton Icon="@Icons.Material.Filled.Search" Color="Color.Secondary" Class="mr-2" />
+        <MudBadge Color="Color.Error" Dot="true" Overlap="true" Class="mr-4">
+            <MudIconButton Icon="@Icons.Material.Filled.NotificationsNone" Color="Color.Secondary" />
+        </MudBadge>
+        
+        <MudAvatar Color="Color.Primary" Variant="Variant.Filled" Class="ml-3">A</MudAvatar>
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_drawerOpen"
+               ClipMode="DrawerClipMode.Always"
+               Variant="@DrawerVariant.Responsive"
+               Elevation="0"
+               Style="border-right: 1px solid var(--mud-palette-lines-default);">
+
+        <!-- Un poco de espacio arriba para que no choque con el AppBar si el ClipMode falla visualmente -->
+        <div style="height: 20px;"></div>
+
         <NavMenu />
-    </div>
+    </MudDrawer>
 
-    <main>
-        <div class="top-row px-4">
-            <AuthorizeView>
-                <Authorized Context="authContext">
-                    <span class="me-3">Hola, @authContext.User.Identity?.Name</span>
-                    <button class="btn btn-outline-danger btn-sm" @onclick="Logout">Cerrar Sesión</button>
-                </Authorized>
-                <NotAuthorized>
-                    <a href="login">Iniciar Sesión</a>
-                </NotAuthorized>
-            </AuthorizeView>
-        </div>
-
-        <article class="content px-4">
+    <!-- 
+       AQUÍ ESTÁ EL TRUCO DE LOS MÁRGENES:
+       1. background-color: #F0F2F5 (Un gris un poco más sólido que el blanco).
+       2. px-4 px-md-12: En móviles margen normal, en escritorio márgenes GRANDES a los lados.
+       3. pt-24: Más espacio arriba para que no pegue con la barra.
+       4. MaxWidth.Large: Restringe el ancho para que no se estire infinito en monitores 4k.
+    -->
+    <MudMainContent Class="px-4 px-md-20 pb-8"
+                    Style="background-color: #FFFFFF; min-height: 100vh; padding-top: 100px !important;">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge">
             @Body
-        </article>
-
-        <SchoolSystem.Web.Shared.ToastContainer />
-
-    </main>
-</div>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
 
 @code {
-    private async Task Logout()
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
     {
-        await AuthService.LogoutAsync();
-        Navigation.NavigateTo("/login");
+        _drawerOpen = !_drawerOpen;
+    }
+
+    // 1. Inicializamos el tema con la Paleta y el Layout
+    private MudTheme _domiexTheme = new MudTheme()
+    {
+        PaletteLight = new PaletteLight()
+        {
+            Primary = "#3B82F6",
+            Secondary = "#64748B",
+            AppbarBackground = "#FFFFFF",
+            Background = "#FFFFFF",
+            DrawerBackground = "#FFFFFF",
+            Surface = "#FFFFFF",
+            TextPrimary = "#1E293B",
+            LinesDefault = "#E2E8F0",
+            TableLines = "#F1F5F9",
+        },
+        LayoutProperties = new LayoutProperties()
+        {
+            DefaultBorderRadius = "12px"
+        }
+    };
+
+    // 2. Configuramos la Tipografía al inicializar el componente
+    // Esto evita los errores de "new()" y de tipos de datos
+    protected override void OnInitialized()
+    {
+        // Configuración Global de Fuente
+        _domiexTheme.Typography.Default.FontFamily = new[] { "Inter", "Segoe UI", "sans-serif" };
+
+        // Configuración H6 (Títulos de tarjetas)
+        _domiexTheme.Typography.H6.FontWeight = "600";
+        _domiexTheme.Typography.H6.FontSize = "1.1rem"; // ¡Debe ser String!
+
+        // Configuración Body2 (Textos secundarios)
+        _domiexTheme.Typography.Body2.FontSize = "0.875rem"; // ¡Debe ser String!
+        _domiexTheme.Typography.Body2.LineHeight = "1.5";    // ¡Debe ser String!
     }
 }

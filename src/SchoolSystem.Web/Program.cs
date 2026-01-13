@@ -2,6 +2,7 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 using SchoolSystem.Web;
 using SchoolSystem.Web.Auth;
 using SchoolSystem.Web.Services;
@@ -44,5 +45,6 @@ builder.Services.AddScoped<PadreService>();
 
 // 4. Servicios de la Aplicación
 builder.Services.AddScoped<ApiService>();
+builder.Services.AddMudServices();
 
 await builder.Build().RunAsync();

@@ -1,0 +1,92 @@
+﻿@using MudBlazor
+<div class="mb-4">
+    <div class="d-flex justify-space-between align-center mb-3">
+        <MudText Typo="Typo.subtitle2" Class="fw-bold">Holiday Lists</MudText>
+        <MudLink Typo="Typo.caption" Href="#" Color="Color.Primary" Underline="Underline.None">View More →</MudLink>
+    </div>
+
+    @if (Holidays == null)
+    {
+        <div class="d-flex justify-center pa-4">
+            <MudProgressCircular Indeterminate="true" Size="Size.Small" Color="Color.Success" />
+        </div>
+    }
+    else if (!Holidays.Any())
+    {
+        <MudText Typo="Typo.caption" Class="text-muted">No hay feriados próximos.</MudText>
+    }
+    else
+    {
+        <div class="d-flex flex-column gap-2">
+            @foreach (var h in Holidays)
+            {
+                <div class="d-flex align-center p-3 rounded-lg bg-light transition-all holiday-item">
+                    <div class="mr-3 d-flex align-center justify-center rounded-circle bg-white" style="width: 35px; height: 35px;">
+                        <!-- Icono dinámico según tipo -->
+                        <MudIcon Icon="@GetIcon(h.Type)" Color="@GetColor(h.Type)" Size="Size.Small" />
+                    </div>
+                    <div class="flex-grow-1">
+                        <MudText Typo="Typo.body2" Class="fw-bold" Style="line-height: 1.2;">@h.Title</MudText>
+                        <MudText Typo="Typo.caption" Class="text-muted">@h.Date.ToString("dd MMM yyyy")</MudText>
+                    </div>
+                    
+                    @if (h.Date.Date == DateTime.Now.Date)
+                    {
+                         <MudChip T="string" Color="Color.Success" Size="Size.Small" Class="mr-0">Hoy</MudChip>
+                    }
+                    else
+                    {
+                         <MudIcon Icon="@Icons.Material.Filled.BeachAccess" Color="Color.Default" Size="Size.Small" Class="text-muted" />
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .holiday-item:hover {
+        background-color: #f1f3f5 !important; /* Gris un poco más oscuro al pasar mouse */
+        transform: translateX(3px);
+    }
+</style>
+
+@code {
+    // Modelo local simple para el componente (luego lo reemplazarás por EventoDto)
+    public class HolidayItem
+    {
+        public string Title { get; set; }
+        public DateTime Date { get; set; }
+        public string Type { get; set; } // Festivo, Puente, Vacaciones
+    }
+
+    private List<HolidayItem> Holidays;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // SIMULACIÓN DE CARGA DE DATOS
+        // Aquí llamarías a: await DashboardService.GetProximosFeriados();
+        await Task.Delay(500); // Simular delay de red
+
+        Holidays = new List<HolidayItem>
+        {
+            new HolidayItem { Title = "Día de Muertos", Date = new DateTime(2024, 11, 2), Type = "Festivo" },
+            new HolidayItem { Title = "Revolución Mexicana", Date = new DateTime(2024, 11, 20), Type = "Patrio" },
+            new HolidayItem { Title = "Vacaciones Invierno", Date = new DateTime(2024, 12, 19), Type = "Vacaciones" }
+        };
+    }
+
+    private string GetIcon(string type) => type switch
+    {
+        "Vacaciones" => Icons.Material.Filled.FlightTakeoff,
+        "Patrio" => Icons.Material.Filled.Flag,
+        _ => Icons.Material.Outlined.CheckCircle
+    };
+    
+    private Color GetColor(string type) => type switch
+    {
+        "Vacaciones" => Color.Info,
+        "Patrio" => Color.Error,
+        _ => Color.Success
+    };
+}
