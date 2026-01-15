@@ -369,6 +369,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         public void MarcarComoEgresado(int usuarioId)
         {
             Estatus = EstatusAlumno.Egresado;
+            FechaBaja = DateTime.Now;
             UpdatedAt = DateTime.Now;
             UpdatedBy = usuarioId;
         }

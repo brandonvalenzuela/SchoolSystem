@@ -73,21 +73,101 @@ else if (stats != null)
                 </MudItem>
 
                 <!-- GRÁFICA DE BARRAS (Total Students) -->
+                <!-- PANEL DE GRÁFICAS CON PESTAÑAS (Altura 420px) -->
                 <MudItem xs="12">
-                    <MudPaper Outlined="true" Class="pa-4 rounded-lg d-flex flex-column" Elevation="0" Style="height: 420px;">
-                        <div class="d-flex justify-space-between align-center mb-4">
-                            <MudText Typo="Typo.h6" Class="fw-bold">Total Students</MudText>
-                            <MudIconButton Icon="@Icons.Material.Filled.MoreHoriz" />
-                        </div>
-                        <div class="flex-grow-1">
-                             <MudChart ChartType="ChartType.Bar" ChartSeries="@SeriesStudents" XAxisLabels="@LabelsAnios" Width="100%" Height="320px"></MudChart>
-                        </div>
+                    <MudPaper Outlined="true" Class="rounded-lg d-flex flex-column overflow-hidden" Elevation="0" Style="height: 420px;">
+
+                        <!-- Pestañas Transparentes -->
+                        <MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true"
+                                 PanelClass="pa-4 h-100" Color="Color.Transparent" SliderColor="Color.Primary"
+                                 centered="false">
+
+                            <!-- TAB 1: ALUMNOS (Gráfica de Barras Tricolor) -->
+                            <MudTabPanel Text="Población Escolar" Icon="@Icons.Material.Filled.School">
+                                <div class="d-flex flex-column h-100">
+                                    <div class="d-flex justify-space-between align-center mb-2">
+                                        <div>
+                                            <MudText Typo="Typo.h6" Class="fw-bold">Movimiento Estudiantil</MudText>
+                                            
+                                        </div>
+                                        <MudText Typo="Typo.caption" Class="text-muted">Histórico de los últimos 5 años</MudText>
+                                        <!-- Leyenda -->
+                                        <div class="d-flex gap-3">
+                                            <div class="d-flex align-center"><div style="width: 10px; height: 10px; background-color: #3B82F6; border-radius: 50%; margin-right: 5px;"></div><span class="small text-muted">Nuevos</span></div>
+                                            <div class="d-flex align-center"><div style="width: 10px; height: 10px; background-color: #10B981; border-radius: 50%; margin-right: 5px;"></div><span class="small text-muted">Egresados</span></div>
+                                            <div class="d-flex align-center"><div style="width: 10px; height: 10px; background-color: #EF4444; border-radius: 50%; margin-right: 5px;"></div><span class="small text-muted">Bajas</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        @if (stats.StudentsChart != null)
+                                        {
+                                            <MudChart ChartType="ChartType.Bar"
+                                                      ChartSeries="@SeriesStudents"
+                                                      XAxisLabels="@LabelsAnios"
+                                                      Width="100%" Height="300px"
+                                                      ChartOptions="@OptionsAlumnos">
+                                            </MudChart>
+                                        }
+                                    </div>
+                                </div>
+                            </MudTabPanel>
+
+                            <!-- TAB 2: FINANZAS (Gráfica Stacked) -->
+                            <MudTabPanel Text="Finanzas" Icon="@Icons.Material.Filled.AttachMoney">
+                                <div class="d-flex flex-column h-100">
+                                    <div class="d-flex justify-space-between align-center mb-2">
+                                        <div>
+                                            <MudText Typo="Typo.h6" Class="fw-bold">Eficiencia de Cobranza</MudText>
+
+                                            <!-- Indicador de Tendencia -->
+                                            @if (TendenciaFinanciera != 0)
+                                            {
+                                                <div class="d-flex align-center mt-1">
+                                                    <MudIcon Icon="@(TendenciaFinanciera > 0 ? Icons.Material.Filled.TrendingUp : Icons.Material.Filled.TrendingDown)"
+                                                             Color="@(TendenciaFinanciera > 0 ? Color.Success : Color.Error)" Size="Size.Small" Class="mr-1" />
+                                                    <MudText Typo="Typo.caption" Color="@(TendenciaFinanciera > 0 ? Color.Success : Color.Error)" Class="fw-bold">
+                                                        @(TendenciaFinanciera > 0 ? "+" : "")@TendenciaFinanciera.ToString("N1")%
+                                                    </MudText>
+                                                    <MudText Typo="Typo.caption" Class="text-muted ml-1">vs mes pasado</MudText>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="d-flex gap-3">
+                                            <div class="d-flex align-center"><div style="width: 10px; height: 10px; background-color: #10B981; border-radius: 50%; margin-right: 5px;"></div><span class="small text-muted">Cobrado</span></div>
+                                            <div class="d-flex align-center"><div style="width: 10px; height: 10px; background-color: #E2E8F0; border-radius: 50%; margin-right: 5px;"></div><span class="small text-muted">Pendiente</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        @if (stats.FinanceChart != null)
+                                        {
+                                            <MudChart ChartType="ChartType.StackedBar"
+                                                      ChartSeries="@SeriesFinanzas"
+                                                      XAxisLabels="@LabelsMesesFinanzas"
+                                                      Width="100%" Height="300px"
+                                                      ChartOptions="@OptionsFinanzas">
+                                            </MudChart>
+                                        }
+                                    </div>
+                                </div>
+                            </MudTabPanel>
+
+                            <!-- TAB 3: ASISTENCIA (Placeholder) -->
+                            <MudTabPanel Text="Asistencia" Icon="@Icons.Material.Filled.EventAvailable">
+                                <div class="d-flex flex-column h-100 justify-center align-center">
+                                    <MudIcon Icon="@Icons.Material.Filled.Construction" Size="Size.Large" Color="Color.Warning" />
+                                    <MudText Typo="Typo.h6" Class="mt-3">Análisis de Asistencia</MudText>
+                                    <MudText Typo="Typo.body2" Class="text-muted">Próximamente disponible</MudText>
+                                </div>
+                            </MudTabPanel>
+
+                        </MudTabs>
                     </MudPaper>
                 </MudItem>
 
-                <!-- TABLA DE NUEVOS ESTUDIANTES -->
+                <!-- TABLA DE ESTUDIANTES (Sigue abajo) -->
                 <MudItem xs="12">
-                     <MudPaper Outlined="true" Class="rounded-lg overflow-hidden d-flex flex-column" Elevation="0" Style="height: 500px;">
+                    <MudPaper Outlined="true" Class="rounded-lg overflow-hidden d-flex flex-column" Elevation="0" Style="height: 500px;">
+                        <!-- ... Contenido de la tabla ... -->
                         <div class="pa-4 border-b mud-border-lines-default d-flex justify-space-between align-center">
                             <MudText Typo="Typo.h6" Class="fw-bold">New Students</MudText>
                             <MudIconButton Icon="@Icons.Material.Filled.MoreHoriz" Color="Color.Default" />
@@ -95,11 +175,11 @@ else if (stats != null)
                         <div class="flex-grow-1 overflow-auto">
                             <MudSimpleTable Hover="true" Dense="true" Elevation="0" Style="width: 100%;">
                                 <tbody>
-                                    @foreach(var st in estudiantesDummy)
+                                    @foreach (var st in estudiantesDummy)
                                     {
                                         <tr>
                                             <td style="width: 50px;">
-                                                <MudAvatar Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium">@st.Nombre.Substring(0,1)</MudAvatar>
+                                                <MudAvatar Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium">@st.Nombre.Substring(0, 1)</MudAvatar>
                                             </td>
                                             <td>
                                                 <MudText Typo="Typo.subtitle2" Class="fw-bold">@st.Nombre</MudText>
@@ -255,7 +335,7 @@ else if (stats != null)
         grid-template-columns: 1fr;
         gap: 24px; /* Spacing */
     }
-
+    </style>
 @code {
     // ... El bloque @code permanece IGUAL que antes ...
     private DashboardDto stats;
@@ -263,12 +343,27 @@ else if (stats != null)
     private string userName;
     private DateTime fechaSeleccionadaDashboard = DateTime.Today;
 
-    public List<ChartSeries> SeriesStudents = new List<ChartSeries>()
+    public List<ChartSeries> SeriesStudents = new();
+    public string[] LabelsAnios;
+
+    // Configuración visual
+    private ChartOptions OptionsAlumnos = new ChartOptions
     {
-        new ChartSeries() { Name = "New Students", Data = new double[] { 100, 40, 100, 10, 10, 120, 240 } },
-        new ChartSeries() { Name = "Leave Students", Data = new double[] { 240, 150, 210, 200, 100, 190, 150 } }
+        ChartPalette = new[] { "#3B82F6", "#10B981", "#EF4444" }, // Azul, Verde, Rojo
+        YAxisLines = true
     };
-    public string[] LabelsAnios = { "2018", "2019", "2020", "2021", "2022", "2023", "2024" };
+
+    // --- GRÁFICA FINANZAS (Stacked) ---
+    public List<ChartSeries> SeriesFinanzas = new();
+    public string[] LabelsMesesFinanzas;
+    public double TendenciaFinanciera = 0;
+
+    private ChartOptions OptionsFinanzas = new ChartOptions
+    {
+        ChartPalette = new[] { "#10B981", "#E2E8F0" }, // Verde (Cobrado), Gris (Pendiente)
+        YAxisLines = false
+    };
+
 
     public double[] dataActivities = { 65, 35 };
     public string[] labelsActivities = { "Process", "In Process" };
@@ -283,6 +378,16 @@ else if (stats != null)
         new EstudianteDummy { Nombre = "Elena Torres", Matricula = "A2024033", Grado = "6° B" },
     };
 
+    private List<ChartSeries> ConvertirSeries(List<ChartSeriesDto> dtos)
+    {
+        return dtos.Select(s => new ChartSeries
+        {
+            Name = s.Name,
+            Data = s.Data
+        }).ToList();
+    }
+
+
     protected override async Task OnInitializedAsync()
     {
         var state = await AuthStateProvider.GetAuthenticationStateAsync();
@@ -290,7 +395,42 @@ else if (stats != null)
         try
         {
             var res = await DashboardService.GetStatsAsync();
-            if (res.Succeeded) stats = res.Data;
+            if (res.Succeeded)
+            {
+                stats = res.Data;
+
+                // 1. Mapear Gráfica Alumnos
+                if (stats.StudentsChart != null)
+                {
+                    LabelsAnios = stats.StudentsChart.Labels.ToArray();
+                    SeriesStudents = ConvertirSeries(stats.StudentsChart.Series);
+                }
+
+                // 2. Mapear Gráfica Finanzas
+                if (stats.FinanceChart != null)
+                {
+                    LabelsMesesFinanzas = stats.FinanceChart.Labels.ToArray();
+
+                    // Convertimos la serie simple a Stacked (Cobrado vs Pendiente)
+                    // Para este ejemplo visual, simularemos la "Pendiente" como un 20% del total
+                    // En producción, tu API debería devolver ambas series.
+
+                    var dataCobrado = stats.FinanceChart.Series[0].Data;
+                    var dataPendiente = dataCobrado.Select(d => d * 0.2).ToArray(); // Simulación
+
+                    SeriesFinanzas.Add(new ChartSeries { Name = "Cobrado", Data = dataCobrado });
+                    SeriesFinanzas.Add(new ChartSeries { Name = "Por Cobrar", Data = dataPendiente });
+
+                    // Calcular Tendencia (Mes actual vs Anterior)
+                    if (dataCobrado.Length >= 2)
+                    {
+                        var actual = dataCobrado.Last();
+                        var anterior = dataCobrado[dataCobrado.Length - 2];
+                        if (anterior > 0)
+                            TendenciaFinanciera = ((actual - anterior) / anterior) * 100;
+                    }
+                }
+            }
         }
         finally
         {

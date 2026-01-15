@@ -16,5 +16,7 @@ namespace SchoolSystem.Application.DTOs.Dashboard
         public decimal IngresosMesActual { get; set; }
         public decimal CargosPendientesTotal { get; set; }
         public int PagosRealizadosHoy { get; set; }
+        public ChartDto StudentsChart { get; set; }
+        public ChartDto FinanceChart { get; set; }
     }
 }
