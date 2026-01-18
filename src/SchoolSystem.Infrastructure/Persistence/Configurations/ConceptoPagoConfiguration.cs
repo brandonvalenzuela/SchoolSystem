@@ -86,6 +86,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(20)
                 .IsRequired(false);
 
+            builder.Property(x => x.CicloEscolarId)
+                .IsRequired(false);
+
+            builder.HasOne(x => x.Ciclo)
+                .WithMany()
+                .HasForeignKey(x => x.CicloEscolarId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Metadata
             builder.Property(cp => cp.CuentaContable)
                 .HasMaxLength(50)
@@ -152,6 +160,9 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             builder.HasIndex(cp => new { cp.Recurrente, cp.Periodicidad })
                 .HasDatabaseName("IX_ConceptosPago_Recurrente_Periodicidad");
+
+            builder.HasIndex(x => new { x.EscuelaId, x.CicloEscolarId })
+                .HasDatabaseName("IX_ConceptosPago_Escuela_CicloEscolarId");
 
             // Propiedades calculadas (ignoradas en BD)
             builder.Ignore(cp => cp.EsColegiatura);

@@ -108,7 +108,7 @@ namespace SchoolSystem.API.Controllers
 
         [HttpGet("grupo/{grupoId}")]
         [Authorize(Roles = Roles.Staff)] // Maestros y Admin
-        public async Task<ActionResult<ApiResponse<List<InscripcionDto>>>> GetPorGrupo(int grupoId)
+        public async Task<ActionResult<ApiResponse<List<InscripcionDto>>>> GetAlumnosPorGrupo(int grupoId)
         {
             var lista = await _service.GetAlumnosPorGrupoAsync(grupoId);
             return Ok(new ApiResponse<List<InscripcionDto>>(lista, "Alumnos del grupo obtenidos."));

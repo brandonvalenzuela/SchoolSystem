@@ -35,6 +35,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(ap => ap.CicloEscolar)
                 .HasMaxLength(10);
 
+            builder.Property(x => x.CicloEscolarId)
+                .IsRequired(false);
+
+            builder.HasOne(x => x.Ciclo)
+                .WithMany()
+                .HasForeignKey(x => x.CicloEscolarId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Puntos
             builder.Property(ap => ap.PuntosTotales)
                 .IsRequired()
@@ -222,6 +230,9 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             builder.HasIndex(ap => ap.RankingEscuela)
                 .HasDatabaseName("IX_AlumnoPuntos_RankingEscuela");
+
+            builder.HasIndex(x => new { x.EscuelaId, x.CicloEscolarId })
+                .HasDatabaseName("IX_AlumnoPuntos_Escuela_CicloEscolarId");
 
             // Índice único: Un alumno solo puede tener un registro de puntos por ciclo escolar
             builder.HasIndex(ap => new { ap.AlumnoId, ap.CicloEscolar })

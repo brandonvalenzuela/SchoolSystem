@@ -32,6 +32,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(20);
 
+            builder.Property(x => x.CicloEscolarId)
+                .IsRequired(false);
+
+            builder.HasOne(x => x.Ciclo)
+                .WithMany()
+                .HasForeignKey(x => x.CicloEscolarId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Montos
             builder.Property(c => c.Monto)
                 .IsRequired()
@@ -192,6 +200,9 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             builder.HasIndex(c => new { c.EscuelaId, c.FechaVencimiento, c.Estatus })
                 .HasDatabaseName("IX_Cargos_Escuela_Fecha_Estatus");
+
+            builder.HasIndex(x => new { x.EscuelaId, x.CicloEscolarId })
+                .HasDatabaseName("IX_Cargos_Escuela_CicloEscolarId");
 
             // Propiedades calculadas (ignoradas en BD)
             builder.Ignore(c => c.EstaVencido);

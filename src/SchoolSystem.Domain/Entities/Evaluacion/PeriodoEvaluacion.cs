@@ -1,4 +1,5 @@
-﻿using SchoolSystem.Domain.Entities.Common;
+﻿using SchoolSystem.Domain.Entities.Academico;
+using SchoolSystem.Domain.Entities.Common;
 using System;
 using System.Collections.Generic;
 
@@ -31,6 +32,10 @@ namespace SchoolSystem.Domain.Entities.Evaluacion
         /// Ejemplo: "2024-2025"
         /// </summary>
         public string CicloEscolar { get; set; }
+
+        public int? CicloEscolarId { get; set; }
+        public virtual CicloEscolar? Ciclo { get; set; }
+
 
         /// <summary>
         /// Nombre del período de evaluación

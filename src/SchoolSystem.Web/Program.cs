@@ -42,6 +42,7 @@ builder.Services.AddScoped<MedicoService>();
 builder.Services.AddScoped<NotificacionService>();
 builder.Services.AddScoped<RelacionService>();
 builder.Services.AddScoped<PadreService>();
+builder.Services.AddScoped<AcademicContextService>();
 
 // 4. Servicios de la Aplicación
 builder.Services.AddScoped<ApiService>();

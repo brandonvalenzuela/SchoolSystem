@@ -51,6 +51,8 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// Ciclo escolar de la asignación
         /// </summary>
         public string CicloEscolar { get; set; }
+        public int? CicloEscolarId { get; set; }
+        public virtual CicloEscolar? Ciclo { get; set; }  // nombre corto para evitar choque
 
         /// <summary>
         /// Horario de la materia (opcional)

@@ -31,6 +31,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(20);
 
+            builder.Property(x => x.CicloEscolarId)
+                .IsRequired(false);
+
+            builder.HasOne(x => x.Ciclo)
+                .WithMany()
+                .HasForeignKey(x => x.CicloEscolarId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Property(i => i.FechaInscripcion)
                 .IsRequired();
 
@@ -192,6 +200,9 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             builder.HasIndex(i => i.Becado)
                 .HasDatabaseName("IX_Inscripciones_Becado");
+
+            builder.HasIndex(x => new { x.EscuelaId, x.CicloEscolarId })
+                .HasDatabaseName("IX_Inscripciones_Escuela_CicloEscolarId");
 
             // Índice único compuesto: Un alumno no puede inscribirse dos veces en el mismo grupo en el mismo ciclo
             builder.HasIndex(i => new { i.AlumnoId, i.GrupoId, i.CicloEscolar })

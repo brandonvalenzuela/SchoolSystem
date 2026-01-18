@@ -34,6 +34,8 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         [Required]
         [StringLength(20)]
         public string CicloEscolar { get; set; }
+        public int? CicloEscolarId { get; set; }
+        public virtual CicloEscolar? Ciclo { get; set; }
 
         #endregion
 

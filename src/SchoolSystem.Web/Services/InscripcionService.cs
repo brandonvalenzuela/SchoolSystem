@@ -5,10 +5,12 @@ namespace SchoolSystem.Web.Services
     public class InscripcionService
     {
         private readonly ApiService _apiService;
+        private readonly AcademicContextService _academicContext;
 
-        public InscripcionService(ApiService apiService)
+        public InscripcionService(ApiService apiService, AcademicContextService academicContext)
         {
             _apiService = apiService;
+            _academicContext = academicContext;
         }
 
         public async Task<ApiResponse<PagedResult<InscripcionDto>>> GetInscripcionesAsync(int page, int size)
@@ -35,9 +37,9 @@ namespace SchoolSystem.Web.Services
         {
             return await _apiService.DeleteAsync<object>($"api/Inscripciones/{id}");
         }
+
         public async Task<ApiResponse<List<InscripcionDto>>> GetAlumnosPorGrupoAsync(int grupoId)
         {
-            // Nota: GetAsync ahora debe soportar retornar List<T> directo, no paginado
             return await _apiService.GetAsync<List<InscripcionDto>>($"api/Inscripciones/grupo/{grupoId}");
         }
 

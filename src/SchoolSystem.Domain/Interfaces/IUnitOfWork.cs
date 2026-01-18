@@ -41,6 +41,7 @@ namespace SchoolSystem.Domain.Interfaces
         IRepository<ExpedienteMedico> ExpedienteMedicos { get; }
         IRepository<Notificacion> Notificaciones { get; }
         IRepository<AlumnoPadre> AlumnoPadres { get; }
+        IRepository<CicloEscolar> CicloEscolares { get; }
 
         // Método para guardar todos los cambios
         Task<int> SaveChangesAsync();

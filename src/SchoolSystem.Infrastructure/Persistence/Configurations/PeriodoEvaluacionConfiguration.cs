@@ -25,6 +25,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(20);
 
+            builder.Property(x => x.CicloEscolarId)
+                .IsRequired(false);
+
+            builder.HasOne(x => x.Ciclo)
+                .WithMany()
+                .HasForeignKey(x => x.CicloEscolarId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Property(pe => pe.Nombre)
                 .IsRequired()
                 .HasMaxLength(100);
@@ -116,6 +124,9 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             builder.HasIndex(pe => pe.CalificacionesDefinitivas)
                 .HasDatabaseName("IX_PeriodosEvaluacion_CalificacionesDefinitivas");
+
+            builder.HasIndex(x => new { x.EscuelaId, x.CicloEscolarId })
+                .HasDatabaseName("IX_PeriodosEvaluacion_Escuela_CicloEscolarId");
 
             // Índice único compuesto: No puede haber dos períodos con el mismo número en el mismo ciclo escolar
             builder.HasIndex(pe => new { pe.EscuelaId, pe.CicloEscolar, pe.Numero })

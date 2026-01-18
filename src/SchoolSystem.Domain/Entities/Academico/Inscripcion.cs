@@ -58,6 +58,9 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// </summary>
         public string CicloEscolar { get; set; }
 
+        public int? CicloEscolarId { get; set; }
+        public virtual CicloEscolar? Ciclo { get; set; } // usa "Ciclo" para no chocar con string
+
         /// <summary>
         /// Fecha en que se realizó la inscripción
         /// </summary>

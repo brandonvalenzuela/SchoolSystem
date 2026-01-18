@@ -5,6 +5,7 @@
 @inject ToastService ToastService
 @inject CalificacionService CalificacionService
 @inject InscripcionService InscripcionService
+@inject AcademicContextService AcademicContextService
 @inject GrupoService GrupoService
 @inject MateriaService MateriaService
 @inject UiService UiService
@@ -189,6 +190,8 @@
     private bool busquedaRealizada = false;
     private string errorMessage;
 
+
+
     protected override async Task OnInitializedAsync()
     {
         isLoadingCatalogs = true; 
@@ -232,6 +235,10 @@
         isLoading = true; 
         busquedaRealizada = false;
         errorMessage = null;
+
+        modelo.Calificaciones ??= new List<CalificacionAlumnoDto>();
+        modelo.Calificaciones.Clear();
+
         busquedaRealizada = false;
         modelo.Calificaciones.Clear();
 
@@ -245,11 +252,11 @@
             
             // Asumiendo que agregamos un filtro o método específico en InscripcionService
             // Por ahora, simularemos que traemos todos y filtramos en memoria (solo para prototipo)
-            var response = await InscripcionService.GetAlumnosPorGrupoAsync(modelo.GrupoId); 
-            
+            var response = await InscripcionService.GetAlumnosPorGrupoAsync(modelo.GrupoId);
+
             if (response.Succeeded)
             {
-                var alumnosDelGrupo = response.Data; // Esto ya es una List<InscripcionDto>
+                var alumnosDelGrupo = response.Data ?? new List<InscripcionDto>(); // Esto ya es una List<InscripcionDto>
 
                 foreach (var ins in alumnosDelGrupo)
                 {
@@ -274,7 +281,7 @@
         finally
         {
             isLoading = false;
-            busquedaRealizada = true; // <--- AQUÍ ES EL LUGAR CORRECTO
+            busquedaRealizada = true;
         }
     }
 

@@ -42,9 +42,14 @@ namespace SchoolSystem.Web.Services
         private async Task SetTokenAsync()
         {
             var token = await _localStorage.GetItemAsync<string>("authToken");
+
             if (!string.IsNullOrEmpty(token))
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            else
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = null;
             }
         }
 
@@ -128,42 +133,74 @@ namespace SchoolSystem.Web.Services
         // --- HELPER PARA DESERIALIZAR ---
         private async Task<T> ProcessResponseAsync<T>(HttpResponseMessage response)
         {
-            // 1. Leer el contenido como string primero (Evita errores de stream)
+            // Leer el contenido como string primero (Evita errores de stream)
             var content = await response.Content.ReadAsStringAsync();
+
+            // Si no hay contenido, devolvemos instancia vacía
+            if (string.IsNullOrWhiteSpace(content))
+                return Activator.CreateInstance<T>();
+
+            // 1) Intento normal: deserializar al tipo esperado
             try
             {
-                if (string.IsNullOrWhiteSpace(content))
-                {
-                    return Activator.CreateInstance<T>();
-                }
-
-                // 2. Deserializar usando las opciones de minúsculas/mayúsculas
                 var result = JsonSerializer.Deserialize<T>(content, _jsonOptions);
-                return result;
+                if (result != null)
+                    return result;
             }
             catch (Exception ex)
             {
                 // Si falla la deserialización (ej: Data es null pero T es int)
                 // Intentamos al menos devolver un objeto con el mensaje de error si existe
-                Console.WriteLine($"Error de Deserialización: {ex.Message}");
+                Console.WriteLine($"Error de deserialización: {ex.Message}");
+            }
 
-                var errorFallback = Activator.CreateInstance<T>();
+            // 2) Fallback: si NO es success, y T parece ser ApiResponse<>,
+            // construimos un ApiResponse con mensaje más útil.
+            if (!response.IsSuccessStatusCode)
+            {
+                var fallback = Activator.CreateInstance<T>();
 
-                // Intentamos extraer el mensaje manualmente del string si es posible
-                if (content.Contains("\"Message\":"))
+                // Mensaje base: status code + razón
+                var message = $"{(int)response.StatusCode} {response.ReasonPhrase}";
+
+                // Intentar extraer un "Message" del JSON si existe
+                try
                 {
-                    // Un truco rápido para extraer el mensaje sin fallar por el tipo de Data
                     using var doc = JsonDocument.Parse(content);
-                    if (doc.RootElement.TryGetProperty("Message", out var msgProp))
+
+                    if (doc.RootElement.ValueKind == JsonValueKind.Object)
                     {
-                        var message = msgProp.GetString();
-                        // Asignamos el mensaje al objeto creado vía reflexión
-                        typeof(T).GetProperty("Message")?.SetValue(errorFallback, message);
+                        if (doc.RootElement.TryGetProperty("message", out var msgLower))
+                            message = msgLower.GetString() ?? message;
+
+                        if (doc.RootElement.TryGetProperty("Message", out var msgUpper))
+                            message = msgUpper.GetString() ?? message;
+
+                        // También podrías extraer "errors" si tu backend manda validaciones tipo ModelState
+                        if (doc.RootElement.TryGetProperty("errors", out var errorsProp) &&
+                            errorsProp.ValueKind == JsonValueKind.Object)
+                        {
+                            message += " (validación)";
+                        }
                     }
                 }
+                catch
+                {
+                    // Si no es JSON (por ejemplo HTML), recortamos para no inundar logs
+                    var snippet = content.Length > 200 ? content.Substring(0, 200) + "..." : content;
+                    message += $" | Respuesta: {snippet}";
+                }
 
-                return errorFallback;
+                // Asignar Succeeded=false y Message si esas propiedades existen en T
+                typeof(T).GetProperty("Succeeded")?.SetValue(fallback, false);
+                typeof(T).GetProperty("Message")?.SetValue(fallback, message);
+
+                return fallback;
             }
+
+            // 3) Si fue success pero no se pudo deserializar, devolvemos instancia vacía
+            // (esto evita crashear la UI)
+            return Activator.CreateInstance<T>();
         }
     }
 }

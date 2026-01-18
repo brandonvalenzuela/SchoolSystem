@@ -43,6 +43,10 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// </summary>
         [StringLength(10)]
         public string CicloEscolar { get; set; }
+        public int? CicloEscolarId { get; set; }
+        public virtual CicloEscolar? Ciclo { get; set; }
+
+
 
         #endregion
 

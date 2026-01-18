@@ -55,6 +55,9 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// </summary>
         public string CicloEscolar { get; set; }
 
+        public int? CicloEscolarId { get; set; }
+        public virtual CicloEscolar? Ciclo { get; set; }
+
         /// <summary>
         /// Descripción del grupo (opcional)
         /// </summary>
@@ -442,7 +445,7 @@ namespace SchoolSystem.Domain.Entities.Academico
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(CicloEscolar))
+            if (!CicloEscolarId.HasValue)
             {
                 mensajeError = "El ciclo escolar es requerido";
                 return false;

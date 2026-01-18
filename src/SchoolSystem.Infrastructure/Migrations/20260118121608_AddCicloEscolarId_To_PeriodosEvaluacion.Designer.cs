@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SchoolSystem.Infrastructure.Persistence.Context;
 
@@ -10,9 +11,11 @@ using SchoolSystem.Infrastructure.Persistence.Context;
 namespace SchoolSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(SchoolSystemDbContext))]
-    partial class SchoolSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260118121608_AddCicloEscolarId_To_PeriodosEvaluacion")]
+    partial class AddCicloEscolarId_To_PeriodosEvaluacion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3087,9 +3090,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("varchar(10)");
 
-                    b.Property<int?>("CicloEscolarId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ColorNivel")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -3286,8 +3286,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("CicloEscolar")
                         .HasDatabaseName("IX_AlumnoPuntos_CicloEscolar");
 
-                    b.HasIndex("CicloEscolarId");
-
                     b.HasIndex("EscuelaId")
                         .HasDatabaseName("IX_AlumnoPuntos_EscuelaId");
 
@@ -3312,9 +3310,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("AlumnoId", "CicloEscolar")
                         .IsUnique()
                         .HasDatabaseName("IX_AlumnoPuntos_Alumno_Ciclo_Unique");
-
-                    b.HasIndex("EscuelaId", "CicloEscolarId")
-                        .HasDatabaseName("IX_AlumnoPuntos_Escuela_CicloEscolarId");
 
                     b.HasIndex("EscuelaId", "RankingEscuela")
                         .HasDatabaseName("IX_AlumnoPuntos_Escuela_Ranking");
@@ -5921,9 +5916,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<int?>("CicloEscolarId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ConceptoPagoId")
                         .HasColumnType("int");
 
@@ -6030,8 +6022,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.HasIndex("CanceladoPorId");
 
-                    b.HasIndex("CicloEscolarId");
-
                     b.HasIndex("ConceptoPagoId")
                         .HasDatabaseName("IX_Cargos_ConceptoPagoId");
 
@@ -6052,9 +6042,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.HasIndex("AlumnoId", "Estatus")
                         .HasDatabaseName("IX_Cargos_Alumno_Estatus");
-
-                    b.HasIndex("EscuelaId", "CicloEscolarId")
-                        .HasDatabaseName("IX_Cargos_Escuela_CicloEscolarId");
 
                     b.HasIndex("EscuelaId", "FechaVencimiento", "Estatus")
                         .HasDatabaseName("IX_Cargos_Escuela_Fecha_Estatus");
@@ -6100,9 +6087,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<string>("CicloEscolar")
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
-
-                    b.Property<int?>("CicloEscolarId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Codigo")
                         .HasMaxLength(20)
@@ -6180,8 +6164,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("Activo")
                         .HasDatabaseName("IX_ConceptosPago_Activo");
 
-                    b.HasIndex("CicloEscolarId");
-
                     b.HasIndex("Codigo")
                         .HasDatabaseName("IX_ConceptosPago_Codigo");
 
@@ -6199,9 +6181,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.HasIndex("EscuelaId", "Activo")
                         .HasDatabaseName("IX_ConceptosPago_Escuela_Activo");
-
-                    b.HasIndex("EscuelaId", "CicloEscolarId")
-                        .HasDatabaseName("IX_ConceptosPago_Escuela_CicloEscolarId");
 
                     b.HasIndex("Recurrente", "Periodicidad")
                         .HasDatabaseName("IX_ConceptosPago_Recurrente_Periodicidad");
@@ -6257,9 +6236,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
-
-                    b.Property<int?>("CicloEscolarId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -6357,8 +6333,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("AlumnoId")
                         .HasDatabaseName("IX_EstadosCuenta_AlumnoId");
 
-                    b.HasIndex("CicloEscolarId");
-
                     b.HasIndex("EscuelaId")
                         .HasDatabaseName("IX_EstadosCuenta_EscuelaId");
 
@@ -6377,9 +6351,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("AlumnoId", "CicloEscolar")
                         .IsUnique()
                         .HasDatabaseName("IX_EstadosCuenta_Alumno_Ciclo_Unique");
-
-                    b.HasIndex("EscuelaId", "CicloEscolarId")
-                        .HasDatabaseName("IX_EstadosCuenta_Escuela_CicloEscolarId");
 
                     b.HasIndex("EscuelaId", "CicloEscolar", "TieneAdeudos")
                         .HasDatabaseName("IX_EstadosCuenta_Escuela_Ciclo_Adeudos");
@@ -8202,14 +8173,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SchoolSystem.Domain.Entities.Academico.CicloEscolar", "Ciclo")
-                        .WithMany()
-                        .HasForeignKey("CicloEscolarId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("Alumno");
-
-                    b.Navigation("Ciclo");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Conducta.RegistroConducta", b =>
@@ -8448,11 +8412,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasForeignKey("CanceladoPorId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("SchoolSystem.Domain.Entities.Academico.CicloEscolar", "Ciclo")
-                        .WithMany()
-                        .HasForeignKey("CicloEscolarId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("SchoolSystem.Domain.Entities.Finanzas.ConceptoPago", "ConceptoPago")
                         .WithMany("Cargos")
                         .HasForeignKey("ConceptoPagoId")
@@ -8463,18 +8422,11 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.Navigation("CanceladoPor");
 
-                    b.Navigation("Ciclo");
-
                     b.Navigation("ConceptoPago");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Finanzas.ConceptoPago", b =>
                 {
-                    b.HasOne("SchoolSystem.Domain.Entities.Academico.CicloEscolar", "Ciclo")
-                        .WithMany()
-                        .HasForeignKey("CicloEscolarId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("SchoolSystem.Domain.Entities.Academico.Grado", "Grado")
                         .WithMany()
                         .HasForeignKey("GradoId")
@@ -8484,8 +8436,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("NivelEducativoId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Ciclo");
 
                     b.Navigation("Grado");
 
@@ -8499,14 +8449,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasForeignKey("AlumnoId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("SchoolSystem.Domain.Entities.Academico.CicloEscolar", "Ciclo")
-                        .WithMany()
-                        .HasForeignKey("CicloEscolarId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("Alumno");
-
-                    b.Navigation("Ciclo");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Finanzas.Pago", b =>

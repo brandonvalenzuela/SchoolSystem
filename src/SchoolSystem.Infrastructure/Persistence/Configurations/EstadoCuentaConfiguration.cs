@@ -28,6 +28,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(20);
 
+            builder.Property(x => x.CicloEscolarId)
+                .IsRequired(false);
+
+            builder.HasOne(x => x.Ciclo)
+                .WithMany()
+                .HasForeignKey(x => x.CicloEscolarId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Resumen financiero
             builder.Property(ec => ec.TotalCargos)
                 .IsRequired()
@@ -165,6 +173,9 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             builder.HasIndex(ec => new { ec.EscuelaId, ec.CicloEscolar, ec.TieneAdeudos })
                 .HasDatabaseName("IX_EstadosCuenta_Escuela_Ciclo_Adeudos");
+
+            builder.HasIndex(x => new { x.EscuelaId, x.CicloEscolarId })
+                .HasDatabaseName("IX_EstadosCuenta_Escuela_CicloEscolarId");
 
             // Propiedades calculadas (ignoradas en BD)
             builder.Ignore(ec => ec.TotalAPagar);

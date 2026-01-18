@@ -368,6 +368,16 @@ namespace SchoolSystem.Infrastructure.Persistence.Context
         public DbSet<TareaEntrega> TareasEntregas { get; set; }
 
         #endregion
+        #region DbSets - CiclosEscolares
+
+
+        /// <summary>
+        /// Entregas de tareas por alumnos
+        /// </summary>
+        public DbSet<CicloEscolar> CiclosEscolares { get; set; }
+
+        #endregion
+
 
         #region Configuración del Modelo
 

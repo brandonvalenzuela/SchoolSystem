@@ -33,6 +33,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(gmm => gmm.CicloEscolar)
                 .HasMaxLength(50);
 
+            builder.Property(x => x.CicloEscolarId)
+                .IsRequired(false);
+
+            builder.HasOne(x => x.Ciclo)
+                .WithMany()
+                .HasForeignKey(x => x.CicloEscolarId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Property(gmm => gmm.Horario)
                 .HasMaxLength(500)
                 .IsRequired(false);
@@ -68,6 +76,9 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             builder.HasIndex(gmm => gmm.CicloEscolar)
                 .HasDatabaseName("IX_GrupoMateriaMaestros_CicloEscolar");
+
+            builder.HasIndex(x => new { x.EscuelaId, x.CicloEscolarId })
+                .HasDatabaseName("IX_GrupoMateriaMaestros_Escuela_CicloEscolarId");
 
             // Índice único compuesto: Un grupo no puede tener la misma materia asignada dos veces en el mismo ciclo
             builder.HasIndex(gmm => new { gmm.EscuelaId, gmm.GrupoId, gmm.MateriaId, gmm.CicloEscolar })
