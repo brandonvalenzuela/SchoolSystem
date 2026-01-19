@@ -36,11 +36,7 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         /// <summary>
         /// Ciclo escolar
         /// </summary>
-        [Required]
-        [StringLength(20)]
-        public string CicloEscolar { get; set; }
-
-        public int? CicloEscolarId { get; set; }
+        public int CicloEscolarId { get; set; }
         public virtual CicloEscolar? Ciclo { get; set; }
 
         #endregion
@@ -540,7 +536,7 @@ namespace SchoolSystem.Domain.Entities.Finanzas
             if (FechaVencimiento < FechaCreacion)
                 errores.Add("La fecha de vencimiento no puede ser anterior a la fecha de creación");
 
-            if (string.IsNullOrWhiteSpace(CicloEscolar))
+            if (Ciclo == null)
                 errores.Add("El ciclo escolar es requerido");
 
             if (MontoPagado < 0)

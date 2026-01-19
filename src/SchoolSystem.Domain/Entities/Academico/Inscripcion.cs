@@ -56,9 +56,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// Ciclo escolar de la inscripción
         /// Ejemplo: "2024-2025"
         /// </summary>
-        public string CicloEscolar { get; set; }
-
-        public int? CicloEscolarId { get; set; }
+        public int CicloEscolarId { get; set; }
         public virtual CicloEscolar? Ciclo { get; set; } // usa "Ciclo" para no chocar con string
 
         /// <summary>
@@ -489,7 +487,8 @@ namespace SchoolSystem.Domain.Entities.Academico
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(CicloEscolar))
+            // Corregido: Usar la propiedad Ciclo en vez de CicloEscolar (que es un int)
+            if (Ciclo == null)
             {
                 mensajeError = "El ciclo escolar es requerido";
                 return false;

@@ -24,12 +24,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(ec => ec.AlumnoId)
                 .IsRequired();
 
-            builder.Property(ec => ec.CicloEscolar)
-                .IsRequired()
-                .HasMaxLength(20);
-
-            builder.Property(x => x.CicloEscolarId)
-                .IsRequired(false);
+            builder.Property(ec => ec.CicloEscolarId)
+                .IsRequired();
 
             builder.HasOne(x => x.Ciclo)
                 .WithMany()
@@ -152,7 +148,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDatabaseName("IX_EstadosCuenta_AlumnoId");
 
             // Índice único: Un alumno solo puede tener un estado de cuenta por ciclo
-            builder.HasIndex(ec => new { ec.AlumnoId, ec.CicloEscolar })
+            builder.HasIndex(ec => new { ec.AlumnoId, ec.CicloEscolarId })
                 .IsUnique()
                 .HasDatabaseName("IX_EstadosCuenta_Alumno_Ciclo_Unique");
 
@@ -171,7 +167,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasIndex(ec => ec.FechaActualizacion)
                 .HasDatabaseName("IX_EstadosCuenta_FechaActualizacion");
 
-            builder.HasIndex(ec => new { ec.EscuelaId, ec.CicloEscolar, ec.TieneAdeudos })
+            builder.HasIndex(ec => new { ec.EscuelaId, ec.CicloEscolarId, ec.TieneAdeudos })
                 .HasDatabaseName("IX_EstadosCuenta_Escuela_Ciclo_Adeudos");
 
             builder.HasIndex(x => new { x.EscuelaId, x.CicloEscolarId })

@@ -30,16 +30,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(gmm => gmm.MaestroId)
                 .IsRequired();
 
-            builder.Property(gmm => gmm.CicloEscolar)
-                .HasMaxLength(50);
-
-            builder.Property(x => x.CicloEscolarId)
-                .IsRequired(false);
-
-            builder.HasOne(x => x.Ciclo)
-                .WithMany()
-                .HasForeignKey(x => x.CicloEscolarId)
-                .OnDelete(DeleteBehavior.Restrict);
+                builder.Property(gmm => gmm.CicloEscolarId)
+                .IsRequired();
 
             builder.Property(gmm => gmm.Horario)
                 .HasMaxLength(500)
@@ -74,21 +66,21 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasIndex(gmm => gmm.MaestroId)
                 .HasDatabaseName("IX_GrupoMateriaMaestros_MaestroId");
 
-            builder.HasIndex(gmm => gmm.CicloEscolar)
-                .HasDatabaseName("IX_GrupoMateriaMaestros_CicloEscolar");
+            builder.HasIndex(gmm => gmm.CicloEscolarId)
+                .HasDatabaseName("IX_GrupoMateriaMaestros_CicloEscolarId");
 
             builder.HasIndex(x => new { x.EscuelaId, x.CicloEscolarId })
                 .HasDatabaseName("IX_GrupoMateriaMaestros_Escuela_CicloEscolarId");
 
             // Índice único compuesto: Un grupo no puede tener la misma materia asignada dos veces en el mismo ciclo
-            builder.HasIndex(gmm => new { gmm.EscuelaId, gmm.GrupoId, gmm.MateriaId, gmm.CicloEscolar })
+            builder.HasIndex(gmm => new { gmm.EscuelaId, gmm.GrupoId, gmm.MateriaId, gmm.CicloEscolarId })
                 .IsUnique()
                 .HasDatabaseName("IX_GrupoMateriaMaestros_Escuela_Grupo_Materia_Ciclo_Unique");
 
-            builder.HasIndex(gmm => new { gmm.MaestroId, gmm.CicloEscolar })
+            builder.HasIndex(gmm => new { gmm.MaestroId, gmm.CicloEscolarId })
                 .HasDatabaseName("IX_GrupoMateriaMaestros_Maestro_Ciclo");
 
-            builder.HasIndex(gmm => new { gmm.GrupoId, gmm.CicloEscolar })
+            builder.HasIndex(gmm => new { gmm.GrupoId, gmm.CicloEscolarId })
                 .HasDatabaseName("IX_GrupoMateriaMaestros_Grupo_Ciclo");
         }
     }

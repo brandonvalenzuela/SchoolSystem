@@ -31,9 +31,7 @@ namespace SchoolSystem.Domain.Entities.Evaluacion
         /// Ciclo escolar al que pertenece el período
         /// Ejemplo: "2024-2025"
         /// </summary>
-        public string CicloEscolar { get; set; }
-
-        public int? CicloEscolarId { get; set; }
+        public int CicloEscolarId { get; set; }
         public virtual CicloEscolar? Ciclo { get; set; }
 
 
@@ -155,7 +153,7 @@ namespace SchoolSystem.Domain.Entities.Evaluacion
         /// Nombre completo del período (incluye ciclo escolar)
         /// Ejemplo: "1er Bimestre 2024-2025"
         /// </summary>
-        public string NombreCompleto => $"{Nombre} {CicloEscolar}";
+        public string NombreCompleto => $"{Nombre} {Ciclo.Nombre} {Ciclo.Clave}";
 
         /// <summary>
         /// Duración en días del período
@@ -420,7 +418,7 @@ namespace SchoolSystem.Domain.Entities.Evaluacion
         {
             mensajeError = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(CicloEscolar))
+            if (Ciclo == null)
             {
                 mensajeError = "El ciclo escolar es requerido";
                 return false;

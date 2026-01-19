@@ -15,10 +15,6 @@ namespace SchoolSystem.Web.Models
         [StringLength(50, ErrorMessage = "El nombre no puede exceder los 50 caracteres.")]
         public string? Nombre { get; set; }
 
-        [Required(ErrorMessage = "El ciclo escolar es obligatorio.")]
-        [StringLength(20, ErrorMessage = "El ciclo escolar no puede exceder los 20 caracteres.")]
-        public string? CicloEscolar { get; set; }
-
         [StringLength(500)]
         public string? Descripcion { get; set; }
 

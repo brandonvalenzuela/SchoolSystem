@@ -28,18 +28,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(50);
 
-            builder.Property(g => g.CicloEscolar)
-                .IsRequired()
-                .HasMaxLength(20);
-
-            builder.Property(x => x.CicloEscolarId)
-                .IsRequired(false);
-
-            builder.HasOne(x => x.Ciclo)
-                .WithMany()
-                .HasForeignKey(x => x.CicloEscolarId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             builder.Property(g => g.Descripcion)
                 .IsRequired(false)
                 .HasMaxLength(500);
@@ -51,6 +39,16 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(g => g.Activo)
                 .IsRequired()
                 .HasDefaultValue(true);
+
+            // Ciclo Escolar como Id entero, no como string
+            builder.Property(x => x.CicloEscolarId)
+                .IsRequired();
+
+            // Relaciones
+            builder.HasOne(x => x.Ciclo)
+                .WithMany()
+                .HasForeignKey(x => x.CicloEscolarId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Propiedades opcionales
             builder.Property(g => g.MaestroTitularId)
@@ -151,8 +149,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasIndex(g => g.GradoId)
                 .HasDatabaseName("IX_Grupos_GradoId");
 
-            builder.HasIndex(g => g.CicloEscolar)
-                .HasDatabaseName("IX_Grupos_CicloEscolar");
+            builder.HasIndex(g => g.CicloEscolarId)
+                .HasDatabaseName("IX_Grupos_CicloEscolarId");
 
             builder.HasIndex(g => g.Activo)
                 .HasDatabaseName("IX_Grupos_Activo");
@@ -167,14 +165,14 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDatabaseName("IX_Grupos_Escuela_CicloEscolarId");
 
             // Índice único compuesto: No puede haber dos grupos con el mismo nombre en el mismo grado y ciclo
-            builder.HasIndex(g => new { g.EscuelaId, g.GradoId, g.Nombre, g.CicloEscolar })
+            builder.HasIndex(g => new { g.EscuelaId, g.GradoId, g.Nombre, g.CicloEscolarId })
                 .IsUnique()
                 .HasDatabaseName("IX_Grupos_Escuela_Grado_Nombre_Ciclo_Unique");
 
-            builder.HasIndex(g => new { g.EscuelaId, g.CicloEscolar, g.Activo })
+            builder.HasIndex(g => new { g.EscuelaId, g.CicloEscolarId, g.Activo })
                 .HasDatabaseName("IX_Grupos_Escuela_Ciclo_Activo");
 
-            builder.HasIndex(g => new { g.GradoId, g.CicloEscolar, g.Activo })
+            builder.HasIndex(g => new { g.GradoId, g.CicloEscolarId, g.Activo })
                 .HasDatabaseName("IX_Grupos_Grado_Ciclo_Activo");
 
             // Propiedades calculadas (ignoradas en BD)

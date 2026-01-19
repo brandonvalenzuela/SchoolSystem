@@ -82,12 +82,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(cp => cp.GradoId)
                 .IsRequired(false);
 
-            builder.Property(cp => cp.CicloEscolar)
-                .HasMaxLength(20)
-                .IsRequired(false);
-
             builder.Property(x => x.CicloEscolarId)
-                .IsRequired(false);
+                .IsRequired();
 
             builder.HasOne(x => x.Ciclo)
                 .WithMany()

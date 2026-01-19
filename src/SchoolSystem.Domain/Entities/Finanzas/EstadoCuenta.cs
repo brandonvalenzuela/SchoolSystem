@@ -31,10 +31,7 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         /// <summary>
         /// Ciclo escolar
         /// </summary>
-        [Required]
-        [StringLength(20)]
-        public string CicloEscolar { get; set; }
-        public int? CicloEscolarId { get; set; }
+        public int CicloEscolarId { get; set; }
         public virtual CicloEscolar? Ciclo { get; set; }
 
         #endregion
@@ -492,7 +489,7 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         /// </summary>
         public string ObtenerResumen()
         {
-            var resumen = $"Estado de Cuenta - {CicloEscolar}\n";
+            var resumen = $"Estado de Cuenta - {Ciclo.Nombre} {Ciclo.Clave}\n";
             resumen += $"Estado: {EstadoGeneral}\n";
             resumen += $"Total a Pagar: ${TotalAPagar:N2}\n";
             resumen += $"Total Pagado: ${TotalPagos:N2}\n";
@@ -517,7 +514,7 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         {
             var errores = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(CicloEscolar))
+            if (Ciclo == null)
                 errores.Add("El ciclo escolar es requerido");
 
             if (TotalCargos < 0)

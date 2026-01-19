@@ -53,9 +53,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         /// Ciclo escolar al que corresponde
         /// Ejemplo: "2024-2025", "2025-2026"
         /// </summary>
-        public string CicloEscolar { get; set; }
-
-        public int? CicloEscolarId { get; set; }
+        public int CicloEscolarId { get; set; }
         public virtual CicloEscolar? Ciclo { get; set; }
 
         /// <summary>
@@ -445,7 +443,7 @@ namespace SchoolSystem.Domain.Entities.Academico
                 return false;
             }
 
-            if (!CicloEscolarId.HasValue)
+            if (CicloEscolarId <= 0)
             {
                 mensajeError = "El ciclo escolar es requerido";
                 return false;

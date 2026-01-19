@@ -1,4 +1,5 @@
-﻿using SchoolSystem.Domain.Enums.Academico;
+﻿using SchoolSystem.Domain.Entities.Academico;
+using SchoolSystem.Domain.Enums.Academico;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,9 +24,8 @@ namespace SchoolSystem.Application.DTOs.Grupos
         [StringLength(50, ErrorMessage = "El nombre no puede exceder los 50 caracteres.")]
         public string Nombre { get; set; }
 
-        [Required(ErrorMessage = "El ciclo escolar es obligatorio.")]
-        [StringLength(20, ErrorMessage = "El ciclo escolar no puede exceder los 20 caracteres.")]
-        public string CicloEscolar { get; set; }
+        public int CicloEscolarId { get; set; }
+        public string CicloEscolarClave { get; set; } = "";
 
         [StringLength(500)]
         public string Descripcion { get; set; }

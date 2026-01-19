@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchoolSystem.Domain.Entities.Academico;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,9 +22,8 @@ namespace SchoolSystem.Application.DTOs.Inscripciones
         [Required(ErrorMessage = "El ID del grupo es obligatorio.")]
         public int GrupoId { get; set; }
 
-        [Required(ErrorMessage = "El ciclo escolar es obligatorio.")]
-        [StringLength(20)]
-        public string? CicloEscolar { get; set; }
+        public int CicloEscolarId { get; set; }
+        public string CicloEscolarClave { get; set; } = "";
 
         public DateTime? FechaInicio { get; set; }
 

@@ -219,7 +219,12 @@ namespace SchoolSystem.Application.Services.Implementations
                 i => i.Grupo.Grado.NivelEducativo
             );
 
-            var filtrado = historial.Where(i => i.AlumnoId == alumnoId).OrderByDescending(i => i.CicloEscolar).ToList();
+            // Cambiar "i.CicloEscolar" por "i.CicloEscolarId" para ordenar por ciclo
+            var filtrado = historial
+                .Where(i => i.AlumnoId == alumnoId)
+                .OrderByDescending(i => i.CicloEscolarId)
+                .ToList();
+
             return _mapper.Map<List<InscripcionDto>>(filtrado);
         }
     }

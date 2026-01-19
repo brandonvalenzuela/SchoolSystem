@@ -33,7 +33,9 @@ namespace SchoolSystem.Application.DTOs.Grupos
         /// <summary>
         /// Ciclo escolar al que pertenece (ej: "2024-2025").
         /// </summary>
-        public string CicloEscolar { get; set; }
+        public int CicloEscolarId { get; set; }
+        public string CicloEscolarClave { get; set; } = "";
+
 
         public int CapacidadMaxima { get; set; }
 

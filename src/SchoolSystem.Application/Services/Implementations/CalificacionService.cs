@@ -324,8 +324,8 @@ namespace SchoolSystem.Application.Services.Implementations
         {
             // 1. Obtener Alumno e Inscripción
             var inscripcion = (await _unitOfWork.Inscripciones.FindAsync(i =>
-                i.AlumnoId == alumnoId && i.CicloEscolar == cicloEscolar,
-                i => i.Alumno, i => i.Grupo
+                i.AlumnoId == alumnoId && i.Ciclo != null && i.Ciclo.Clave == cicloEscolar,
+                i => i.Alumno, i => i.Grupo, i => i.Ciclo
             )).FirstOrDefault();
 
             if (inscripcion == null)
@@ -334,7 +334,7 @@ namespace SchoolSystem.Application.Services.Implementations
             // 2. Obtener todas las calificaciones del alumno en ese ciclo
             // Necesitamos incluir Materia y Periodo
             var calificaciones = await _unitOfWork.Calificaciones.FindAsync(c =>
-                c.AlumnoId == alumnoId && c.Grupo.CicloEscolar == cicloEscolar,
+                c.AlumnoId == alumnoId && c.Grupo.Ciclo.Clave == cicloEscolar,
                 c => c.Materia, c => c.Periodo
             );
 
@@ -349,7 +349,8 @@ namespace SchoolSystem.Application.Services.Implementations
                 NombreAlumno = inscripcion.Alumno.NombreCompleto,
                 Matricula = inscripcion.Alumno.Matricula,
                 Grupo = inscripcion.Grupo.Nombre,
-                CicloEscolar = cicloEscolar,
+                CicloEscolarId = inscripcion.Grupo.CicloEscolarId,
+                CicloEscolarClave = inscripcion.Grupo.Ciclo?.Clave,
                 Materias = new List<MateriaBoletaDto>()
             };
 

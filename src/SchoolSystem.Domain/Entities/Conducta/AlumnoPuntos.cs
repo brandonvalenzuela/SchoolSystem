@@ -41,9 +41,7 @@ namespace SchoolSystem.Domain.Entities.Conducta
         /// <summary>
         /// Ciclo escolar (ej: "2024-2025")
         /// </summary>
-        [StringLength(10)]
-        public string CicloEscolar { get; set; }
-        public int? CicloEscolarId { get; set; }
+        public int CicloEscolarId { get; set; }
         public virtual CicloEscolar? Ciclo { get; set; }
 
 

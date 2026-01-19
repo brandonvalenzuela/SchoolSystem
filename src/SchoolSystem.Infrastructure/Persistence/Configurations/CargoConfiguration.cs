@@ -28,12 +28,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(c => c.ConceptoPagoId)
                 .IsRequired();
 
-            builder.Property(c => c.CicloEscolar)
-                .IsRequired()
-                .HasMaxLength(20);
-
             builder.Property(x => x.CicloEscolarId)
-                .IsRequired(false);
+                .IsRequired();
 
             builder.HasOne(x => x.Ciclo)
                 .WithMany()
@@ -192,7 +188,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasIndex(c => c.FechaVencimiento)
                 .HasDatabaseName("IX_Cargos_FechaVencimiento");
 
-            builder.HasIndex(c => new { c.AlumnoId, c.CicloEscolar })
+            builder.HasIndex(c => new { c.AlumnoId, c.CicloEscolarId })
                 .HasDatabaseName("IX_Cargos_Alumno_Ciclo");
 
             builder.HasIndex(c => c.NumeroRecibo)

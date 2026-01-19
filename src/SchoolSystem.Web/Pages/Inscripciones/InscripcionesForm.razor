@@ -65,11 +65,6 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label">Ciclo Escolar</label>
-                            <InputText class="form-control" @bind-Value="modelo.CicloEscolar" />
-                        </div>
-
-                        <div class="col-md-4">
                             <label class="form-label">Número de Lista</label>
                             <InputNumber class="form-control" @bind-Value="modelo.NumeroLista" />
                         </div>
@@ -164,7 +159,6 @@
                 var i = res.Data;
                 modelo.AlumnoId = i.AlumnoId;
                 modelo.GrupoId = i.GrupoId;
-                modelo.CicloEscolar = i.CicloEscolar;
                 modelo.NumeroLista = i.NumeroLista;
                 // modelo.Observaciones = ... (si el DTO de lectura lo trae)
 

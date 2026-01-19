@@ -27,12 +27,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(i => i.GrupoId)
                 .IsRequired();
 
-            builder.Property(i => i.CicloEscolar)
-                .IsRequired()
-                .HasMaxLength(20);
-
             builder.Property(x => x.CicloEscolarId)
-                .IsRequired(false);
+                .IsRequired();
 
             builder.HasOne(x => x.Ciclo)
                 .WithMany()
@@ -189,9 +185,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasIndex(i => i.GrupoId)
                 .HasDatabaseName("IX_Inscripciones_GrupoId");
 
-            builder.HasIndex(i => i.CicloEscolar)
-                .HasDatabaseName("IX_Inscripciones_CicloEscolar");
-
             builder.HasIndex(i => i.Estatus)
                 .HasDatabaseName("IX_Inscripciones_Estatus");
 
@@ -205,17 +198,17 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDatabaseName("IX_Inscripciones_Escuela_CicloEscolarId");
 
             // Índice único compuesto: Un alumno no puede inscribirse dos veces en el mismo grupo en el mismo ciclo
-            builder.HasIndex(i => new { i.AlumnoId, i.GrupoId, i.CicloEscolar })
+            builder.HasIndex(i => new { i.AlumnoId, i.GrupoId, i.CicloEscolarId })
                 .IsUnique()
                 .HasDatabaseName("IX_Inscripciones_Alumno_Grupo_Ciclo_Unique");
 
-            builder.HasIndex(i => new { i.EscuelaId, i.CicloEscolar, i.Estatus })
+            builder.HasIndex(i => new { i.EscuelaId, i.CicloEscolarId, i.Estatus })
                 .HasDatabaseName("IX_Inscripciones_Escuela_Ciclo_Estatus");
 
-            builder.HasIndex(i => new { i.AlumnoId, i.CicloEscolar })
+            builder.HasIndex(i => new { i.AlumnoId, i.CicloEscolarId })
                 .HasDatabaseName("IX_Inscripciones_Alumno_Ciclo");
 
-            builder.HasIndex(i => new { i.GrupoId, i.CicloEscolar, i.Estatus })
+            builder.HasIndex(i => new { i.GrupoId, i.CicloEscolarId, i.Estatus })
                 .HasDatabaseName("IX_Inscripciones_Grupo_Ciclo_Estatus");
 
             builder.HasIndex(i => new { i.GrupoId, i.NumeroLista })

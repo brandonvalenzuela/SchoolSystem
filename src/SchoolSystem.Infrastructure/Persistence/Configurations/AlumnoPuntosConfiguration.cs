@@ -32,11 +32,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(ap => ap.PeriodoEscolarId)
                 .IsRequired(false);
 
-            builder.Property(ap => ap.CicloEscolar)
-                .HasMaxLength(10);
-
-            builder.Property(x => x.CicloEscolarId)
-                .IsRequired(false);
+            builder.Property(ap => ap.CicloEscolarId)
+                .IsRequired();
 
             builder.HasOne(x => x.Ciclo)
                 .WithMany()
@@ -213,8 +210,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasIndex(ap => ap.PeriodoEscolarId)
                 .HasDatabaseName("IX_AlumnoPuntos_PeriodoEscolarId");
 
-            builder.HasIndex(ap => ap.CicloEscolar)
-                .HasDatabaseName("IX_AlumnoPuntos_CicloEscolar");
+            builder.HasIndex(ap => ap.CicloEscolarId)
+                .HasDatabaseName("IX_AlumnoPuntos_CicloEscolarId");
 
             builder.HasIndex(ap => ap.PuntosTotales)
                 .HasDatabaseName("IX_AlumnoPuntos_PuntosTotales");
@@ -235,11 +232,11 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDatabaseName("IX_AlumnoPuntos_Escuela_CicloEscolarId");
 
             // Índice único: Un alumno solo puede tener un registro de puntos por ciclo escolar
-            builder.HasIndex(ap => new { ap.AlumnoId, ap.CicloEscolar })
+            builder.HasIndex(ap => new { ap.AlumnoId, ap.CicloEscolarId })
                 .IsUnique()
                 .HasDatabaseName("IX_AlumnoPuntos_Alumno_Ciclo_Unique");
 
-            builder.HasIndex(ap => new { ap.EscuelaId, ap.CicloEscolar, ap.PuntosTotales })
+            builder.HasIndex(ap => new { ap.EscuelaId, ap.CicloEscolarId, ap.PuntosTotales })
                 .HasDatabaseName("IX_AlumnoPuntos_Escuela_Ciclo_Puntos");
 
             builder.HasIndex(ap => new { ap.EscuelaId, ap.RankingEscuela })

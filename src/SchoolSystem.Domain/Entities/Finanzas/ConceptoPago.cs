@@ -123,9 +123,7 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         /// <summary>
         /// Ciclo escolar al que aplica
         /// </summary>
-        [StringLength(20)]
-        public string CicloEscolar { get; set; }
-        public int? CicloEscolarId { get; set; }
+        public int CicloEscolarId { get; set; }
         public virtual CicloEscolar? Ciclo { get; set; }
 
 
@@ -380,11 +378,12 @@ namespace SchoolSystem.Domain.Entities.Finanzas
         /// <summary>
         /// Establece el alcance del concepto
         /// </summary>
-        public void EstablecerAlcance(int? nivelEducativoId = null, int? gradoId = null, string cicloEscolar = null)
+        public void EstablecerAlcance(int? nivelEducativoId = null, int? gradoId = null, int? cicloEscolarId = null)
         {
             NivelEducativoId = nivelEducativoId;
             GradoId = gradoId;
-            CicloEscolar = cicloEscolar;
+            if (cicloEscolarId.HasValue)
+                CicloEscolarId = cicloEscolarId.Value;
             UpdatedAt = DateTime.Now;
         }
 

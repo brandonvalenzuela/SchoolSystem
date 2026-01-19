@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchoolSystem.Domain.Entities.Academico;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,9 @@ namespace SchoolSystem.Application.DTOs.Inscripciones
         public string NombreCompletoAlumno { get; set; }
         public int GrupoId { get; set; }
         public string NombreCompletoGrupo { get; set; }
-        public string CicloEscolar { get; set; }
+        public int CicloEscolarId { get; set; }
+        public string CicloEscolarClave { get; set; } = "";
+
         public DateTime FechaInscripcion { get; set; }
 
         /// <summary>

@@ -13,10 +13,6 @@ namespace SchoolSystem.Web.Models
         [Required(ErrorMessage = "Debes seleccionar un grupo")]
         [Range(1, int.MaxValue, ErrorMessage = "Selecciona un grupo válido")]
         public int GrupoId { get; set; }
-
-        [Required]
-        public string CicloEscolar { get; set; } = DateTime.Now.Year + "-" + (DateTime.Now.Year + 1);
-
         public int? NumeroLista { get; set; }
         public bool Becado { get; set; }
         public bool Repetidor { get; set; }

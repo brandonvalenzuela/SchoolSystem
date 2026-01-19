@@ -21,12 +21,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.Property(pe => pe.EscuelaId)
                 .IsRequired();
 
-            builder.Property(pe => pe.CicloEscolar)
-                .IsRequired()
-                .HasMaxLength(20);
-
-            builder.Property(x => x.CicloEscolarId)
-                .IsRequired(false);
+            builder.Property(pe => pe.CicloEscolarId)
+                .IsRequired();
 
             builder.HasOne(x => x.Ciclo)
                 .WithMany()
@@ -110,8 +106,8 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasIndex(pe => pe.EscuelaId)
                 .HasDatabaseName("IX_PeriodosEvaluacion_EscuelaId");
 
-            builder.HasIndex(pe => pe.CicloEscolar)
-                .HasDatabaseName("IX_PeriodosEvaluacion_CicloEscolar");
+            builder.HasIndex(pe => pe.CicloEscolarId)
+                .HasDatabaseName("IX_PeriodosEvaluacion_CicloEscolarId");
 
             builder.HasIndex(pe => pe.Activo)
                 .HasDatabaseName("IX_PeriodosEvaluacion_Activo");
@@ -129,17 +125,17 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDatabaseName("IX_PeriodosEvaluacion_Escuela_CicloEscolarId");
 
             // Índice único compuesto: No puede haber dos períodos con el mismo número en el mismo ciclo escolar
-            builder.HasIndex(pe => new { pe.EscuelaId, pe.CicloEscolar, pe.Numero })
+            builder.HasIndex(pe => new { pe.EscuelaId, pe.CicloEscolarId, pe.Numero })
                 .IsUnique()
                 .HasDatabaseName("IX_PeriodosEvaluacion_Escuela_Ciclo_Numero_Unique");
 
-            builder.HasIndex(pe => new { pe.EscuelaId, pe.CicloEscolar, pe.Activo })
+            builder.HasIndex(pe => new { pe.EscuelaId, pe.CicloEscolarId, pe.Activo })
                 .HasDatabaseName("IX_PeriodosEvaluacion_Escuela_Ciclo_Activo");
 
             builder.HasIndex(pe => new { pe.EscuelaId, pe.FechaInicio, pe.FechaFin })
                 .HasDatabaseName("IX_PeriodosEvaluacion_Escuela_Fechas");
 
-            builder.HasIndex(pe => new { pe.CicloEscolar, pe.Numero })
+            builder.HasIndex(pe => new { pe.CicloEscolarId, pe.Numero })
                 .HasDatabaseName("IX_PeriodosEvaluacion_Ciclo_Numero");
 
             // Propiedades calculadas (ignoradas en BD)

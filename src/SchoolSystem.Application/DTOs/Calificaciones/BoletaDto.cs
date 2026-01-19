@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchoolSystem.Domain.Entities.Academico;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,8 @@ namespace SchoolSystem.Application.DTOs.Calificacion
         public string NombreAlumno { get; set; }
         public string Matricula { get; set; }
         public string Grupo { get; set; }
-        public string CicloEscolar { get; set; }
+        public int CicloEscolarId { get; set; }
+        public string CicloEscolarClave { get; set; } = "";
         public decimal PromedioGeneral { get; set; }
 
         // Lista de materias con sus calificaciones por periodo

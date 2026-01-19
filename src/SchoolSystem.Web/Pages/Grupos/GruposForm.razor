@@ -66,12 +66,6 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label">Ciclo Escolar *</label>
-                            <InputText class="form-control" @bind-Value="modelo.CicloEscolar" placeholder="Ej: 2024-2025" />
-                            <ValidationMessage For="@(() => modelo.CicloEscolar)" />
-                        </div>
-
-                        <div class="col-md-4">
                             <label class="form-label">Turno</label>
                             <InputSelect class="form-select" @bind-Value="modelo.Turno">
                                 <option value="1">Matutino</option>
@@ -145,7 +139,6 @@
                 var g = res.Data;
                 modelo.Nombre = g.Nombre;
                 modelo.GradoId = g.GradoId;
-                modelo.CicloEscolar = g.CicloEscolar;
                 modelo.CapacidadMaxima = g.CapacidadMaxima;
                 modelo.MaestroTitularId = g.MaestroTitularId;
                 modelo.Aula = g.Aula;
@@ -182,7 +175,6 @@
                     Id = this.Id,
                     Nombre = modelo.Nombre,
                     GradoId = modelo.GradoId,
-                    CicloEscolar = modelo.CicloEscolar,
                     CapacidadMaxima = modelo.CapacidadMaxima,
                     MaestroTitularId = modelo.MaestroTitularId,
                     Aula = modelo.Aula,
