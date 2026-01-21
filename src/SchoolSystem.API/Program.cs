@@ -114,6 +114,8 @@ builder.Services.AddScoped<IMedicoService, MedicoService>();
 builder.Services.AddScoped<INotificacionService, NotificacionService>();
 builder.Services.AddScoped<IRelacionService, RelacionService>();
 builder.Services.AddScoped<ICicloEscolarService, CicloEscolarService>();
+builder.Services.AddScoped<IPeriodoEvaluacionService, PeriodoEvaluacionService>();
+
 
 
 

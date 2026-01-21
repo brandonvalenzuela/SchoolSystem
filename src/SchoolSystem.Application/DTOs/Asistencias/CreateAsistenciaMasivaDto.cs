@@ -13,8 +13,7 @@ namespace SchoolSystem.Application.DTOs.Asistencias
     /// </summary>
     public class CreateAsistenciaMasivaDto
     {
-        [Required]
-        public int EscuelaId { get; set; }
+        [Required] public int EscuelaId { get; set; }
 
         [Required(ErrorMessage = "El ID del grupo es obligatorio.")]
         public int GrupoId { get; set; }
@@ -25,8 +24,7 @@ namespace SchoolSystem.Application.DTOs.Asistencias
         [Required(ErrorMessage = "Se requiere el ID del usuario que registra.")]
         public int RegistradoPor { get; set; }
 
-        [Required]
-        [MinLength(1, ErrorMessage = "Debe haber al menos un registro de asistencia.")]
+        [Required, MinLength(1, ErrorMessage = "Debe haber al menos un registro de asistencia.")]
         public List<AsistenciaAlumnoDto> Asistencias { get; set; }
     }
 }

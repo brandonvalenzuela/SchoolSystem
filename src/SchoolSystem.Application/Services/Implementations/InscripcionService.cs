@@ -180,36 +180,32 @@ namespace SchoolSystem.Application.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<List<InscripcionDto>> GetAlumnosPorGrupoAsync(int grupoId)
+        public async Task<List<InscripcionDto>> GetAlumnosPorGrupoAsync(int grupoId, bool soloActivos = true)
         {
-            // 1) Buscar grupo
-            var grupo = await _unitOfWork.Grupos.GetByIdAsync(grupoId);
+            // 1) Traer grupo con su ciclo
+            var grupo = await _unitOfWork.Grupos.FirstOrDefaultAsync(g => g.Id == grupoId);
             if (grupo == null)
-                return new List<InscripcionDto>();
+                return new();
 
-            // 2) Resolver cicloEscolarId
-            int? cicloId = grupo.CicloEscolarId;
+            var cicloId = grupo.CicloEscolarId; // NOT NULL en tu DB nueva
 
-            // Fallback a ciclo actual si el grupo no lo tiene (casos viejos)
-            if (!cicloId.HasValue)
-            {
-                var cicloActual = await _unitOfWork.CicloEscolares.FirstOrDefaultAsync(x =>
-                    x.EscuelaId == grupo.EscuelaId && x.EsActual);
-
-                cicloId = cicloActual?.Id;
-            }
-
-            // 3) Query inscripciones
+            // 2) Traer inscripciones del grupo en ese ciclo
             var inscripciones = await _unitOfWork.Inscripciones.FindAsync(
                 i => i.GrupoId == grupoId
-                     && i.Estatus == EstatusInscripcion.Inscrito
-                     && (!cicloId.HasValue || i.CicloEscolarId == cicloId.Value),
-                i => i.Alumno
+                     && i.CicloEscolarId == cicloId
+                     && (!soloActivos || i.Estatus == EstatusInscripcion.Inscrito),
+                i => i.Alumno,
+                i => i.Grupo,
+                i => i.Ciclo // si lo necesitas para mapear clave
             );
 
             return _mapper.Map<List<InscripcionDto>>(inscripciones
-                .OrderBy(i => i.Alumno.ApellidoPaterno));
+                .OrderBy(x => x.Alumno.ApellidoPaterno)
+                .ThenBy(x => x.Alumno.ApellidoMaterno)
+                .ThenBy(x => x.Alumno.Nombre)
+            );
         }
+
 
         public async Task<List<InscripcionDto>> GetHistorialPorAlumnoAsync(int alumnoId)
         {

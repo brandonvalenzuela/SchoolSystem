@@ -70,15 +70,21 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var t1 = InscripcionService.GetAlumnosPorGrupoAsync(GrupoId);
-        var t2 = GrupoService.GetByIdAsync(GrupoId);
+        isLoading = true;
 
-        await Task.WhenAll(t1, t2);
+        var tIns = InscripcionService.GetAlumnosPorGrupoAsync(GrupoId, soloActivos: true);
+        var tGrupo = GrupoService.GetByIdAsync(GrupoId);
 
-        if (t1.Result.Succeeded)
-            alumnos = t1.Result.Data;
-        if (t2.Result.Succeeded)
-            grupo = t2.Result.Data;
+        await Task.WhenAll(tIns, tGrupo);
+
+        var resIns = await tIns;
+        var resGrupo = await tGrupo;
+
+        if (resIns.Succeeded)
+            alumnos = resIns.Data ?? new List<InscripcionDto>();
+
+        if (resGrupo.Succeeded)
+            grupo = resGrupo.Data;
 
         isLoading = false;
     }

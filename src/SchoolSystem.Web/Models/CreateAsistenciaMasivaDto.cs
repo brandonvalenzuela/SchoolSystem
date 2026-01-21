@@ -6,11 +6,9 @@ namespace SchoolSystem.Web.Models
     {
         public int EscuelaId { get; set; }
 
-        [Required]
-        public int GrupoId { get; set; }
+        [Required] public int GrupoId { get; set; }
 
-        [Required]
-        public DateTime Fecha { get; set; }
+        [Required] public DateTime Fecha { get; set; }
 
         public int RegistradoPor { get; set; }
 

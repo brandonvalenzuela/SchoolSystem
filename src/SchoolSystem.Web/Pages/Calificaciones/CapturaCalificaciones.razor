@@ -2,6 +2,7 @@
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
 @using SchoolSystem.Web.Services.Toast
+@inject PeriodoEvaluacionService PeriodoEvaluacionService
 @inject ToastService ToastService
 @inject CalificacionService CalificacionService
 @inject InscripcionService InscripcionService
@@ -31,7 +32,7 @@
                 <div class="row g-3">
                     <div class="col-md-3">
                         <label class="form-label">Grupo</label>
-                        <InputSelect class="form-select" @bind-Value="modelo.GrupoId">
+                        <InputSelect class="form-select" @bind-Value="modelo.GrupoId" @onchange="OnGrupoChanged">
                             <option value="0">-- Seleccione --</option>
                             @foreach (var g in grupos)
                             {
@@ -54,11 +55,12 @@
                     <div class="col-md-3">
                         <label class="form-label">Periodo</label>
                         <!-- Aquí idealmente cargarías Periodos de la BD -->
-                        <InputSelect class="form-select" @bind-Value="modelo.PeriodoId">
+                        <InputSelect class="form-select" @bind-Value="modelo.PeriodoId" disabled="@(modelo.GrupoId == 0 || isLoadingCatalogs)">
                             <option value="0">-- Seleccione --</option>
-                            <option value="1">Periodo 1</option>
-                            <option value="2">Periodo 2</option>
-                            <option value="3">Periodo 3</option>
+                            @foreach (var p in periodos.OrderBy(x => x.Numero))
+                            {
+                                <option value="@p.Id">@p.Nombre</option>
+                            }
                         </InputSelect>
                     </div>
 
@@ -180,6 +182,7 @@
     [SupplyParameterFromQuery]
     public int? GrupoId { get; set; }
 
+    private List<PeriodoEvaluacionDto> periodos = new();
     private CreateCalificacionMasivaDto modelo = new();
     private List<GrupoDto> grupos = new();
     private List<MateriaDto> materias = new();
@@ -203,8 +206,11 @@
             
             await Task.WhenAll(t1, t2);
             
-            if (t1.Result.Succeeded) grupos = t1.Result.Data.Items.ToList();
-            if (t2.Result.Succeeded) materias = t2.Result.Data.Items.ToList();
+            var r1 = await t1;
+            var r2 = await t2;
+            
+            if (r1.Succeeded) grupos = r1.Data.Items.ToList();
+            if (r2.Succeeded) materias = r2.Data.Items.ToList();
 
              // --- LÓGICA DE PRE-LLENADO ---
             if (GrupoId.HasValue && GrupoId.Value > 0)
@@ -226,57 +232,52 @@
 
     private async Task CargarAlumnos()
     {
+        if (isLoading) return;
+    
         if (modelo.GrupoId == 0 || modelo.MateriaId == 0 || modelo.PeriodoId == 0)
         {
             errorMessage = "Seleccione Grupo, Materia y Periodo.";
             return;
         }
-
-        isLoading = true; 
+    
+        isLoading = true;
         busquedaRealizada = false;
         errorMessage = null;
-
+    
         modelo.Calificaciones ??= new List<CalificacionAlumnoDto>();
         modelo.Calificaciones.Clear();
-
-        busquedaRealizada = false;
-        modelo.Calificaciones.Clear();
-
+    
         try
         {
-            // 1. Obtenemos las inscripciones del grupo para saber quiénes son los alumnos
-            // Nota: Aquí estamos reusando GetInscripcionesAsync, pero lo ideal sería tener un endpoint
-            // "GetAlumnosPorGrupo" o filtrar en el cliente si son pocos.
-            // Para este ejemplo, traeremos las inscripciones paginadas (hack temporal: size grande)
-            // Lo correcto: Crear un endpoint GetByGrupoId en el servicio de Inscripciones.
-            
-            // Asumiendo que agregamos un filtro o método específico en InscripcionService
-            // Por ahora, simularemos que traemos todos y filtramos en memoria (solo para prototipo)
-            var response = await InscripcionService.GetAlumnosPorGrupoAsync(modelo.GrupoId);
+            var response = await InscripcionService.GetAlumnosPorGrupoAsync(modelo.GrupoId, soloActivos: true);
 
-            if (response.Succeeded)
+            if (response.Succeeded && response.Data != null)
             {
-                var alumnosDelGrupo = response.Data ?? new List<InscripcionDto>(); // Esto ya es una List<InscripcionDto>
-
-                foreach (var ins in alumnosDelGrupo)
+                foreach (var ins in response.Data)
                 {
                     modelo.Calificaciones.Add(new CalificacionAlumnoDto
                     {
                         AlumnoId = ins.AlumnoId,
                         NombreAlumno = ins.NombreCompletoAlumno,
-                        Matricula = ins.Matricula, // Ahora sí viene del DTO
-                        CalificacionNumerica = 0 
+                        Matricula = ins.Matricula,
+                        CalificacionNumerica = 0
                     });
                 }
+    
+                // Si no hay alumnos, tu UI mostrará el alert de "no se encontraron"
+                if (!modelo.Calificaciones.Any())
+                    ToastService.ShowWarning("No se encontraron alumnos inscritos en este grupo.");
             }
             else
             {
-                 errorMessage = response.Message;
+                errorMessage = response.Message ?? "No se pudo cargar la lista de alumnos.";
+                ToastService.ShowError(errorMessage);
             }
         }
         catch (Exception ex)
         {
             errorMessage = ex.Message;
+            ToastService.ShowError("Error al cargar alumnos: " + ex.Message);
         }
         finally
         {
@@ -304,7 +305,7 @@
             }
             else
             {
-                errorMessage = response.Message;
+                ToastService.ShowError(response.Message);
             }
         }
         catch (Exception ex)
@@ -323,4 +324,28 @@
         if (calificacion >= 9) return "text-success";
         return "";
     }
+
+    private async Task OnGrupoChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e?.Value?.ToString(), out var id))
+            modelo.GrupoId = id;
+    
+        // Reset dependientes
+        modelo.PeriodoId = 0;
+        periodos.Clear();
+        modelo.Calificaciones?.Clear();
+        busquedaRealizada = false;
+        errorMessage = null;
+    
+        if (modelo.GrupoId <= 0)
+            return;
+    
+        var resp = await PeriodoEvaluacionService.GetPorGrupoAsync(modelo.GrupoId, soloActivos: true);
+    
+        if (resp.Succeeded && resp.Data != null)
+            periodos = resp.Data;
+        else
+            ToastService.ShowError(resp.Message ?? "No se pudieron cargar los periodos.");
+    }
+
 }

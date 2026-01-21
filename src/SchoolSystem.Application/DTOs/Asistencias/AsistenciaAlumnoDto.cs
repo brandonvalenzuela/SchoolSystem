@@ -14,18 +14,10 @@ namespace SchoolSystem.Application.DTOs.Asistencias
     /// </summary>
     public class AsistenciaAlumnoDto
     {
-        [Required]
-        public int AlumnoId { get; set; }
-
-        [Required]
-        public EstadoAsistencia Estatus { get; set; }
-
+        [Required] public int AlumnoId { get; set; }
+        [Required] public EstadoAsistencia Estatus { get; set; }
         public TimeSpan? HoraEntrada { get; set; }
-
-        [Range(0, int.MaxValue)]
-        public int? MinutosRetardo { get; set; }
-
-        [StringLength(500)]
-        public string Observaciones { get; set; }
+        [Range(0, int.MaxValue)] public int? MinutosRetardo { get; set; }
+        [StringLength(500)] public string? Observaciones { get; set; }
     }
 }

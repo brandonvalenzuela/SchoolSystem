@@ -38,10 +38,10 @@ namespace SchoolSystem.Web.Services
             return await _apiService.DeleteAsync<object>($"api/Inscripciones/{id}");
         }
 
-        public async Task<ApiResponse<List<InscripcionDto>>> GetAlumnosPorGrupoAsync(int grupoId)
-        {
-            return await _apiService.GetAsync<List<InscripcionDto>>($"api/Inscripciones/grupo/{grupoId}");
-        }
+        public Task<ApiResponse<List<InscripcionDto>>> GetAlumnosPorGrupoAsync(int grupoId, bool soloActivos = true)
+            => _apiService.GetAsync<List<InscripcionDto>>($"api/Inscripciones/grupo/{grupoId}?soloActivos={soloActivos.ToString().ToLowerInvariant()}");
+
+
 
         public async Task<ApiResponse<List<InscripcionDto>>> GetHistorialAlumnoAsync(int alumnoId)
         {

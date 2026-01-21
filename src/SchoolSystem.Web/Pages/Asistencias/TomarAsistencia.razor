@@ -120,13 +120,13 @@ else
         isLoading = true;
         try
         {
-            var t1 = GrupoService.GetByIdAsync(GrupoId);
-            var t2 = InscripcionService.GetAlumnosPorGrupoAsync(GrupoId);
+            var tGrupo = GrupoService.GetByIdAsync(GrupoId);
+            var tIns = InscripcionService.GetAlumnosPorGrupoAsync(GrupoId, soloActivos: true);
 
-            await Task.WhenAll(t1, t2);
+            await Task.WhenAll(tGrupo, tIns);
 
-            var resGrupo = t1.Result;
-            var resAlumnos = t2.Result;
+            var resGrupo = await tGrupo;
+            var resAlumnos = await tIns;
 
             if (resGrupo.Succeeded)
                 grupo = resGrupo.Data;
@@ -146,6 +146,10 @@ else
                     Observaciones = ""
                 }).ToList();
             }
+            else if (!resAlumnos.Succeeded)
+            {
+                Console.WriteLine($"No se pudo cargar alumnos: {resAlumnos.Message}");
+            }
         }
         catch (Exception ex)
         {
@@ -156,6 +160,7 @@ else
             isLoading = false;
         }
     }
+
 
     // --- MÉTODO HELPER PARA EVITAR EL ERROR DE RAZOR ---
     private string ObtenerNombreAlumno(int alumnoId)

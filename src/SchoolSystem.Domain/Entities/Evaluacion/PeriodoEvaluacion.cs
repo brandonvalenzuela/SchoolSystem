@@ -153,7 +153,8 @@ namespace SchoolSystem.Domain.Entities.Evaluacion
         /// Nombre completo del período (incluye ciclo escolar)
         /// Ejemplo: "1er Bimestre 2024-2025"
         /// </summary>
-        public string NombreCompleto => $"{Nombre} {Ciclo.Nombre} {Ciclo.Clave}";
+        public string NombreCompleto => Ciclo == null ? Nombre : $"{Nombre} {Ciclo.Nombre} {Ciclo.Clave}";
+
 
         /// <summary>
         /// Duración en días del período
