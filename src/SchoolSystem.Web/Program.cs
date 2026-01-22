@@ -44,7 +44,8 @@ builder.Services.AddScoped<RelacionService>();
 builder.Services.AddScoped<PadreService>();
 builder.Services.AddScoped<AcademicContextService>();
 builder.Services.AddScoped<PeriodoEvaluacionService>();
-
+builder.Services.AddScoped<CurrentUserContextService>();
+builder.Services.AddBlazoredLocalStorage();
 
 // 4. Servicios de la Aplicación
 builder.Services.AddScoped<ApiService>();

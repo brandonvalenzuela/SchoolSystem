@@ -5,14 +5,18 @@ namespace SchoolSystem.Web.Models
     public class CalificacionAlumnoDto
     {
         public int AlumnoId { get; set; }
+        public string? Matricula { get; set; }
+        public string? NombreAlumno { get; set; }
 
-        // Propiedades auxiliares para la vista (no se envían al backend necesariamente, pero ayudan)
-        public string NombreAlumno { get; set; }
-        public string Matricula { get; set; }
-
-        [Range(0, 10, ErrorMessage = "La nota debe estar entre 0 y 10")]
         public decimal CalificacionNumerica { get; set; }
+        public string? Observaciones { get; set; }
 
-        public string Observaciones { get; set; }
+        // UI flags de “punto 5”
+        public bool YaTieneCalificacion { get; set; }
+        public decimal? CalificacionActual { get; set; }
+        public string? ObservacionesActuales { get; set; }
+
+        // UI: cuando el usuario decide recalificar, habilitamos edición en estos
+        public bool HabilitadoParaEdicion { get; set; }
     }
 }

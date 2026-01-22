@@ -1,16 +1,18 @@
 ﻿@page "/calificaciones/captura"
+@using MudBlazor
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
 @using SchoolSystem.Web.Services.Toast
+@using SchoolSystem.Web.Shared.Components.Calificaciones
 @inject PeriodoEvaluacionService PeriodoEvaluacionService
 @inject ToastService ToastService
 @inject CalificacionService CalificacionService
 @inject InscripcionService InscripcionService
-@inject AcademicContextService AcademicContextService
+@inject CurrentUserContextService CurrentUserContextService
 @inject GrupoService GrupoService
 @inject MateriaService MateriaService
-@inject UiService UiService
 @inject NavigationManager Navigation
+@inject IDialogService DialogService
 @attribute [Authorize]
 
 <PageTitle>Captura de Calificaciones</PageTitle>
@@ -20,7 +22,6 @@
         <h2><i class="oi oi-pencil"></i> Captura de Calificaciones</h2>
     </div>
 
-    <!-- SECCIÓN 1: FILTROS -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-light">
             <h5 class="mb-0">Selección de Grupo y Materia</h5>
@@ -28,11 +29,14 @@
         <div class="card-body">
             <EditForm Model="@modelo" OnValidSubmit="CargarAlumnos">
                 <DataAnnotationsValidator />
-                
+
                 <div class="row g-3">
                     <div class="col-md-3">
                         <label class="form-label">Grupo</label>
-                        <InputSelect class="form-select" @bind-Value="modelo.GrupoId" @onchange="OnGrupoChanged">
+                        <InputSelect class="form-select"
+                                     TValue="int"
+                                     @bind-Value="modelo.GrupoId"
+                                     @bind-Value:after="OnGrupoChangedAfter">
                             <option value="0">-- Seleccione --</option>
                             @foreach (var g in grupos)
                             {
@@ -43,7 +47,10 @@
 
                     <div class="col-md-3">
                         <label class="form-label">Materia</label>
-                        <InputSelect class="form-select" @bind-Value="modelo.MateriaId">
+                        <InputSelect class="form-select"
+                                     TValue="int"
+                                     @bind-Value="modelo.MateriaId"
+                                     disabled="@(modelo.GrupoId == 0 || isLoadingCatalogs)">
                             <option value="0">-- Seleccione --</option>
                             @foreach (var m in materias)
                             {
@@ -54,8 +61,10 @@
 
                     <div class="col-md-3">
                         <label class="form-label">Periodo</label>
-                        <!-- Aquí idealmente cargarías Periodos de la BD -->
-                        <InputSelect class="form-select" @bind-Value="modelo.PeriodoId" disabled="@(modelo.GrupoId == 0 || isLoadingCatalogs)">
+                        <InputSelect class="form-select"
+                                     TValue="int"
+                                     @bind-Value="modelo.PeriodoId"
+                                     disabled="@(modelo.GrupoId == 0 || isLoadingCatalogs || !periodos.Any())">
                             <option value="0">-- Seleccione --</option>
                             @foreach (var p in periodos.OrderBy(x => x.Numero))
                             {
@@ -85,7 +94,6 @@
         </div>
     </div>
 
-    <!-- SECCIÓN 2: GRID DE CAPTURA -->
     @if (modelo.Calificaciones != null && modelo.Calificaciones.Any())
     {
         <div class="card shadow border-0">
@@ -95,15 +103,17 @@
                     <span class="badge bg-info text-dark">@modelo.Calificaciones.Count alumnos encontrados</span>
                 </div>
             </div>
+
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover table-striped mb-0 align-middle">
                         <thead class="table-dark">
                             <tr>
                                 <th style="width: 15%">Matrícula</th>
-                                <th style="width: 35%">Nombre del Alumno</th>
+                                <th style="width: 30%">Nombre del Alumno</th>
+                                <th style="width: 15%" class="text-center">Estado</th>
                                 <th style="width: 15%" class="text-center">Calificación</th>
-                                <th style="width: 35%">Observaciones</th>
+                                <th style="width: 25%">Observaciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -112,17 +122,41 @@
                                 <tr>
                                     <td>@item.Matricula</td>
                                     <td class="fw-bold">@item.NombreAlumno</td>
-                                    <td>
-                                        <input type="number" 
-                                               class="form-control text-center fw-bold @GetClaseCalificacion(item.CalificacionNumerica)" 
-                                               @bind="item.CalificacionNumerica" 
-                                               min="0" max="10" step="0.1" />
+
+                                    <!-- ESTADO (alineado) -->
+                                    <td class="text-center">
+                                        @if (item.YaTieneCalificacion)
+                                        {
+                                            <MudTooltip Text="@item.ObservacionesActuales">
+                                                <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small">
+                                                    Ya calificado (@item.CalificacionActual)
+                                                </MudChip>
+                                            </MudTooltip>
+                                        }
+                                        else
+                                        {
+                                            <MudChip T="string" Color="Color.Success" Variant="Variant.Outlined" Size="Size.Small">
+                                                Pendiente
+                                            </MudChip>
+                                        }
                                     </td>
+
+                                    <!-- CALIFICACIÓN -->
                                     <td>
-                                        <input type="text" 
-                                               class="form-control form-control-sm" 
-                                               @bind="item.Observaciones" 
-                                               placeholder="Opcional..." />
+                                        <input type="number"
+                                               class="form-control text-center fw-bold @GetClaseCalificacion(item.CalificacionNumerica)"
+                                               @bind="item.CalificacionNumerica"
+                                               min="0" max="10" step="0.1"
+                                               disabled="@(!item.HabilitadoParaEdicion)" />
+                                    </td>
+
+                                    <!-- OBSERVACIONES -->
+                                    <td>
+                                        <input type="text"
+                                               class="form-control form-control-sm"
+                                               @bind="item.Observaciones"
+                                               placeholder="Opcional..."
+                                               disabled="@(!item.HabilitadoParaEdicion)" />
                                     </td>
                                 </tr>
                             }
@@ -130,6 +164,7 @@
                     </table>
                 </div>
             </div>
+
             <div class="card-footer bg-light py-3 text-end">
                 <button class="btn btn-success px-4" @onclick="GuardarCalificaciones" disabled="@isSaving">
                     @if (isSaving)
@@ -144,34 +179,20 @@
             </div>
         </div>
     }
-    @if (isLoading)
+    else if (isLoading)
     {
-        <!-- ESTADO 1: CARGANDO -->
         <div class="text-center py-5">
             <div class="spinner-border text-primary" role="status"></div>
             <p class="mt-2">Buscando alumnos...</p>
         </div>
     }
-    else if (modelo.Calificaciones != null && modelo.Calificaciones.Any())
-    {
-        <!-- ESTADO 2: HAY DATOS (Mostrar la tabla) -->
-        <div class="card shadow border-0">
-            <!-- ... (Aquí va todo tu código de la tabla que ya tienes) ... -->
-             <div class="card-header bg-white">
-                <!-- ... contenido de la tabla ... -->
-             </div>
-             <!-- ... -->
-        </div>
-    }
     else if (busquedaRealizada)
     {
-        <!-- ESTADO 3: NO HAY DATOS (Y YA TERMINÓ DE CARGAR) -->
         <div class="alert alert-warning text-center mt-4 shadow-sm">
             <i class="oi oi-warning me-2"></i> No se encontraron alumnos inscritos en este grupo para la materia seleccionada.
         </div>
     }
 
-    <!-- Mensajes de error globales -->
     @if (!string.IsNullOrEmpty(errorMessage))
     {
         <div class="alert alert-danger mt-3">@errorMessage</div>
@@ -179,46 +200,37 @@
 </div>
 
 @code {
-    [SupplyParameterFromQuery]
-    public int? GrupoId { get; set; }
+    [SupplyParameterFromQuery] public int? GrupoId { get; set; }
 
     private List<PeriodoEvaluacionDto> periodos = new();
     private CreateCalificacionMasivaDto modelo = new();
     private List<GrupoDto> grupos = new();
     private List<MateriaDto> materias = new();
-    
-    private bool isLoading = false;
-    private bool isLoadingCatalogs = true; // <--- EMPIEZA EN TRUE
-    private bool isSaving = false;
-    private bool busquedaRealizada = false;
-    private string errorMessage;
 
-
+    private bool isLoading;
+    private bool isLoadingCatalogs = true;
+    private bool isSaving;
+    private bool busquedaRealizada;
+    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        isLoadingCatalogs = true; 
-        // Cargar catálogos
+        isLoadingCatalogs = true;
         try
         {
             var t1 = GrupoService.GetGruposAsync(1, 100);
             var t2 = MateriaService.GetAsync(1, 100);
-            
+
             await Task.WhenAll(t1, t2);
-            
+
             var r1 = await t1;
             var r2 = await t2;
-            
+
             if (r1.Succeeded) grupos = r1.Data.Items.ToList();
             if (r2.Succeeded) materias = r2.Data.Items.ToList();
 
-             // --- LÓGICA DE PRE-LLENADO ---
             if (GrupoId.HasValue && GrupoId.Value > 0)
-            {
                 modelo.GrupoId = GrupoId.Value;
-                // No podemos cargar alumnos automáticamente porque falta seleccionar Materia y Periodo
-                // pero al menos ya ahorramos un paso.
-            }
         }
         catch (Exception ex)
         {
@@ -226,53 +238,62 @@
         }
         finally
         {
-            isLoadingCatalogs = false; // Terminó la carga inicial
+            isLoadingCatalogs = false;
         }
     }
 
     private async Task CargarAlumnos()
     {
         if (isLoading) return;
-    
+
         if (modelo.GrupoId == 0 || modelo.MateriaId == 0 || modelo.PeriodoId == 0)
         {
             errorMessage = "Seleccione Grupo, Materia y Periodo.";
             return;
         }
-    
+
         isLoading = true;
         busquedaRealizada = false;
         errorMessage = null;
-    
+
         modelo.Calificaciones ??= new List<CalificacionAlumnoDto>();
         modelo.Calificaciones.Clear();
-    
+
         try
         {
-            var response = await InscripcionService.GetAlumnosPorGrupoAsync(modelo.GrupoId, soloActivos: true);
+            var ins = await InscripcionService.GetAlumnosPorGrupoAsync(modelo.GrupoId, soloActivos: true);
 
-            if (response.Succeeded && response.Data != null)
+            if (!ins.Succeeded || ins.Data == null)
             {
-                foreach (var ins in response.Data)
+                ToastService.ShowError(ins.Message ?? "No se pudo cargar la lista de alumnos.");
+                return;
+            }
+
+            foreach (var a in ins.Data)
+            {
+                modelo.Calificaciones.Add(new CalificacionAlumnoDto
                 {
-                    modelo.Calificaciones.Add(new CalificacionAlumnoDto
-                    {
-                        AlumnoId = ins.AlumnoId,
-                        NombreAlumno = ins.NombreCompletoAlumno,
-                        Matricula = ins.Matricula,
-                        CalificacionNumerica = 0
-                    });
-                }
-    
-                // Si no hay alumnos, tu UI mostrará el alert de "no se encontraron"
-                if (!modelo.Calificaciones.Any())
-                    ToastService.ShowWarning("No se encontraron alumnos inscritos en este grupo.");
+                    AlumnoId = a.AlumnoId,
+                    NombreAlumno = a.NombreCompletoAlumno,
+                    Matricula = a.Matricula,
+                    CalificacionNumerica = 0,
+                    Observaciones = "",
+                    // por default: editable (hasta que el precheck diga lo contrario)
+                    HabilitadoParaEdicion = true
+                });
             }
-            else
+
+            if (!modelo.Calificaciones.Any())
             {
-                errorMessage = response.Message ?? "No se pudo cargar la lista de alumnos.";
-                ToastService.ShowError(errorMessage);
+                ToastService.ShowWarning("No se encontraron alumnos inscritos en este grupo.");
+                return;
             }
+
+            // --- Precheck “enterprise”: marcar existentes y bloquear edición para esos ---
+            await AplicarPrecheckExistentesAsync(mostrarToast: true);
+
+            // IMPORTANTE: nunca dejes el modelo en SoloValidar para la UI
+            modelo.SoloValidar = false;
         }
         catch (Exception ex)
         {
@@ -286,31 +307,143 @@
         }
     }
 
+    private async Task AplicarPrecheckExistentesAsync(bool mostrarToast)
+    {
+        var ctx = await CurrentUserContextService.GetAsync();
+        modelo.CapturadoPor = ctx.UserId;
+        modelo.EscuelaId = ctx.EscuelaId;
+
+        modelo.SoloValidar = true;
+        modelo.PermitirRecalificarExistentes = false;
+
+        var pre = await CalificacionService.CreateMasivoAsync(modelo);
+
+        if (pre.Succeeded && pre.Data?.Existentes?.Any() == true)
+        {
+            var map = pre.Data.Existentes.ToDictionary(x => x.AlumnoId);
+
+            foreach (var item in modelo.Calificaciones)
+            {
+                if (map.TryGetValue(item.AlumnoId, out var exi))
+                {
+                    item.YaTieneCalificacion = true;
+                    item.CalificacionActual = exi.CalificacionActual;
+                    item.ObservacionesActuales = exi.ObservacionesActuales;
+
+                    // por default: NO editable si ya existe (hasta que el dialog permita recalificar)
+                    item.HabilitadoParaEdicion = false;
+                }
+                else
+                {
+                    item.YaTieneCalificacion = false;
+                    item.CalificacionActual = null;
+                    item.ObservacionesActuales = null;
+                    item.HabilitadoParaEdicion = true;
+                }
+            }
+
+            if (mostrarToast)
+                ToastService.ShowWarning($"Ya existen calificaciones para {pre.Data.Existentes.Count} alumno(s).");
+        }
+        else
+        {
+            foreach (var item in modelo.Calificaciones)
+            {
+                item.YaTieneCalificacion = false;
+                item.CalificacionActual = null;
+                item.ObservacionesActuales = null;
+                item.HabilitadoParaEdicion = true;
+            }
+        }
+
+        modelo.SoloValidar = false;
+    }
+
     private async Task GuardarCalificaciones()
     {
+        if (modelo.Calificaciones == null || !modelo.Calificaciones.Any())
+        {
+            ToastService.ShowWarning("No hay alumnos cargados para guardar calificaciones.");
+            return;
+        }
+
+        if (isSaving) return;
+
         isSaving = true;
         errorMessage = null;
 
         try
         {
-            // Asignar el ID del usuario actual (quemado por ahora, luego usar AuthState)
-            modelo.CapturadoPor = 2; // ID de un maestro/admin de prueba
+            // 1) Contexto
+            var ctx = await CurrentUserContextService.GetAsync();
+            modelo.CapturadoPor = ctx.UserId;
+            modelo.EscuelaId = ctx.EscuelaId;
 
-            var response = await CalificacionService.CreateMasivoAsync(modelo);
-            
-            if (response.Succeeded)
+            // 2) Precheck ANTES del commit (concurrencia / otro prof pudo capturar)
+            modelo.SoloValidar = true;
+            modelo.PermitirRecalificarExistentes = false;
+
+            var pre = await CalificacionService.CreateMasivoAsync(modelo);
+
+            if (!pre.Succeeded)
             {
-                ToastService.ShowSuccess($"{response.Data} calificaciones registradas correctamente.");
-                Navigation.NavigateTo("/calificaciones"); // O recargar la misma página
+                ToastService.ShowError(pre.Message ?? "No se pudo validar.");
+                return;
+            }
+
+            var preData = pre.Data;
+
+            bool permitirRecalificar = false;
+
+            // 3) Si hay existentes -> dialog decide
+            if (preData?.Existentes?.Any() == true)
+            {
+                var parameters = new DialogParameters { ["Model"] = preData };
+                var options = new DialogOptions
+                {
+                    CloseOnEscapeKey = true,
+                    MaxWidth = MaxWidth.Medium,
+                    FullWidth = true
+                };
+
+                var dialog = DialogService.Show<RecalificarExistentesDialog>("Confirmación", parameters, options);
+                var result = await dialog.Result;
+
+                if (result.Canceled)
+                    return;
+
+                var decision = result.Data as RecalificarDecision;
+                permitirRecalificar = decision?.PermitirRecalificarExistentes ?? false;
+
+                // Si eligió recalificar, habilita edición solo para los “existentes”
+                if (permitirRecalificar)
+                {
+                    var idsExistentes = preData.Existentes.Select(x => x.AlumnoId).ToHashSet();
+                    foreach (var item in modelo.Calificaciones)
+                        item.HabilitadoParaEdicion = idsExistentes.Contains(item.AlumnoId) || !item.YaTieneCalificacion;
+                }
+            }
+
+            // 4) COMMIT
+            modelo.SoloValidar = false;
+            modelo.PermitirRecalificarExistentes = permitirRecalificar;
+
+            var resp = await CalificacionService.CreateMasivoAsync(modelo);
+
+            if (resp.Succeeded)
+            {
+                ToastService.ShowSuccess($"Guardado: {resp.Data.Insertadas} nuevas, {resp.Data.Actualizadas} recalificadas.");
+                Navigation.NavigateTo("/calificaciones");
             }
             else
             {
-                ToastService.ShowError(response.Message);
+                ToastService.ShowError(resp.Message ?? "No se pudo guardar.");
             }
         }
         catch (Exception ex)
         {
-            errorMessage = "Error al guardar: " + ex.Message;
+            errorMessage = ex.Message;
+            ToastService.ShowError("Error al guardar: " + ex.Message);
         }
         finally
         {
@@ -325,27 +458,25 @@
         return "";
     }
 
-    private async Task OnGrupoChanged(ChangeEventArgs e)
+    private async Task OnGrupoChanged(int value)
     {
-        if (int.TryParse(e?.Value?.ToString(), out var id))
-            modelo.GrupoId = id;
-    
-        // Reset dependientes
+        modelo.GrupoId = value;
+
         modelo.PeriodoId = 0;
         periodos.Clear();
         modelo.Calificaciones?.Clear();
         busquedaRealizada = false;
         errorMessage = null;
-    
+
         if (modelo.GrupoId <= 0)
             return;
-    
+
         var resp = await PeriodoEvaluacionService.GetPorGrupoAsync(modelo.GrupoId, soloActivos: true);
-    
         if (resp.Succeeded && resp.Data != null)
             periodos = resp.Data;
         else
             ToastService.ShowError(resp.Message ?? "No se pudieron cargar los periodos.");
     }
 
+    private async Task OnGrupoChangedAfter() => await OnGrupoChanged(modelo.GrupoId);
 }

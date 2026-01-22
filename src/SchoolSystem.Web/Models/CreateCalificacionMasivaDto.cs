@@ -20,5 +20,7 @@ namespace SchoolSystem.Web.Models
         public int CapturadoPor { get; set; }
 
         public List<CalificacionAlumnoDto> Calificaciones { get; set; } = new();
+        public bool PermitirRecalificarExistentes { get; set; } = false;
+        public bool SoloValidar { get; set; } = false;
     }
 }

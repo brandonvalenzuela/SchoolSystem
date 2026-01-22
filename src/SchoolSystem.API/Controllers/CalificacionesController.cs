@@ -111,19 +111,24 @@ namespace SchoolSystem.API.Controllers
         /// </summary>
         [HttpPost("masivo")]
         [Authorize(Roles = Roles.Staff)] // Maestros
-        public async Task<ActionResult<ApiResponse<int>>> CreateMasivo([FromBody] CreateCalificacionMasivaDto dto)
+        public async Task<ActionResult<ApiResponse<CalificacionMasivaResultadoDto>>> CreateMasivo([FromBody] CreateCalificacionMasivaDto dto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(new ApiResponse<int>("Datos inválidos."));
+                return BadRequest(new ApiResponse<CalificacionMasivaResultadoDto>("Datos inválidos."));
 
             try
             {
-                var count = await _service.CreateMasivoAsync(dto);
-                return Ok(new ApiResponse<int>(count, $"Se registraron {count} calificaciones exitosamente."));
+                var resultado = await _service.CreateMasivoAsync(dto);
+                var total = (resultado?.Insertadas ?? 0) + (resultado?.Actualizadas ?? 0);
+                var msg = dto.SoloValidar
+                    ? "Validación completada."
+                    : $"Se registraron {total} calificaciones exitosamente.";
+
+                return Ok(new ApiResponse<CalificacionMasivaResultadoDto>(resultado, msg));
             }
             catch (Exception ex)
             {
-                return BadRequest(new ApiResponse<int>(ex.Message));
+                return BadRequest(new ApiResponse<CalificacionMasivaResultadoDto>(ex.Message));
             }
         }
 

@@ -11,9 +11,9 @@ namespace SchoolSystem.Web.Services
             _apiService = apiService;
         }
 
-        public async Task<ApiResponse<int>> CreateMasivoAsync(CreateCalificacionMasivaDto model)
+        public async Task<ApiResponse<CalificacionMasivaResultadoDto>> CreateMasivoAsync(CreateCalificacionMasivaDto model)
         {
-            return await _apiService.PostAsync<CreateCalificacionMasivaDto, int>("api/Calificaciones/masivo", model);
+            return await _apiService.PostAsync<CreateCalificacionMasivaDto, CalificacionMasivaResultadoDto>("api/Calificaciones/masivo", model);
         }
 
         public async Task<ApiResponse<PagedResult<CalificacionDto>>> GetCalificacionesAsync(int page, int size)

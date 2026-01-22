@@ -19,7 +19,7 @@ namespace SchoolSystem.Application.Services.Interfaces
         Task DeleteAsync(int id);
 
         // 5. Carga Masiva
-        Task<int> CreateMasivoAsync(CreateCalificacionMasivaDto dto);
+        Task<CalificacionMasivaResultadoDto> CreateMasivoAsync(CreateCalificacionMasivaDto dto);
 
         // 3. Reporte de Boleta
         Task<BoletaDto> GetBoletaAsync(int alumnoId, string cicloEscolar);

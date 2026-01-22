@@ -135,38 +135,170 @@ namespace SchoolSystem.Application.Services.Implementations
         // ============================================================
         // 5. CAPTURA MASIVA (BULK INSERT)
         // ============================================================
-        public async Task<int> CreateMasivoAsync(CreateCalificacionMasivaDto dto)
+        public async Task<CalificacionMasivaResultadoDto> CreateMasivoAsync(CreateCalificacionMasivaDto dto)
         {
+            // ---------------------------------------------------------
+            // PASO 0: Validaciones de Consistencia
+            // ---------------------------------------------------------
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+            if (dto.Calificaciones == null || dto.Calificaciones.Count == 0)
+                throw new Exception("Debe enviar al menos una calificación.");
+
+            // Normalizar: si viene el mismo alumno repetido, nos quedamos con la última captura
+            var califsNormalizadas = dto.Calificaciones
+                .GroupBy(x => x.AlumnoId)
+                .Select(g => g.Last())
+                .ToList();
+
+            var alumnosIdsEnDto = califsNormalizadas
+                .Select(c => c.AlumnoId)
+                .Distinct()
+                .ToList();
+
+            var grupo = await _unitOfWork.Grupos.FirstOrDefaultAsync(g =>
+                g.Id == dto.GrupoId && g.EscuelaId == dto.EscuelaId)
+                ?? throw new Exception("Grupo no encontrado o no pertenece a la escuela.");
+
+            var periodo = await _unitOfWork.PeriodoEvaluaciones.FirstOrDefaultAsync(p =>
+                p.Id == dto.PeriodoId && p.EscuelaId == dto.EscuelaId)
+                ?? throw new Exception("Periodo de evaluación no encontrado o no pertenece a la escuela.");
+
+            if (periodo.CicloEscolarId != grupo.CicloEscolarId)
+                throw new Exception("El periodo seleccionado no pertenece al ciclo escolar del grupo.");
+
+            // Regla de periodo
+            var permiteInsercion = periodo.PuedeCapturarCalificaciones();
+            var permiteRecalificacion = periodo.PuedeModificarCalificaciones() || periodo.EstaEnPeriodoRecalificacion();
+
+            if (!dto.SoloValidar)
+            {
+                // Si NO viene con intención de recalificar, requiere permitir captura normal
+                if (!dto.PermitirRecalificarExistentes && !permiteInsercion)
+                    throw new Exception("Este periodo no permite captura (inactivo, definitivo o fuera de plazo).");
+
+                // Si SÍ viene con intención de recalificar, requiere permitir recalificación/modificación
+                if (dto.PermitirRecalificarExistentes && !permiteRecalificacion)
+                    throw new Exception("Este periodo no permite recalificación/modificación.");
+            }
 
             // ---------------------------------------------------------
-            // PASO 1: Validación y Filtrado en Memoria (0 Queries)
+            // PASO 0.1: Validación enterprise de alumnos vs inscripciones (seguridad + consistencia)
             // ---------------------------------------------------------
+            var inscripcionesValidas = await _unitOfWork.Inscripciones.FindAsync(i =>
+                i.GrupoId == dto.GrupoId &&
+                i.CicloEscolarId == grupo.CicloEscolarId &&
+                i.EscuelaId == dto.EscuelaId &&
+                alumnosIdsEnDto.Contains(i.AlumnoId) &&
+                i.Estatus == Domain.Enums.Academico.EstatusInscripcion.Inscrito &&
+                !i.IsDeleted
+            );
 
-            // Obtenemos los IDs de los alumnos que queremos calificar
-            var alumnosIdsEnDto = dto.Calificaciones.Select(c => c.AlumnoId).Distinct().ToList();
+            var idsAlumnosValidos = inscripcionesValidas
+                .Select(i => i.AlumnoId)
+                .ToHashSet();
 
-            // Verificamos en UNA SOLA consulta si ya existen calificaciones para estos alumnos
-            // en esta materia/periodo para evitar duplicados.
-            var calificacionesExistentes = await _unitOfWork.Calificaciones.FindAsync(c =>
+            // ---------------------------------------------------------
+            // PASO 1: Preparación (existentes + resumen)
+            // ---------------------------------------------------------
+            var resultado = new CalificacionMasivaResultadoDto
+            {
+                TotalEnviadas = califsNormalizadas.Count,
+                PermiteRecalificar = permiteRecalificacion,
+                MotivoNoPermiteRecalificar = permiteRecalificacion ? null : "El periodo está cerrado o es definitivo."
+            };
+
+            // Traer calificaciones existentes (por grupo/materia/periodo)
+            var existentes = await _unitOfWork.Calificaciones.FindAsync(c =>
+                c.GrupoId == dto.GrupoId &&
                 c.MateriaId == dto.MateriaId &&
                 c.PeriodoId == dto.PeriodoId &&
-                alumnosIdsEnDto.Contains(c.AlumnoId.Value) && // Uso de IN en SQL
-                !c.IsDeleted);
+                c.AlumnoId.HasValue &&
+                alumnosIdsEnDto.Contains(c.AlumnoId.Value) &&
+                !c.IsDeleted
+            );
 
-            var idsConCalificacion = calificacionesExistentes.Select(c => c.AlumnoId.Value).ToHashSet();
+            var existentesPorAlumno = existentes.ToDictionary(x => x.AlumnoId!.Value);
 
-            // ---------------------------------------------------------
-            // PASO 2: Preparación de Entidades (En Memoria)
-            // ---------------------------------------------------------
-
-            var nuevasCalificaciones = new List<Calificacion>();
-
-            foreach (var item in dto.Calificaciones)
+            foreach (var kvp in existentesPorAlumno)
             {
-                // Si ya tiene calificación, lo saltamos
-                if (idsConCalificacion.Contains(item.AlumnoId))
-                    continue;
+                var cal = kvp.Value;
 
+                resultado.Existentes.Add(new CalificacionMasivaExistenteDto
+                {
+                    AlumnoId = kvp.Key,
+                    CalificacionActual = cal.CalificacionNumerica, // ajusta si tu propiedad se llama diferente
+                    ObservacionesActuales = cal.Observaciones
+                });
+            }
+
+            // Si solo valida, regresamos aquí (con PermiteRecalificar/Motivo/Existentes/TotalEnviadas)
+            if (dto.SoloValidar)
+            {
+                // (Opcional) reportar errores de alumnos inválidos incluso en validación
+                foreach (var item in califsNormalizadas)
+                {
+                    if (!idsAlumnosValidos.Contains(item.AlumnoId))
+                    {
+                        resultado.Errores.Add(new CalificacionMasivaErrorDto
+                        {
+                            AlumnoId = item.AlumnoId,
+                            Motivo = "El alumno no está inscrito en este grupo/ciclo o no es válido."
+                        });
+                    }
+                }
+
+                return resultado;
+            }
+
+            // ---------------------------------------------------------
+            // PASO 2: Construir inserts y updates
+            // ---------------------------------------------------------
+            var nuevasCalificaciones = new List<Calificacion>();
+            var calificacionesActualizar = new List<Calificacion>();
+
+            foreach (var item in califsNormalizadas)
+            {
+                // Validación enterprise: alumno debe estar inscrito en el grupo/ciclo/escuela
+                if (!idsAlumnosValidos.Contains(item.AlumnoId))
+                {
+                    resultado.Errores.Add(new CalificacionMasivaErrorDto
+                    {
+                        AlumnoId = item.AlumnoId,
+                        Motivo = "El alumno no está inscrito en este grupo/ciclo o no es válido."
+                    });
+                    continue;
+                }
+
+                // Existe calificación
+                if (existentesPorAlumno.TryGetValue(item.AlumnoId, out var existente))
+                {
+                    // Si no se permite recalificar, lo omitimos (sin error, es decisión de negocio)
+                    if (!dto.PermitirRecalificarExistentes)
+                        continue;
+
+                    // Segunda validación (por si cambian reglas o se llamó en otro flujo)
+                    if (!permiteRecalificacion)
+                    {
+                        resultado.Errores.Add(new CalificacionMasivaErrorDto
+                        {
+                            AlumnoId = item.AlumnoId,
+                            Motivo = "El periodo no permite recalificación/modificación."
+                        });
+                        continue;
+                    }
+
+                    existente.Observaciones = item.Observaciones;
+                    existente.CapturadoPor = dto.CapturadoPor;
+                    existente.FechaCaptura = DateTime.Now;
+                    existente.TipoEvaluacion = "Ordinaria";
+                    existente.EstablecerCalificacion(item.CalificacionNumerica, 6.0m);
+
+                    calificacionesActualizar.Add(existente);
+                    continue;
+                }
+
+                // No existe: crear nueva
                 var calificacion = new Calificacion
                 {
                     EscuelaId = dto.EscuelaId,
@@ -177,80 +309,75 @@ namespace SchoolSystem.Application.Services.Implementations
                     AlumnoId = item.AlumnoId,
                     Observaciones = item.Observaciones,
                     FechaCaptura = DateTime.Now,
-                    TipoEvaluacion = "Ordinaria" // O pasarlo en el DTO
+                    TipoEvaluacion = "Ordinaria"
                 };
 
-                // Usar método de dominio
                 calificacion.EstablecerCalificacion(item.CalificacionNumerica, 6.0m);
-
                 nuevasCalificaciones.Add(calificacion);
             }
 
-            if (nuevasCalificaciones.Count == 0)
-                return 0;
+            // ---------------------------------------------------------
+            // PASO 3: Persistencia (bulk)
+            // ---------------------------------------------------------
+            if (nuevasCalificaciones.Any())
+                await _unitOfWork.Calificaciones.AddRangeAsync(nuevasCalificaciones);
+
+            if (calificacionesActualizar.Any())
+                await _unitOfWork.Calificaciones.UpdateRangeAsync(calificacionesActualizar);
+
+            if (!nuevasCalificaciones.Any() && !calificacionesActualizar.Any())
+                return resultado;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            resultado.Insertadas = nuevasCalificaciones.Count;
+            resultado.Actualizadas = calificacionesActualizar.Count;
+            resultado.AlumnoIdsInsertados = nuevasCalificaciones.Select(x => x.AlumnoId!.Value).ToList();
+            resultado.AlumnoIdsActualizados = calificacionesActualizar.Select(x => x.AlumnoId!.Value).ToList();
 
             // ---------------------------------------------------------
-            // PASO 3: Inserción Masiva (1 Query)
+            // PASO 4: Recalcular promedios (por ciclo)
             // ---------------------------------------------------------
-
-            // AddRange es mucho más rápido que Add en un bucle
-            await _unitOfWork.Calificaciones.AddRangeAsync(nuevasCalificaciones);
-            await _unitOfWork.SaveChangesAsync(); // Se generan los IDs aquí
-
-            // ---------------------------------------------------------
-            // PASO 4: Recálculo Masivo de Promedios (2 Queries)
-            // ---------------------------------------------------------
-
-            // A. Traer TODAS las inscripciones afectadas de un solo golpe
             var inscripcionesAfectadas = await _unitOfWork.Inscripciones.FindAsync(i =>
                 i.GrupoId == dto.GrupoId &&
-                alumnosIdsEnDto.Contains(i.AlumnoId) && // Solo los alumnos que tocamos
-                i.Estatus == Domain.Enums.Academico.EstatusInscripcion.Inscrito
+                i.CicloEscolarId == grupo.CicloEscolarId &&
+                idsAlumnosValidos.Contains(i.AlumnoId) &&
+                i.Estatus == Domain.Enums.Academico.EstatusInscripcion.Inscrito &&
+                !i.IsDeleted
             );
 
-            // B. Traer TODAS las calificaciones de estos alumnos en este grupo de un solo golpe
-            // (Necesitamos todas para promediar, no solo las nuevas)
             var todasLasCalificacionesDelGrupo = await _unitOfWork.Calificaciones.FindAsync(c =>
                 c.GrupoId == dto.GrupoId &&
-                alumnosIdsEnDto.Contains(c.AlumnoId.Value) &&
+                c.AlumnoId.HasValue &&
+                idsAlumnosValidos.Contains(c.AlumnoId.Value) &&
                 !c.IsDeleted
             );
 
-            // C. Procesamiento en Memoria (Rapidísimo)
             var inscripcionesParaActualizar = new List<Inscripcion>();
 
             foreach (var inscripcion in inscripcionesAfectadas)
             {
-                // Filtramos calificaciones de este alumno
                 var notasAlumno = todasLasCalificacionesDelGrupo
                     .Where(c => c.AlumnoId == inscripcion.AlumnoId)
                     .ToList();
 
                 if (notasAlumno.Any())
                 {
-                    // USAMOS EL HELPER AQUÍ:
                     decimal promedio = CalcularPromedioInteligente(notasAlumno);
-
-                    // Actualizamos la entidad
                     inscripcion.ActualizarPromedioAcumulado(promedio);
-
                     inscripcionesParaActualizar.Add(inscripcion);
                 }
             }
 
-            // ---------------------------------------------------------
-            // PASO 5: Actualización Masiva (1 Query)
-            // ---------------------------------------------------------
-
             if (inscripcionesParaActualizar.Any())
             {
-                // UpdateRange es más eficiente
                 await _unitOfWork.Inscripciones.UpdateRangeAsync(inscripcionesParaActualizar);
                 await _unitOfWork.SaveChangesAsync();
             }
 
-            return nuevasCalificaciones.Count;
+            return resultado;
         }
+
 
         // ============================================================
         // 4. AUDITORÍA EN UPDATE (Lógica mejorada)
