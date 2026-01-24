@@ -60,7 +60,7 @@ namespace SchoolSystem.API.Controllers
         public async Task<ActionResult<ApiResponse<int>>> Create([FromBody] CreateUsuarioDto dto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(new ApiResponse<int>("Datos del usuario inválidos."));
+              return BadRequest(new ApiResponse<int>("Datos del usuario inválidos."));
 
             var id = await _service.CreateAsync(dto);
             var response = new ApiResponse<int>(id, "Usuario registrado exitosamente.");

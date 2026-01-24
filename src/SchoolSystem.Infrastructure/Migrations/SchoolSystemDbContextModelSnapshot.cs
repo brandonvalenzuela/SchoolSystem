@@ -5719,8 +5719,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.HasIndex("CapturadoPor");
 
-                    b.HasIndex("EscuelaId");
-
                     b.HasIndex("MateriaId");
 
                     b.HasIndex("PeriodoId");
@@ -5735,11 +5733,15 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_Calificacion_Alumno_Materia_Periodo");
 
+                    b.HasIndex("EscuelaId", "GrupoId", "MateriaId", "PeriodoId", "AlumnoId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_Calificaciones_Escuela_Grupo_Materia_Periodo_Alumno");
+
                     b.ToTable("Calificaciones", null, t =>
                         {
-                            t.HasCheckConstraint("CHK_Calificacion_Rango", "CalificacionNumerica >=0 AND CalificacionNumerica <=10");
+                            t.HasCheckConstraint("CK_Calificaciones_CalificacionNumerica", "`CalificacionNumerica` >= 0 AND `CalificacionNumerica` <= 10");
 
-                            t.HasCheckConstraint("CHK_Peso_Rango", "Peso IS NULL OR (Peso >=0 AND Peso <=100)");
+                            t.HasCheckConstraint("CK_Calificaciones_Peso", "`Peso` IS NULL OR (`Peso` >= 0 AND `Peso` <= 100)");
                         });
                 });
 

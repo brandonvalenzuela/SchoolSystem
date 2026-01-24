@@ -1,4 +1,5 @@
 ﻿using Hangfire.Dashboard;
+using Microsoft.EntityFrameworkCore.Storage;
 using SchoolSystem.Domain.Entities.Academico;
 using SchoolSystem.Domain.Entities.Auditoria;
 using SchoolSystem.Domain.Entities.Comunicacion;
@@ -23,6 +24,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly SchoolSystemDbContext _context;
+        private IDbContextTransaction _transaction;
 
         // Backing fields para los repositorios
         private IRepository<Alumno> _alumnos;
@@ -83,6 +85,44 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+
+        // Métodos para transacciones explícitas
+        public async Task BeginTransactionAsync()
+        {
+            _transaction = await _context.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+            if (_transaction != null)
+            {
+                try
+                {
+                    await _transaction.CommitAsync();
+                }
+                finally
+                {
+                    await _transaction.DisposeAsync();
+                    _transaction = null;
+                }
+            }
+        }
+
+        public async Task RollbackTransactionAsync()
+        {
+            if (_transaction != null)
+            {
+                try
+                {
+                    await _transaction.RollbackAsync();
+                }
+                finally
+                {
+                    await _transaction.DisposeAsync();
+                    _transaction = null;
+                }
+            }
         }
 
         public void Dispose()

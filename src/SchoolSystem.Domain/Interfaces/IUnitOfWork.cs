@@ -45,7 +45,12 @@ namespace SchoolSystem.Domain.Interfaces
         IRepository<PeriodoEvaluacion> PeriodoEvaluaciones { get; }
 
 
-        // Método para guardar todos los cambios
-        Task<int> SaveChangesAsync();
-    }
+            // Método para guardar todos los cambios
+            Task<int> SaveChangesAsync();
+
+            // Métodos para transacciones explícitas
+            Task BeginTransactionAsync();
+            Task CommitTransactionAsync();
+            Task RollbackTransactionAsync();
+        }
 }

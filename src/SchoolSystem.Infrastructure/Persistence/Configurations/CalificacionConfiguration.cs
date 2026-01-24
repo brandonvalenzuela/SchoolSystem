@@ -219,6 +219,13 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             #region Índices
 
+            // Índice único compuesto: Evita duplicados por concurrencia
+            // (EscuelaId, GrupoId, MateriaId, PeriodoId, AlumnoId) deben ser únicos
+            // Protege contra race conditions en captura masiva
+            builder.HasIndex(c => new { c.EscuelaId, c.GrupoId, c.MateriaId, c.PeriodoId, c.AlumnoId })
+                .HasDatabaseName("UX_Calificaciones_Escuela_Grupo_Materia_Periodo_Alumno")
+                .IsUnique();
+
             // Índice único compuesto: Un alumno solo puede tener una calificación por materia-período
             builder.HasIndex(c => new { c.AlumnoId, c.MateriaId, c.PeriodoId })
                 .HasDatabaseName("IX_Calificacion_Alumno_Materia_Periodo")
@@ -285,17 +292,18 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
 
             #region Validaciones a Nivel de BD (Constraints)
 
-            // Constraint: La calificación debe estar entre0 y10
-            builder.HasCheckConstraint(
-                "CHK_Calificacion_Rango",
-                "CalificacionNumerica >=0 AND CalificacionNumerica <=10"
-            );
+            // Check Constraint: La calificación numérica debe estar entre 0 y 10
+            // Usando el nuevo estilo de EF Core 8 con ToTable()
+            builder.ToTable(t => t.HasCheckConstraint(
+                "CK_Calificaciones_CalificacionNumerica",
+                "`CalificacionNumerica` >= 0 AND `CalificacionNumerica` <= 10"
+            ));
 
-            // Constraint: El peso debe estar entre0 y100 si existe
-            builder.HasCheckConstraint(
-                "CHK_Peso_Rango",
-                "Peso IS NULL OR (Peso >=0 AND Peso <=100)"
-            );
+            // Check Constraint: El peso debe estar entre 0 y 100 si existe
+            builder.ToTable(t => t.HasCheckConstraint(
+                "CK_Calificaciones_Peso",
+                "`Peso` IS NULL OR (`Peso` >= 0 AND `Peso` <= 100)"
+            ));
 
             #endregion
         }

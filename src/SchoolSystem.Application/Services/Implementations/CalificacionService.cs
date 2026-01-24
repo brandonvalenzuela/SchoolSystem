@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SchoolSystem.Application.Common.Models;
 using SchoolSystem.Application.DTOs.Calificacion;
 using SchoolSystem.Application.DTOs.Calificaciones;
@@ -317,65 +318,97 @@ namespace SchoolSystem.Application.Services.Implementations
             }
 
             // ---------------------------------------------------------
-            // PASO 3: Persistencia (bulk)
+            // PASO 3: Persistencia (bulk) + PASO 4: Recalculo de promedios
+            // Envuelta en transacción explícita para garantizar consistencia
             // ---------------------------------------------------------
-            if (nuevasCalificaciones.Any())
-                await _unitOfWork.Calificaciones.AddRangeAsync(nuevasCalificaciones);
-
-            if (calificacionesActualizar.Any())
-                await _unitOfWork.Calificaciones.UpdateRangeAsync(calificacionesActualizar);
-
-            if (!nuevasCalificaciones.Any() && !calificacionesActualizar.Any())
-                return resultado;
-
-            await _unitOfWork.SaveChangesAsync();
-
-            resultado.Insertadas = nuevasCalificaciones.Count;
-            resultado.Actualizadas = calificacionesActualizar.Count;
-            resultado.AlumnoIdsInsertados = nuevasCalificaciones.Select(x => x.AlumnoId!.Value).ToList();
-            resultado.AlumnoIdsActualizados = calificacionesActualizar.Select(x => x.AlumnoId!.Value).ToList();
-
-            // ---------------------------------------------------------
-            // PASO 4: Recalcular promedios (por ciclo)
-            // ---------------------------------------------------------
-            var inscripcionesAfectadas = await _unitOfWork.Inscripciones.FindAsync(i =>
-                i.GrupoId == dto.GrupoId &&
-                i.CicloEscolarId == grupo.CicloEscolarId &&
-                idsAlumnosValidos.Contains(i.AlumnoId) &&
-                i.Estatus == Domain.Enums.Academico.EstatusInscripcion.Inscrito &&
-                !i.IsDeleted
-            );
-
-            var todasLasCalificacionesDelGrupo = await _unitOfWork.Calificaciones.FindAsync(c =>
-                c.GrupoId == dto.GrupoId &&
-                c.AlumnoId.HasValue &&
-                idsAlumnosValidos.Contains(c.AlumnoId.Value) &&
-                !c.IsDeleted
-            );
-
-            var inscripcionesParaActualizar = new List<Inscripcion>();
-
-            foreach (var inscripcion in inscripcionesAfectadas)
+            try
             {
-                var notasAlumno = todasLasCalificacionesDelGrupo
-                    .Where(c => c.AlumnoId == inscripcion.AlumnoId)
-                    .ToList();
+                // BEGIN TRANSACTION
+                await _unitOfWork.BeginTransactionAsync();
 
-                if (notasAlumno.Any())
+                // PASO 3: Persistencia de calificaciones (inserts y updates)
+                if (nuevasCalificaciones.Any())
+                    await _unitOfWork.Calificaciones.AddRangeAsync(nuevasCalificaciones);
+
+                if (calificacionesActualizar.Any())
+                    await _unitOfWork.Calificaciones.UpdateRangeAsync(calificacionesActualizar);
+
+                if (!nuevasCalificaciones.Any() && !calificacionesActualizar.Any())
                 {
-                    decimal promedio = CalcularPromedioInteligente(notasAlumno);
-                    inscripcion.ActualizarPromedioAcumulado(promedio);
-                    inscripcionesParaActualizar.Add(inscripcion);
+                    // Si no hay cambios, rollback y retornamos resultado
+                    await _unitOfWork.RollbackTransactionAsync();
+                    return resultado;
                 }
-            }
 
-            if (inscripcionesParaActualizar.Any())
-            {
-                await _unitOfWork.Inscripciones.UpdateRangeAsync(inscripcionesParaActualizar);
+                // Primer SaveChanges dentro de la transacción (calificaciones)
                 await _unitOfWork.SaveChangesAsync();
-            }
 
-            return resultado;
+                resultado.Insertadas = nuevasCalificaciones.Count;
+                resultado.Actualizadas = calificacionesActualizar.Count;
+                resultado.AlumnoIdsInsertados = nuevasCalificaciones.Select(x => x.AlumnoId!.Value).ToList();
+                resultado.AlumnoIdsActualizados = calificacionesActualizar.Select(x => x.AlumnoId!.Value).ToList();
+
+                // PASO 4: Recalcular promedios (por ciclo)
+                var inscripcionesAfectadas = await _unitOfWork.Inscripciones.FindAsync(i =>
+                    i.GrupoId == dto.GrupoId &&
+                    i.CicloEscolarId == grupo.CicloEscolarId &&
+                    idsAlumnosValidos.Contains(i.AlumnoId) &&
+                    i.Estatus == Domain.Enums.Academico.EstatusInscripcion.Inscrito &&
+                    !i.IsDeleted
+                );
+
+                var todasLasCalificacionesDelGrupo = await _unitOfWork.Calificaciones.FindAsync(c =>
+                    c.GrupoId == dto.GrupoId &&
+                    c.AlumnoId.HasValue &&
+                    idsAlumnosValidos.Contains(c.AlumnoId.Value) &&
+                    !c.IsDeleted
+                );
+
+                var inscripcionesParaActualizar = new List<Inscripcion>();
+
+                foreach (var inscripcion in inscripcionesAfectadas)
+                {
+                    var notasAlumno = todasLasCalificacionesDelGrupo
+                        .Where(c => c.AlumnoId == inscripcion.AlumnoId)
+                        .ToList();
+
+                    if (notasAlumno.Any())
+                    {
+                        decimal promedio = CalcularPromedioInteligente(notasAlumno);
+                        inscripcion.ActualizarPromedioAcumulado(promedio);
+                        inscripcionesParaActualizar.Add(inscripcion);
+                    }
+                }
+
+                if (inscripcionesParaActualizar.Any())
+                {
+                    await _unitOfWork.Inscripciones.UpdateRangeAsync(inscripcionesParaActualizar);
+                    // Segundo SaveChanges dentro de la transacción (promedios)
+                    await _unitOfWork.SaveChangesAsync();
+                }
+
+                    // COMMIT TRANSACTION
+                    await _unitOfWork.CommitTransactionAsync();
+
+                    return resultado;
+                }
+                catch (DbUpdateException dbEx) when (IsDuplicateKey(dbEx))
+                {
+                    // ROLLBACK on duplicate key violation (MySQL error 1062)
+                    await _unitOfWork.RollbackTransactionAsync();
+
+                    // Devolver un resultado consistente indicando que hay duplicados
+                    // (Otro usuario ya capturó algunas calificaciones)
+                    resultado.Exitoso = false;
+                    resultado.Mensaje = "No se pudo completar la operación. Otro usuario ya capturó algunas calificaciones para los mismos alumnos. Intenta nuevamente o contacta al administrador.";
+                    return resultado;
+                }
+                catch (Exception)
+                {
+                    // ROLLBACK on any other exception
+                    await _unitOfWork.RollbackTransactionAsync();
+                    throw;
+                }
         }
 
 
@@ -580,8 +613,52 @@ namespace SchoolSystem.Application.Services.Implementations
                 promedioFinal = calificaciones.Average(c => c.CalificacionNumerica);
             }
 
-            // Retornamos redondeado a 2 decimales (estándar escolar)
-            return Math.Round(promedioFinal, 2);
-        }
-    }
-}
+                        // Retornamos redondeado a 2 decimales (estándar escolar)
+                        return Math.Round(promedioFinal, 2);
+                    }
+
+                    // ============================================================
+                    // HELPER PRIVADO: DETECCIÓN DE VIOLACIÓN DE CLAVE ÚNICA
+                    // ============================================================
+                    /// <summary>
+                    /// Detecta si una excepción DbUpdateException es causada por
+                    /// un error de violación de clave única (MySQL error 1062).
+                    /// 
+                    /// Esto es usado en CreateMasivoAsync para manejar race conditions
+                    /// cuando múltiples usuarios capturan calificaciones simultáneamente.
+                    /// </summary>
+                    private bool IsDuplicateKey(DbUpdateException ex)
+                    {
+                        // En MySQL, el error de clave duplicada es 1062
+                        // Buscamos en la InnerException si la propiedad "Number" es 1062
+
+                        if (ex?.InnerException == null)
+                            return false;
+
+                        // Si la InnerException tiene una propiedad "Number" igual a 1062
+                        // entonces es un error de clave duplicada en MySQL
+                        var innerEx = ex.InnerException;
+
+                        // Intentar acceder a la propiedad Number (tipo dinámico o reflexión)
+                        try
+                        {
+                            var numberProperty = innerEx.GetType().GetProperty("Number");
+                            if (numberProperty != null)
+                            {
+                                var number = (int?)numberProperty.GetValue(innerEx);
+                                return number == 1062; // MySQL Duplicate entry error
+                            }
+                        }
+                        catch
+                        {
+                            // Si falla la reflexión, intentar en el mensaje
+                        }
+
+                        // Fallback: buscar en el mensaje si contiene "Duplicate entry"
+                        if (innerEx.Message != null && innerEx.Message.Contains("Duplicate entry", StringComparison.OrdinalIgnoreCase))
+                            return true;
+
+                        return false;
+                    }
+                }
+            }
