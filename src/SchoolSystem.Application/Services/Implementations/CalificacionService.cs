@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SchoolSystem.Application.Common.Models;
 using SchoolSystem.Application.DTOs.Calificacion;
 using SchoolSystem.Application.DTOs.Calificaciones;
+using SchoolSystem.Application.Exceptions;
 using SchoolSystem.Application.Services.Interfaces;
 using SchoolSystem.Domain.Entities.Academico;
 using SchoolSystem.Domain.Entities.Auditoria;
@@ -314,13 +315,17 @@ namespace SchoolSystem.Application.Services.Implementations
                         continue;
                     }
 
-                    preview.Estado = "Insertar";
-                    resultado.TotalInsertarias++;
-                    resultado.PreviewPorAlumno.Add(preview);
-                }
+                            preview.Estado = "Insertar";
+                            resultado.TotalInsertarias++;
+                            resultado.PreviewPorAlumno.Add(preview);
+                        }
 
-                return resultado;
-            }
+                        // AUDITORÍA: Setear flag si se requiere motivo de recalificación
+                        // (cuando hay calificaciones a recalificar y el período lo permite)
+                        resultado.RequiereMotivoRecalificacion = resultado.TotalActualizarias > 0 && permiteRecalificacion;
+
+                        return resultado;
+                    }
 
             // ---------------------------------------------------------
             // PASO 2: Construir inserts y updates
@@ -507,24 +512,25 @@ namespace SchoolSystem.Application.Services.Implementations
                                 resultado.AlumnoIdsActualizados.Clear();
 
                                 // Agregar error global de concurrencia
-                                resultado.Errores.Add(new CalificacionMasivaErrorDto
+                                    resultado.Errores.Add(new CalificacionMasivaErrorDto
+                                    {
+                                        AlumnoId = 0,  // 0 indica error global, no específico de un alumno
+                                        Motivo = "Ya existe calificación (concurrencia). Reintenta."
+                                    });
+
+                                    resultado.TotalErrores += 1;
+                                    resultado.Exitoso = false;
+                                    resultado.Mensaje = "No se pudo completar la operación por conflicto de concurrencia. Otro usuario capturó calificaciones simultáneamente.";
+
+                                    // Lanzar ConflictException para que el controller devuelva 409
+                                    throw new ConflictException(resultado.Mensaje);
+                                }
+                                catch (Exception)
                                 {
-                                    AlumnoId = 0,  // 0 indica error global, no específico de un alumno
-                                    Motivo = "Conflicto de concurrencia: ya existen calificaciones para algunos alumnos. Recarga e intenta de nuevo."
-                                });
-
-                                resultado.TotalErrores += 1;
-                                resultado.Exitoso = false;
-                                resultado.Mensaje = "No se pudo completar la operación por conflicto de concurrencia. Otro usuario capturó calificaciones simultáneamente.";
-
-                                return resultado;
-                            }
-                            catch (Exception)
-                            {
-                                // ROLLBACK on any other exception
-                                await _unitOfWork.RollbackTransactionAsync();
-                                throw;
-                            }
+                                    // ROLLBACK on any other exception
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    throw;
+                                }
                     }
 
 

@@ -1,4 +1,4 @@
-﻿@page "/calificaciones/captura"
+@page "/calificaciones/captura"
 @using MudBlazor
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
@@ -96,6 +96,100 @@
 
     @if (modelo.Calificaciones != null && modelo.Calificaciones.Any())
     {
+        <!-- PASO 2: Mostrar resumen del precheck -->
+        @if (_precheck != null)
+        {
+            <MudPaper Class="pa-4 mb-4 bg-light">
+                <MudStack Spacing="2">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <MudText Typo="Typo.caption" Color="Color.Tertiary">Total Enviados</MudText>
+                                <MudText Typo="Typo.h5">@_total</MudText>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <MudText Typo="Typo.caption" Color="Color.Info">Ya Existentes</MudText>
+                                <MudText Typo="Typo.h5" Color="Color.Info">@_existentes</MudText>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <MudText Typo="Typo.caption" Color="Color.Success">Nuevas</MudText>
+                                <MudText Typo="Typo.h5" Color="Color.Success">@_nuevas</MudText>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <MudText Typo="Typo.caption" Color="Color.Error">Errores</MudText>
+                                <MudText Typo="Typo.h5" Color="Color.Error">@_precheck.TotalErrores</MudText>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!_precheck.PermiteRecalificar && _existentes > 0)
+                    {
+                        <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Warning">
+                            <MudText Typo="Typo.body2">
+                                <strong>⚠️ No se puede recalificar:</strong> @_precheck.MotivoNoPermiteRecalificar
+                            </MudText>
+                        </MudAlert>
+                    }
+                </MudStack>
+            </MudPaper>
+        }
+
+        <!-- PASO 4: Resumen mejorado de Totales/Pendientes/YaCalificados -->
+        <MudPaper Class="pa-3 mb-3">
+            <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                <MudText Typo="Typo.body2">
+                    <strong>Resumen:</strong>
+                </MudText>
+                <MudChip T="string" Color="Color.Default" Icon="@Icons.Material.Filled.Info" Size="Size.Small">
+                    Total: @_totalAlumnos
+                </MudChip>
+                <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small">
+                    Pendientes: @_alumnosPendientes
+                </MudChip>
+                <MudChip T="string" Color="Color.Warning" Icon="@Icons.Material.Filled.HourglassBottom" Size="Size.Small">
+                    Ya Calificados: @_alumnosYaCalificados
+                </MudChip>
+                <MudSpacer />
+                <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.body2">
+                        Mostrar solo pendientes:
+                    </MudText>
+                    <MudSwitch T="bool" @bind-Checked="@_soloPendientes" Color="Color.Primary" />
+                </MudStack>
+            </MudStack>
+        </MudPaper>
+
+        <!-- PASO 4: Alert si se detectaron nuevos existentes por concurrencia -->
+        @if (_mostrarAlertaConcurrencia)
+        {
+            <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined" Class="mb-3" Icon="@Icons.Material.Filled.Warning">
+                <MudText Typo="Typo.body2">
+                    <strong>⚠️ Concurrencia detectada:</strong> Se detectaron nuevas calificaciones existentes (posiblemente otro usuario capturó en el mismo período). Se marcaron en amarillo.
+                </MudText>
+            </MudAlert>
+        }
+
+        <!-- PASO 5: Alert si hay conflicto al guardar (409) -->
+        @if (_mostrarAlertaConflictoGuardado)
+        {
+            <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Class="mb-3" Icon="@Icons.Material.Filled.Error">
+                <MudStack Spacing="1">
+                    <MudText Typo="Typo.body2">
+                        <strong>❌ Conflicto detectado:</strong> Otro usuario capturó calificaciones simultáneamente. Se actualizó la lista de alumnos con calificaciones existentes.
+                    </MudText>
+                    <MudText Typo="Typo.caption">
+                        Revisa los cambios y reintenta si es necesario. Si el conflicto persiste, recarga la página.
+                    </MudText>
+                </MudStack>
+            </MudAlert>
+        }
+
         <!-- PASO 14: Mostrar alertas de errores críticos -->
         @if (modelo.Calificaciones.Any(c => c.EstadoPreview == "Error"))
         {
@@ -115,7 +209,7 @@
             <div class="card-header bg-white">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="text-primary mb-0">Listado de Alumnos</h5>
-                    <span class="badge bg-info text-dark">@modelo.Calificaciones.Count alumnos encontrados</span>
+                    <span class="badge bg-info text-dark">@(_soloPendientes ? _alumnosPendientes : modelo.Calificaciones.Count) alumnos mostrados</span>
                 </div>
             </div>
 
@@ -132,9 +226,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in modelo.Calificaciones)
+                            @foreach (var item in GetItemsAMostrar())
                             {
-                                <tr class="@(item.EstadoPreview == "Error" ? "table-danger" : "")">
+                                <tr class="@(item.EstadoPreview == "Error" ? "table-danger" : item.YaTieneCalificacion && _mostrarAlertaConcurrencia ? "table-warning" : "")">
                                     <td>@item.Matricula</td>
                                     <td class="fw-bold">@item.NombreAlumno</td>
 
@@ -213,7 +307,7 @@
             <div class="card-footer bg-light py-3 text-end">
                 <button class="btn btn-success px-4" 
                         @onclick="GuardarCalificaciones" 
-                        disabled="@(isSaving || modelo.Calificaciones.Any(c => c.EstadoPreview == "Error"))">
+                        disabled="@IsGuardarDisabled()">
                     @if (isSaving)
                     {
                         <span class="spinner-border spinner-border-sm"></span> <span>Guardando...</span>
@@ -221,6 +315,10 @@
                     else if (modelo.Calificaciones.Any(c => c.EstadoPreview == "Error"))
                     {
                         <span><i class="oi oi-block"></i> No se puede guardar (hay errores)</span>
+                    }
+                    else if (!_precheckOk)
+                    {
+                        <span><i class="oi oi-block"></i> Carga alumnos primero</span>
                     }
                     else
                     {
@@ -263,6 +361,25 @@
     private bool isSaving;
     private bool busquedaRealizada;
     private string? errorMessage;
+
+    // PASO 2: Estado local para guardar el precheck
+    private CalificacionMasivaResultadoDto? _precheck;
+    private bool _precheckOk;
+
+    // PASO 2: Helpers computed properties
+    private int _total => _precheck?.TotalEnviadas ?? 0;
+    private int _existentes => _precheck?.Existentes?.Count ?? 0;
+    private int _nuevas => Math.Max(0, _total - _existentes);
+
+    // PASO 4: UX mejorada
+    private bool _soloPendientes = false;
+    private bool _mostrarAlertaConcurrencia = false;
+    private bool _mostrarAlertaConflictoGuardado = false;
+
+    // PASO 4: Propiedades computed para resumen
+    private int _totalAlumnos => modelo.Calificaciones?.Count ?? 0;
+    private int _alumnosPendientes => modelo.Calificaciones?.Count(x => !x.YaTieneCalificacion) ?? 0;
+    private int _alumnosYaCalificados => modelo.Calificaciones?.Count(x => x.YaTieneCalificacion) ?? 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -329,7 +446,6 @@
                     Matricula = a.Matricula,
                     CalificacionNumerica = 0,
                     Observaciones = "",
-                    // por default: editable (hasta que el precheck diga lo contrario)
                     HabilitadoParaEdicion = true
                 });
             }
@@ -340,7 +456,7 @@
                 return;
             }
 
-            // --- Precheck “enterprise”: marcar existentes y bloquear edición para esos ---
+            // --- Precheck "enterprise": marcar existentes y bloquear edición para esos ---
             await AplicarPrecheckExistentesAsync(mostrarToast: true);
 
             // IMPORTANTE: nunca dejes el modelo en SoloValidar para la UI
@@ -369,38 +485,38 @@
 
         var pre = await CalificacionService.CreateMasivoAsync(modelo);
 
+        // PASO 2: Guardar el precheck en estado local
+        _precheck = pre.Data;
+        _precheckOk = pre.Succeeded;
+
         if (pre.Succeeded && pre.Data != null)
         {
-            // PASO 14: Usar PreviewPorAlumno para marcar estados
             var previewMap = pre.Data.PreviewPorAlumno?.ToDictionary(x => x.AlumnoId) ?? new();
 
             foreach (var item in modelo.Calificaciones)
             {
                 if (previewMap.TryGetValue(item.AlumnoId, out var preview))
                 {
-                    // Asignar estado y motivo del preview
                     item.EstadoPreview = preview.Estado;
                     item.MotivoPreview = preview.Motivo;
 
-                    // Llenar datos actuales si existen
                     if (preview.CalificacionActual.HasValue)
                     {
                         item.YaTieneCalificacion = true;
                         item.CalificacionActual = preview.CalificacionActual;
                         item.ObservacionesActuales = preview.ObservacionesActuales;
-                        item.HabilitadoParaEdicion = false; // Por defecto no editable
+                        item.HabilitadoParaEdicion = false;
                     }
                     else
                     {
                         item.YaTieneCalificacion = false;
                         item.CalificacionActual = null;
                         item.ObservacionesActuales = null;
-                        item.HabilitadoParaEdicion = preview.Estado != "Error"; // Solo editable si no hay error
+                        item.HabilitadoParaEdicion = preview.Estado != "Error";
                     }
                 }
                 else
                 {
-                    // Fallback si no está en preview (no debería ocurrir)
                     item.EstadoPreview = "Pendiente";
                     item.MotivoPreview = null;
                     item.YaTieneCalificacion = false;
@@ -434,27 +550,51 @@
         modelo.SoloValidar = false;
     }
 
+    // PASO 2: Helper para controlar si Guardar está deshabilitado
+    private bool IsGuardarDisabled()
+    {
+        if (isSaving || isLoading)
+            return true;
+
+        if (modelo.Calificaciones == null || !modelo.Calificaciones.Any())
+            return true;
+
+        if (!_precheckOk)
+            return true;
+
+        if (modelo.Calificaciones.Any(c => c.EstadoPreview == "Error"))
+            return true;
+
+        return false;
+    }
+
     private async Task GuardarCalificaciones()
     {
+        // PASO 3: Validaciones iniciales
         if (modelo.Calificaciones == null || !modelo.Calificaciones.Any())
         {
             ToastService.ShowWarning("No hay alumnos cargados para guardar calificaciones.");
             return;
         }
 
-        if (isSaving) return;
+        // PASO 5: Guard clause para evitar doble submit
+        if (isSaving) 
+        {
+            ToastService.ShowInfo("La solicitud ya está en proceso. Por favor, espera...");
+            return;
+        }
 
         isSaving = true;
         errorMessage = null;
 
         try
         {
-            // 1) Contexto
+            // PASO 3: Obtener contexto real
             var ctx = await CurrentUserContextService.GetAsync();
             modelo.CapturadoPor = ctx.UserId;
             modelo.EscuelaId = ctx.EscuelaId;
 
-            // 2) Precheck ANTES del commit (concurrencia / otro prof pudo capturar)
+            // PASO 3: PRECHECK fresco antes de guardar
             modelo.SoloValidar = true;
             modelo.PermitirRecalificarExistentes = false;
 
@@ -466,13 +606,28 @@
                 return;
             }
 
-            var preData = pre.Data;
+            // Actualizar precheck local con resultado fresco
+            _precheck = pre.Data;
+            _precheckOk = pre.Succeeded;
 
+            var preData = pre.Data;
             bool permitirRecalificar = false;
 
-            // 3) Si hay existentes -> dialog decide
+            // PASO 3: Si hay existentes, mostrar dialog
             if (preData?.Existentes?.Any() == true)
             {
+                // Actualizar flags visuales con el precheck fresco
+                var previewMap = preData.PreviewPorAlumno?.ToDictionary(x => x.AlumnoId) ?? new();
+                foreach (var item in modelo.Calificaciones)
+                {
+                    if (previewMap.TryGetValue(item.AlumnoId, out var preview))
+                    {
+                        item.EstadoPreview = preview.Estado;
+                        item.MotivoPreview = preview.Motivo;
+                    }
+                }
+
+                // Abrir dialog RecalificarExistentesDialog
                 var parameters = new DialogParameters { ["Model"] = preData };
                 var options = new DialogOptions
                 {
@@ -485,34 +640,92 @@
                 var result = await dialog.Result;
 
                 if (result.Canceled)
-                    return;
-
-                var decision = result.Data as RecalificarDecision;
-                permitirRecalificar = decision?.PermitirRecalificarExistentes ?? false;
-
-                // Si eligió recalificar, habilita edición solo para los “existentes”
-                if (permitirRecalificar)
                 {
-                    var idsExistentes = preData.Existentes.Select(x => x.AlumnoId).ToHashSet();
-                    foreach (var item in modelo.Calificaciones)
-                        item.HabilitadoParaEdicion = idsExistentes.Contains(item.AlumnoId) || !item.YaTieneCalificacion;
+                    modelo.SoloValidar = false;
+                    ToastService.ShowInfo("Operación cancelada por el usuario.");
+                    return;
                 }
-            }
 
-            // 4) COMMIT
-            modelo.SoloValidar = false;
-            modelo.PermitirRecalificarExistentes = permitirRecalificar;
+                    var decision = result.Data as RecalificarDecision;
+                    permitirRecalificar = decision?.PermitirRecalificarExistentes ?? false;
+
+                    // AUDITORÍA: Capturar motivo de recalificación
+                    if (permitirRecalificar)
+                    {
+                        modelo.MotivoRecalificacion = decision?.MotivoRecalificacion;
+
+                        // Validación adicional: si viene vacío, rechazar
+                        if (string.IsNullOrWhiteSpace(modelo.MotivoRecalificacion))
+                        {
+                            ToastService.ShowError("El motivo de recalificación es requerido.");
+                            permitirRecalificar = false;
+                        }
+                        else
+                        {
+                            // AUDITORÍA: Propagar motivo a cada alumno que será recalificado
+                            // Esto se enviará al backend en el modelo.Calificaciones
+                            foreach (var item in modelo.Calificaciones)
+                            {
+                                if (item.YaTieneCalificacion)
+                                {
+                                    item.MotivoModificacion = modelo.MotivoRecalificacion;
+                                }
+                            }
+                        }
+                    }
+
+                    // Validación: si usuario quiere recalificar pero el período no lo permite
+                    if (permitirRecalificar && !preData.PermiteRecalificar)
+                    {
+                        ToastService.ShowError($"No se puede recalificar: {preData.MotivoNoPermiteRecalificar}");
+                        permitirRecalificar = false;
+                    }
+
+                    // Si se recalificará, habilitar edición solo para existentes
+                    if (permitirRecalificar)
+                    {
+                        var idsExistentes = preData.Existentes.Select(x => x.AlumnoId).ToHashSet();
+                        foreach (var item in modelo.Calificaciones)
+                            item.HabilitadoParaEdicion = idsExistentes.Contains(item.AlumnoId) || !item.YaTieneCalificacion;
+                    }
+                }
+
+                // PASO 3: COMMIT real
+                modelo.SoloValidar = false;
+                modelo.PermitirRecalificarExistentes = permitirRecalificar;
 
             var resp = await CalificacionService.CreateMasivoAsync(modelo);
 
             if (resp.Succeeded)
             {
-                ToastService.ShowSuccess($"Guardado: {resp.Data.Insertadas} nuevas, {resp.Data.Actualizadas} recalificadas.");
-                Navigation.NavigateTo("/calificaciones");
+                // FEEDBACK: Mostrar resumen completo
+                var tieneErrores = resp.Data.Errores?.Any() == true;
+
+                var mensaje = $"✅ Operación completada:\n" +
+                    $"• Nuevas: {resp.Data.Insertadas}\n" +
+                    $"• Recalificadas: {resp.Data.Actualizadas}";
+
+                if (tieneErrores)
+                {
+                    mensaje += $"\n• ⚠️ Errores: {resp.Data.Errores.Count}";
+                    ToastService.ShowWarning(mensaje);
+
+                    // NO navegar si hay errores: dejar que el usuario vea y corrija
+                    ToastService.ShowInfo("No navegamos automáticamente. Revisa los errores y reintenta si es necesario.");
+                }
+                else
+                {
+                    ToastService.ShowSuccess(mensaje);
+
+                    // Navegar después de 1.5 segundos para que el usuario vea el toast
+                    await Task.Delay(1500);
+                    Navigation.NavigateTo("/calificaciones");
+                }
             }
             else
             {
-                ToastService.ShowError(resp.Message ?? "No se pudo guardar.");
+                // PASO 4: Mejorar manejo de concurrencia
+                await ManejarRespuestaGuardado(resp);
             }
         }
         catch (Exception ex)
@@ -523,6 +736,7 @@
         finally
         {
             isSaving = false;
+            modelo.SoloValidar = false; // Asegurar que queda en false
         }
     }
 
@@ -543,6 +757,17 @@
         busquedaRealizada = false;
         errorMessage = null;
 
+        // PASO 2: Limpiar precheck cuando cambia Grupo
+        _precheck = null;
+        _precheckOk = false;
+
+        // PASO 4: Limpiar alertas cuando cambia Grupo
+        _mostrarAlertaConcurrencia = false;
+        _soloPendientes = false;
+
+        // PASO 5: Limpiar alert de conflicto cuando cambia Grupo
+        _mostrarAlertaConflictoGuardado = false;
+
         if (modelo.GrupoId <= 0)
             return;
 
@@ -553,5 +778,60 @@
             ToastService.ShowError(resp.Message ?? "No se pudieron cargar los periodos.");
     }
 
-    private async Task OnGrupoChangedAfter() => await OnGrupoChanged(modelo.GrupoId);
-}
+        private async Task OnGrupoChangedAfter() => await OnGrupoChanged(modelo.GrupoId);
+
+        // PASO 4: Método helper para filtrar items según toggle
+        private IEnumerable<CalificacionAlumnoDto> GetItemsAMostrar()
+        {
+            if (modelo.Calificaciones == null)
+                return Enumerable.Empty<CalificacionAlumnoDto>();
+
+            return _soloPendientes
+                ? modelo.Calificaciones.Where(x => !x.YaTieneCalificacion)
+                : modelo.Calificaciones;
+        }
+
+            // PASO 5: Mejorar manejo de 409 Conflict en GuardarCalificaciones
+            private async Task ManejarRespuestaGuardado(ApiResponse<CalificacionMasivaResultadoDto> resp)
+            {
+                if (!resp.Succeeded)
+                {
+                    // AUDITORÍA: Detectar error por motivo requerido
+                    var esErrorMotivo = resp.Message != null && 
+                        resp.Message.Contains("motivo", StringComparison.OrdinalIgnoreCase);
+
+                    if (esErrorMotivo)
+                    {
+                        ToastService.ShowError("❌ El motivo de recalificación es requerido. Abre el diálogo nuevamente e indica un motivo.");
+                        return;
+                    }
+
+                    // PASO 5: Detectar error por concurrencia/duplicados (409 Conflict o heurística)
+                    // Detecta: "Conflicto", "ya fueron capturadas", "duplicate", "unique", "concurrencia"
+                    var esConflictoConcurrencia = resp.Message != null && 
+                        (resp.Message.Contains("Conflicto", StringComparison.OrdinalIgnoreCase) ||
+                         resp.Message.Contains("ya fueron capturadas", StringComparison.OrdinalIgnoreCase) ||
+                         resp.Message.Contains("duplicate", StringComparison.OrdinalIgnoreCase) ||
+                         resp.Message.Contains("unique", StringComparison.OrdinalIgnoreCase) ||
+                         resp.Message.Contains("concurrencia", StringComparison.OrdinalIgnoreCase));
+
+                    if (esConflictoConcurrencia)
+                    {
+                        ToastService.ShowWarning("⚠️ Otro usuario ya capturó algunas calificaciones. Actualizando lista…");
+
+                        // Ejecutar precheck fresco automáticamente
+                        await AplicarPrecheckExistentesAsync(mostrarToast: false);
+
+                        // Mostrar alert de conflicto permanente
+                        _mostrarAlertaConflictoGuardado = true;
+
+                        // Mostrar feedback adicional
+                        ToastService.ShowInfo("Se actualizó la lista. Revisa los cambios y reintenta si es necesario.");
+
+                        return;
+                    }
+
+                    ToastService.ShowError(resp.Message ?? "No se pudo guardar.");
+                }
+            }
+        }

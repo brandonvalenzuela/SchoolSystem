@@ -23,8 +23,18 @@ namespace SchoolSystem.Application.DTOs.Calificaciones
 
         /// <summary>
         /// Motivo de la modificación/recalificación. 
-        /// Requerido si PermitirRecalificarExistentes es true y hay calificaciones existentes.
+        /// Requerido si PermitirRecalificarExistentes es true y hay calificaciones existentes para actualizar.
+        /// Se usa para auditoría: MotivoModificacion en la entidad Calificacion.
         /// </summary>
         public string? MotivoModificacion { get; set; }
+
+        /// <summary>
+        /// Alias para MotivoModificacion. Si se proporciona MotivoRecalificacion, se usa en lugar de MotivoModificacion.
+        /// </summary>
+        public string? MotivoRecalificacion 
+        { 
+            get => MotivoModificacion;
+            set => MotivoModificacion = value;
+        }
     }
 }

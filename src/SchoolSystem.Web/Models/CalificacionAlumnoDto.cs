@@ -21,10 +21,16 @@ namespace SchoolSystem.Web.Models
 
         // PASO 14: Preview del estado (Insertar, Actualizar, OmitirExistente, Error, Pendiente)
         public string EstadoPreview { get; set; } = "Pendiente";
-        
+
         /// <summary>
         /// Motivo del estado del preview (ej: "Alumno no está inscrito", "Período cerrado", etc.)
         /// </summary>
         public string? MotivoPreview { get; set; }
+
+        /// <summary>
+        /// AUDITORÍA: Motivo de recalificación. Se propaga cuando el usuario activa "Recalificar".
+        /// Se usa para auditoría en la BD (tabla Calificacion.MotivoModificacion).
+        /// </summary>
+        public string? MotivoModificacion { get; set; }
     }
 }

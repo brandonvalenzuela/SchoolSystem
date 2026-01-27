@@ -29,6 +29,13 @@
         public int TotalOmitirias { get; set; }
         public int TotalErrores { get; set; }
 
+        // Auditoría: Indica si se requiere motivo de recalificación
+        /// <summary>
+        /// Cuando SoloValidar=true y existen calificaciones para recalificar:
+        /// true si se requiere MotivoRecalificacion en el próximo commit.
+        /// </summary>
+        public bool RequiereMotivoRecalificacion { get; set; }
+
         // Propiedades para manejo de errores de concurrencia
         public bool Exitoso { get; set; } = true; // Por defecto, exitoso
         public string? Mensaje { get; set; } // Mensaje de error o información

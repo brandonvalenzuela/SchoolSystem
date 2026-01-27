@@ -49,8 +49,38 @@
             else
             {
                 <MudText Typo="Typo.body2" Color="Color.Secondary">
-                    Si activas esta opción, se actualizarán únicamente los alumnos listados como "Ya tenían".
+                    Si activas esta opción, se actualizarán @Model.Existentes.Count alumno(s) que ya tenían calificaciones.
                 </MudText>
+            }
+
+            <!-- AUDITORÍA: Campo de motivo de recalificación -->
+            @if (_recalificar && _permiteRecalificar)
+            {
+                <MudPaper Class="pa-3 my-3 bg-info-light">
+                    <MudText Typo="Typo.caption" Color="Color.Info">
+                        <strong>ℹ️ Se recalificarán:</strong> @Model.Existentes.Count alumno(s)
+                    </MudText>
+                </MudPaper>
+
+                @if (_mostrarErrorMotivo)
+                {
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Error" Class="mb-3">
+                        <MudText Typo="Typo.body2">
+                            <strong>❌ Motivo requerido:</strong> Debes indicar un motivo para recalificar.
+                        </MudText>
+                    </MudAlert>
+                }
+
+                <MudTextField T="string"
+                              @bind-Value="_motivoRecalificacion"
+                              Label="Motivo de recalificación (obligatorio)"
+                              Placeholder="Ej: Corrección por error de captura, ajuste por evaluación extraordinaria…"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              FullWidth="true"
+                              Counter="500"
+                              MaxLength="500"
+                              HelperText="Proporciona un motivo claro para la auditoría. Se registrará en la BD." />
             }
 
             <MudDivider />
@@ -101,36 +131,74 @@
         </MudStack>
     </DialogContent>
 
-    <DialogActions>
-        <MudButton Variant="Variant.Text" OnClick="Cancelar">Cancelar</MudButton>
+        <DialogActions>
+            <MudButton Variant="Variant.Text" OnClick="Cancelar">Cancelar</MudButton>
 
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="GuardarSoloNuevas">
-            Guardar solo nuevas
-        </MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="GuardarSoloNuevas">
+                Guardar solo nuevas
+            </MudButton>
 
-        <MudButton Variant="Variant.Filled"
-                   Color="Color.Success"
-                   Disabled="@(!_permiteRecalificar)"
-                   OnClick="RecalificarYGuardar">
-            Recalificar + Guardar
-        </MudButton>
-    </DialogActions>
-</MudDialog>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Success"
+                       Disabled="@(!PuedeRecalificar())"
+                       OnClick="RecalificarYGuardar">
+                Recalificar + Guardar
+            </MudButton>
+        </DialogActions>
+    </MudDialog>
 
-@code {
-    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
-    [Parameter] public CalificacionMasivaResultadoDto Model { get; set; } = new();
+    @code {
+        [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+        [Parameter] public CalificacionMasivaResultadoDto Model { get; set; } = new();
 
-    private bool _recalificar;
+        private bool _recalificar;
+        private string? _motivoRecalificacion;
+        private bool _mostrarErrorMotivo;
 
-    private bool _permiteRecalificar => Model?.PermiteRecalificar ?? false;
-    private int Nuevas => (Model?.TotalEnviadas ?? 0) - (Model?.Existentes?.Count ?? 0);
+        private bool _permiteRecalificar => Model?.PermiteRecalificar ?? false;
+        private int Nuevas => (Model?.TotalEnviadas ?? 0) - (Model?.Existentes?.Count ?? 0);
 
-    private void Cancelar() => MudDialog.Cancel();
+        private void Cancelar() => MudDialog.Cancel();
 
-    private void GuardarSoloNuevas()
-        => MudDialog.Close(DialogResult.Ok(new RecalificarDecision { PermitirRecalificarExistentes = false }));
+        private void GuardarSoloNuevas()
+            => MudDialog.Close(DialogResult.Ok(new RecalificarDecision 
+            { 
+                PermitirRecalificarExistentes = false,
+                MotivoRecalificacion = null
+            }));
 
-    private void RecalificarYGuardar()
-        => MudDialog.Close(DialogResult.Ok(new RecalificarDecision { PermitirRecalificarExistentes = true }));
-}
+        /// <summary>
+        /// Valida si el usuario puede recalificar:
+        /// - Debe haber seleccionado recalificar
+        /// - Debe haber indicado un motivo (auditoría)
+        /// </summary>
+        private bool PuedeRecalificar()
+        {
+            if (!_permiteRecalificar)
+                return false;
+
+            if (!_recalificar)
+                return true; // Si no está marcado, el botón no debe estar deshabilitado, solo no hacer nada
+
+            // Si está marcado recalificar, el motivo es obligatorio
+            return !string.IsNullOrWhiteSpace(_motivoRecalificacion);
+        }
+
+        private void RecalificarYGuardar()
+        {
+            _mostrarErrorMotivo = false;
+
+            // Validación: Si intenta recalificar sin motivo, mostrar error
+            if (_recalificar && string.IsNullOrWhiteSpace(_motivoRecalificacion))
+            {
+                _mostrarErrorMotivo = true;
+                return;
+            }
+
+            MudDialog.Close(DialogResult.Ok(new RecalificarDecision 
+            { 
+                PermitirRecalificarExistentes = _recalificar,
+                MotivoRecalificacion = _recalificar ? _motivoRecalificacion : null
+            }));
+        }
+    }
