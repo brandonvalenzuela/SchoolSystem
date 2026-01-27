@@ -31,6 +31,7 @@ namespace SchoolSystem.Application.Services.Implementations
         {
             // 1. Buscar usuario
             var users = await _unitOfWork.Usuarios.GetAllAsync();
+
             var user = users.FirstOrDefault(u => u.Username == loginDto.Username);
 
             // 2. Validar usuario y contraseña

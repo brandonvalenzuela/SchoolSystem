@@ -242,20 +242,81 @@ namespace SchoolSystem.Application.Services.Implementations
                 });
             }
 
-            // Si solo valida, regresamos aquí (con PermiteRecalificar/Motivo/Existentes/TotalEnviadas)
+            // Si solo valida, llenar preview y retornar sin persistir
             if (dto.SoloValidar)
             {
-                // (Opcional) reportar errores de alumnos inválidos incluso en validación
+                // PASO 14: Llenar PreviewPorAlumno con el estado que tendría cada alumno
                 foreach (var item in califsNormalizadas)
                 {
+                    var preview = new CalificacionMasivaPreviewAlumnoDto
+                    {
+                        AlumnoId = item.AlumnoId
+                    };
+
+                    // Validación 1: ¿Está inscrito?
                     if (!idsAlumnosValidos.Contains(item.AlumnoId))
                     {
-                        resultado.Errores.Add(new CalificacionMasivaErrorDto
-                        {
-                            AlumnoId = item.AlumnoId,
-                            Motivo = "El alumno no está inscrito en este grupo/ciclo o no es válido."
-                        });
+                        preview.Estado = "Error";
+                        preview.Motivo = "El alumno no está inscrito en este grupo/ciclo o no es válido.";
+                        resultado.PreviewPorAlumno.Add(preview);
+                        resultado.TotalErrores++;
+                        continue;
                     }
+
+                    // Validación 2: ¿Existe calificación?
+                    if (existentesPorAlumno.TryGetValue(item.AlumnoId, out var existente))
+                    {
+                        preview.CalificacionActual = existente.CalificacionNumerica;
+                        preview.ObservacionesActuales = existente.Observaciones;
+
+                        if (!dto.PermitirRecalificarExistentes)
+                        {
+                            preview.Estado = "OmitirExistente";
+                            preview.Motivo = "Ya existe calificación para este alumno.";
+                            resultado.TotalOmitirias++;
+                            resultado.PreviewPorAlumno.Add(preview);
+                            continue;
+                        }
+
+                        // ¿Permite recalificar?
+                        if (!permiteRecalificacion)
+                        {
+                            preview.Estado = "Error";
+                            preview.Motivo = "El período no permite recalificación/modificación.";
+                            resultado.TotalErrores++;
+                            resultado.PreviewPorAlumno.Add(preview);
+                            continue;
+                        }
+
+                        // ¿Está bloqueada?
+                        if (existente.Bloqueada)
+                        {
+                            preview.Estado = "Error";
+                            preview.Motivo = "La calificación está bloqueada y no puede ser modificada.";
+                            resultado.TotalErrores++;
+                            resultado.PreviewPorAlumno.Add(preview);
+                            continue;
+                        }
+
+                        preview.Estado = "Actualizar";
+                        resultado.TotalActualizarias++;
+                        resultado.PreviewPorAlumno.Add(preview);
+                        continue;
+                    }
+
+                    // No existe: ¿Permite insertar?
+                    if (!permiteInsercion)
+                    {
+                        preview.Estado = "Error";
+                        preview.Motivo = "Este período no permite captura (inactivo, definitivo o fuera de plazo).";
+                        resultado.TotalErrores++;
+                        resultado.PreviewPorAlumno.Add(preview);
+                        continue;
+                    }
+
+                    preview.Estado = "Insertar";
+                    resultado.TotalInsertarias++;
+                    resultado.PreviewPorAlumno.Add(preview);
                 }
 
                 return resultado;
@@ -431,26 +492,40 @@ namespace SchoolSystem.Application.Services.Implementations
                     // COMMIT TRANSACTION
                     await _unitOfWork.CommitTransactionAsync();
 
-                    return resultado;
-                }
-                catch (DbUpdateException dbEx) when (IsDuplicateKey(dbEx))
-                {
-                    // ROLLBACK on duplicate key violation (MySQL error 1062)
-                    await _unitOfWork.RollbackTransactionAsync();
+                                return resultado;
+                            }
+                            catch (DbUpdateException dbEx) when (IsDuplicateKey(dbEx))
+                            {
+                                // ROLLBACK on duplicate key violation (MySQL error 1062)
+                                await _unitOfWork.RollbackTransactionAsync();
 
-                    // Devolver un resultado consistente indicando que hay duplicados
-                    // (Otro usuario ya capturó algunas calificaciones)
-                    resultado.Exitoso = false;
-                    resultado.Mensaje = "No se pudo completar la operación. Otro usuario ya capturó algunas calificaciones para los mismos alumnos. Intenta nuevamente o contacta al administrador.";
-                    return resultado;
-                }
-                catch (Exception)
-                {
-                    // ROLLBACK on any other exception
-                    await _unitOfWork.RollbackTransactionAsync();
-                    throw;
-                }
-        }
+                                // MANEJO ENTERPRISE DE CONCURRENCIA
+                                // Resetear conteos de éxito
+                                resultado.Insertadas = 0;
+                                resultado.Actualizadas = 0;
+                                resultado.AlumnoIdsInsertados.Clear();
+                                resultado.AlumnoIdsActualizados.Clear();
+
+                                // Agregar error global de concurrencia
+                                resultado.Errores.Add(new CalificacionMasivaErrorDto
+                                {
+                                    AlumnoId = 0,  // 0 indica error global, no específico de un alumno
+                                    Motivo = "Conflicto de concurrencia: ya existen calificaciones para algunos alumnos. Recarga e intenta de nuevo."
+                                });
+
+                                resultado.TotalErrores += 1;
+                                resultado.Exitoso = false;
+                                resultado.Mensaje = "No se pudo completar la operación por conflicto de concurrencia. Otro usuario capturó calificaciones simultáneamente.";
+
+                                return resultado;
+                            }
+                            catch (Exception)
+                            {
+                                // ROLLBACK on any other exception
+                                await _unitOfWork.RollbackTransactionAsync();
+                                throw;
+                            }
+                    }
 
 
         // ============================================================

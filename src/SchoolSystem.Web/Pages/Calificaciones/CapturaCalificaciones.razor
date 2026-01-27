@@ -96,6 +96,21 @@
 
     @if (modelo.Calificaciones != null && modelo.Calificaciones.Any())
     {
+        <!-- PASO 14: Mostrar alertas de errores críticos -->
+        @if (modelo.Calificaciones.Any(c => c.EstadoPreview == "Error"))
+        {
+            <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Class="mb-3" Icon="@Icons.Material.Filled.Error">
+                <MudStack Spacing="1">
+                    <MudText Typo="Typo.body2">
+                        <strong>⚠️ Errores en captura:</strong> Los siguientes alumnos no pueden ser procesados. Revisa y contacta al administrador si es necesario.
+                    </MudText>
+                    <MudText Typo="Typo.caption">
+                        Total: <strong>@modelo.Calificaciones.Count(c => c.EstadoPreview == "Error")</strong> alumno(s) con problemas.
+                    </MudText>
+                </MudStack>
+            </MudAlert>
+        }
+
         <div class="card shadow border-0">
             <div class="card-header bg-white">
                 <div class="d-flex justify-content-between align-items-center">
@@ -110,34 +125,64 @@
                         <thead class="table-dark">
                             <tr>
                                 <th style="width: 15%">Matrícula</th>
-                                <th style="width: 30%">Nombre del Alumno</th>
+                                <th style="width: 25%">Nombre del Alumno</th>
                                 <th style="width: 15%" class="text-center">Estado</th>
                                 <th style="width: 15%" class="text-center">Calificación</th>
-                                <th style="width: 25%">Observaciones</th>
+                                <th style="width: 30%">Observaciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in modelo.Calificaciones)
                             {
-                                <tr>
+                                <tr class="@(item.EstadoPreview == "Error" ? "table-danger" : "")">
                                     <td>@item.Matricula</td>
                                     <td class="fw-bold">@item.NombreAlumno</td>
 
-                                    <!-- ESTADO (alineado) -->
+                                    <!-- PASO 14: Estado basado en preview -->
                                     <td class="text-center">
-                                        @if (item.YaTieneCalificacion)
+                                        @switch (item.EstadoPreview)
                                         {
-                                            <MudTooltip Text="@item.ObservacionesActuales">
-                                                <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small">
-                                                    Ya calificado (@item.CalificacionActual)
+                                            case "Insertar":
+                                                <MudTooltip Text="Nueva calificación">
+                                                    <MudChip T="string" Color="Color.Success" Variant="Variant.Outlined" Size="Size.Small">
+                                                        <MudIcon Icon="@Icons.Material.Filled.Add" Size="Size.Small" Class="me-1"></MudIcon>
+                                                        Nueva
+                                                    </MudChip>
+                                                </MudTooltip>
+                                                break;
+
+                                            case "Actualizar":
+                                                <MudTooltip Text="Será recalificada">
+                                                    <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small">
+                                                        <MudIcon Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Class="me-1"></MudIcon>
+                                                        Actualizar
+                                                    </MudChip>
+                                                </MudTooltip>
+                                                break;
+
+                                            case "OmitirExistente":
+                                                <MudTooltip Text="@item.MotivoPreview">
+                                                    <MudChip T="string" Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small">
+                                                        <MudIcon Icon="@Icons.Material.Filled.Info" Size="Size.Small" Class="me-1"></MudIcon>
+                                                        Existente
+                                                    </MudChip>
+                                                </MudTooltip>
+                                                break;
+
+                                            case "Error":
+                                                <MudTooltip Text="@item.MotivoPreview">
+                                                    <MudChip T="string" Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small">
+                                                        <MudIcon Icon="@Icons.Material.Filled.Close" Size="Size.Small" Class="me-1"></MudIcon>
+                                                        Error
+                                                    </MudChip>
+                                                </MudTooltip>
+                                                break;
+
+                                            default:
+                                                <MudChip T="string" Color="Color.Default" Variant="Variant.Outlined" Size="Size.Small">
+                                                    Pendiente
                                                 </MudChip>
-                                            </MudTooltip>
-                                        }
-                                        else
-                                        {
-                                            <MudChip T="string" Color="Color.Success" Variant="Variant.Outlined" Size="Size.Small">
-                                                Pendiente
-                                            </MudChip>
+                                                break;
                                         }
                                     </td>
 
@@ -147,7 +192,7 @@
                                                class="form-control text-center fw-bold @GetClaseCalificacion(item.CalificacionNumerica)"
                                                @bind="item.CalificacionNumerica"
                                                min="0" max="10" step="0.1"
-                                               disabled="@(!item.HabilitadoParaEdicion)" />
+                                               disabled="@(!item.HabilitadoParaEdicion || item.EstadoPreview == "Error")" />
                                     </td>
 
                                     <!-- OBSERVACIONES -->
@@ -156,7 +201,7 @@
                                                class="form-control form-control-sm"
                                                @bind="item.Observaciones"
                                                placeholder="Opcional..."
-                                               disabled="@(!item.HabilitadoParaEdicion)" />
+                                               disabled="@(!item.HabilitadoParaEdicion || item.EstadoPreview == "Error")" />
                                     </td>
                                 </tr>
                             }
@@ -166,10 +211,16 @@
             </div>
 
             <div class="card-footer bg-light py-3 text-end">
-                <button class="btn btn-success px-4" @onclick="GuardarCalificaciones" disabled="@isSaving">
+                <button class="btn btn-success px-4" 
+                        @onclick="GuardarCalificaciones" 
+                        disabled="@(isSaving || modelo.Calificaciones.Any(c => c.EstadoPreview == "Error"))">
                     @if (isSaving)
                     {
                         <span class="spinner-border spinner-border-sm"></span> <span>Guardando...</span>
+                    }
+                    else if (modelo.Calificaciones.Any(c => c.EstadoPreview == "Error"))
+                    {
+                        <span><i class="oi oi-block"></i> No se puede guardar (hay errores)</span>
                     }
                     else
                     {
@@ -318,23 +369,40 @@
 
         var pre = await CalificacionService.CreateMasivoAsync(modelo);
 
-        if (pre.Succeeded && pre.Data?.Existentes?.Any() == true)
+        if (pre.Succeeded && pre.Data != null)
         {
-            var map = pre.Data.Existentes.ToDictionary(x => x.AlumnoId);
+            // PASO 14: Usar PreviewPorAlumno para marcar estados
+            var previewMap = pre.Data.PreviewPorAlumno?.ToDictionary(x => x.AlumnoId) ?? new();
 
             foreach (var item in modelo.Calificaciones)
             {
-                if (map.TryGetValue(item.AlumnoId, out var exi))
+                if (previewMap.TryGetValue(item.AlumnoId, out var preview))
                 {
-                    item.YaTieneCalificacion = true;
-                    item.CalificacionActual = exi.CalificacionActual;
-                    item.ObservacionesActuales = exi.ObservacionesActuales;
+                    // Asignar estado y motivo del preview
+                    item.EstadoPreview = preview.Estado;
+                    item.MotivoPreview = preview.Motivo;
 
-                    // por default: NO editable si ya existe (hasta que el dialog permita recalificar)
-                    item.HabilitadoParaEdicion = false;
+                    // Llenar datos actuales si existen
+                    if (preview.CalificacionActual.HasValue)
+                    {
+                        item.YaTieneCalificacion = true;
+                        item.CalificacionActual = preview.CalificacionActual;
+                        item.ObservacionesActuales = preview.ObservacionesActuales;
+                        item.HabilitadoParaEdicion = false; // Por defecto no editable
+                    }
+                    else
+                    {
+                        item.YaTieneCalificacion = false;
+                        item.CalificacionActual = null;
+                        item.ObservacionesActuales = null;
+                        item.HabilitadoParaEdicion = preview.Estado != "Error"; // Solo editable si no hay error
+                    }
                 }
                 else
                 {
+                    // Fallback si no está en preview (no debería ocurrir)
+                    item.EstadoPreview = "Pendiente";
+                    item.MotivoPreview = null;
                     item.YaTieneCalificacion = false;
                     item.CalificacionActual = null;
                     item.ObservacionesActuales = null;
@@ -342,13 +410,20 @@
                 }
             }
 
-            if (mostrarToast)
-                ToastService.ShowWarning($"Ya existen calificaciones para {pre.Data.Existentes.Count} alumno(s).");
+            if (mostrarToast && (pre.Data.TotalActualizarias > 0 || pre.Data.TotalErrores > 0))
+            {
+                if (pre.Data.TotalErrores > 0)
+                    ToastService.ShowError($"{pre.Data.TotalErrores} alumno(s) con problemas. {pre.Data.TotalActualizarias} para recalificar.");
+                else if (pre.Data.TotalActualizarias > 0)
+                    ToastService.ShowWarning($"{pre.Data.TotalActualizarias} alumno(s) ya tienen calificaciones.");
+            }
         }
         else
         {
             foreach (var item in modelo.Calificaciones)
             {
+                item.EstadoPreview = "Pendiente";
+                item.MotivoPreview = null;
                 item.YaTieneCalificacion = false;
                 item.CalificacionActual = null;
                 item.ObservacionesActuales = null;
