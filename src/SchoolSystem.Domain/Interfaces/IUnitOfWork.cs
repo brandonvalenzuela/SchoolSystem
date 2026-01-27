@@ -43,6 +43,7 @@ namespace SchoolSystem.Domain.Interfaces
         IRepository<AlumnoPadre> AlumnoPadres { get; }
         IRepository<CicloEscolar> CicloEscolares { get; }
         IRepository<PeriodoEvaluacion> PeriodoEvaluaciones { get; }
+        IRepository<GrupoMateriaMaestro> GrupoMateriaMaestros { get; }
 
 
             // Método para guardar todos los cambios

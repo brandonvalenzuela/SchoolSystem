@@ -16,8 +16,15 @@ namespace SchoolSystem.Application.DTOs.Calificaciones
 
         [Required, MinLength(1, ErrorMessage = "Debe haber al menos una calificación.")]
         public List<CalificacionAlumnoDto> Calificaciones { get; set; }
+
         public bool PermitirRecalificarExistentes { get; set; } = false;
+
         public bool SoloValidar { get; set; } = false;
 
+        /// <summary>
+        /// Motivo de la modificación/recalificación. 
+        /// Requerido si PermitirRecalificarExistentes es true y hay calificaciones existentes.
+        /// </summary>
+        public string? MotivoModificacion { get; set; }
     }
 }

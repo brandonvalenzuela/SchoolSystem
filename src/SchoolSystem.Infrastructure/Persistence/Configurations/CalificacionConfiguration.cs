@@ -17,7 +17,19 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
         {
             #region Tabla
 
-            builder.ToTable("Calificaciones");
+            // Configurar tabla con check constraints usando EF Core 8 overload
+            builder.ToTable("Calificaciones", t =>
+            {
+                // Check Constraint: La calificación numérica debe estar entre 0 y 10
+                t.HasCheckConstraint(
+                    "CK_Calificaciones_CalificacionNumerica",
+                    "`CalificacionNumerica` >= 0 AND `CalificacionNumerica` <= 10");
+
+                // Check Constraint: El peso debe estar entre 0 y 100 si existe
+                t.HasCheckConstraint(
+                    "CK_Calificaciones_Peso",
+                    "`Peso` IS NULL OR (`Peso` >= 0 AND `Peso` <= 100)");
+            });
 
             #endregion
 
@@ -226,10 +238,10 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasDatabaseName("UX_Calificaciones_Escuela_Grupo_Materia_Periodo_Alumno")
                 .IsUnique();
 
-            // Índice único compuesto: Un alumno solo puede tener una calificación por materia-período
+            // Índice compuesto (no único): Un alumno puede tener múltiples calificaciones
+            // Se mantiene como índice normal para performance en búsquedas
             builder.HasIndex(c => new { c.AlumnoId, c.MateriaId, c.PeriodoId })
-                .HasDatabaseName("IX_Calificacion_Alumno_Materia_Periodo")
-                .IsUnique();
+                .HasDatabaseName("IX_Calificacion_Alumno_Materia_Periodo");
 
             // Índice compuesto en Grupo y Período (para consultas de maestros)
             builder.HasIndex(c => new { c.GrupoId, c.PeriodoId })
@@ -246,6 +258,15 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             // Índice en VisibleParaPadres
             builder.HasIndex(c => c.VisibleParaPadres)
                 .HasDatabaseName("IX_Calificacion_Visible_Padres");
+
+            // Índices para optimizar búsquedas en flujo de captura masiva
+            // Performance: búsqueda por grupo, materia, período y alumno
+            builder.HasIndex(c => new { c.GrupoId, c.MateriaId, c.PeriodoId, c.AlumnoId })
+                .HasDatabaseName("IX_Calificaciones_Grupo_Materia_Periodo_Alumno");
+
+            // Performance: búsqueda por grupo y alumno (recalcular promedios)
+            builder.HasIndex(c => new { c.GrupoId, c.AlumnoId })
+                .HasDatabaseName("IX_Calificaciones_Grupo_Alumno");
 
             #endregion
 
@@ -287,23 +308,6 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .WithMany()
                 .HasForeignKey(c => c.CapturadoPor)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            #endregion
-
-            #region Validaciones a Nivel de BD (Constraints)
-
-            // Check Constraint: La calificación numérica debe estar entre 0 y 10
-            // Usando el nuevo estilo de EF Core 8 con ToTable()
-            builder.ToTable(t => t.HasCheckConstraint(
-                "CK_Calificaciones_CalificacionNumerica",
-                "`CalificacionNumerica` >= 0 AND `CalificacionNumerica` <= 10"
-            ));
-
-            // Check Constraint: El peso debe estar entre 0 y 100 si existe
-            builder.ToTable(t => t.HasCheckConstraint(
-                "CK_Calificaciones_Peso",
-                "`Peso` IS NULL OR (`Peso` >= 0 AND `Peso` <= 100)"
-            ));
 
             #endregion
         }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SchoolSystem.Infrastructure.Persistence.Context;
 
@@ -10,9 +11,11 @@ using SchoolSystem.Infrastructure.Persistence.Context;
 namespace SchoolSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(SchoolSystemDbContext))]
-    partial class SchoolSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260125111920_Add_CheckConstraint_CalificacionNumerica")]
+    partial class Add_CheckConstraint_CalificacionNumerica
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -866,9 +869,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     b.HasIndex("GrupoId", "CicloEscolarId", "Estatus")
                         .HasDatabaseName("IX_Inscripciones_Grupo_Ciclo_Estatus");
-
-                    b.HasIndex("GrupoId", "CicloEscolarId", "Estatus", "AlumnoId")
-                        .HasDatabaseName("IX_Inscripciones_Grupo_Ciclo_Estatus_Alumno");
 
                     b.ToTable("Inscripciones", null, t =>
                         {
@@ -5729,17 +5729,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("VisibleParaPadres")
                         .HasDatabaseName("IX_Calificacion_Visible_Padres");
 
-                    b.HasIndex("GrupoId", "AlumnoId")
-                        .HasDatabaseName("IX_Calificaciones_Grupo_Alumno");
-
                     b.HasIndex("GrupoId", "PeriodoId")
                         .HasDatabaseName("IX_Calificacion_Grupo_Periodo");
 
                     b.HasIndex("AlumnoId", "MateriaId", "PeriodoId")
                         .HasDatabaseName("IX_Calificacion_Alumno_Materia_Periodo");
-
-                    b.HasIndex("GrupoId", "MateriaId", "PeriodoId", "AlumnoId")
-                        .HasDatabaseName("IX_Calificaciones_Grupo_Materia_Periodo_Alumno");
 
                     b.HasIndex("EscuelaId", "GrupoId", "MateriaId", "PeriodoId", "AlumnoId")
                         .IsUnique()

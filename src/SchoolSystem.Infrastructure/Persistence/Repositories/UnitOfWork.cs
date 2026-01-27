@@ -50,6 +50,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         private IRepository<AlumnoPadre> _alumnoPadres;
         private IRepository<CicloEscolar> _cicloEscolares;
         private IRepository<PeriodoEvaluacion> _periodoEvaluaciones;
+        private IRepository<GrupoMateriaMaestro> _grupoMateriaMaestros;
 
         public UnitOfWork(SchoolSystemDbContext context)
         {
@@ -80,6 +81,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         public IRepository<AlumnoPadre> AlumnoPadres => _alumnoPadres ??= new Repository<AlumnoPadre>(_context);
         public IRepository<CicloEscolar> CicloEscolares => _cicloEscolares ??= new Repository<CicloEscolar>(_context);
         public IRepository<PeriodoEvaluacion> PeriodoEvaluaciones => _periodoEvaluaciones ??= new Repository<PeriodoEvaluacion>(_context);
+        public IRepository<GrupoMateriaMaestro> GrupoMateriaMaestros => _grupoMateriaMaestros ??= new Repository<GrupoMateriaMaestro>(_context);
 
 
         public async Task<int> SaveChangesAsync()

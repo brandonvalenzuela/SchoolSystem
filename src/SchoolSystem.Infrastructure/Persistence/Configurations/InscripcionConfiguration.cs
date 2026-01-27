@@ -208,6 +208,11 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
             builder.HasIndex(i => new { i.AlumnoId, i.CicloEscolarId })
                 .HasDatabaseName("IX_Inscripciones_Alumno_Ciclo");
 
+            // Índice para optimizar búsquedas en flujo de recalcular promedios
+            // Performance: filtro por grupo, ciclo escolar, estatus y alumno
+            builder.HasIndex(i => new { i.GrupoId, i.CicloEscolarId, i.Estatus, i.AlumnoId })
+                .HasDatabaseName("IX_Inscripciones_Grupo_Ciclo_Estatus_Alumno");
+
             builder.HasIndex(i => new { i.GrupoId, i.CicloEscolarId, i.Estatus })
                 .HasDatabaseName("IX_Inscripciones_Grupo_Ciclo_Estatus");
 

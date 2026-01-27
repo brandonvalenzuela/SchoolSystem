@@ -168,6 +168,15 @@ namespace SchoolSystem.Application.Services.Implementations
             if (periodo.CicloEscolarId != grupo.CicloEscolarId)
                 throw new Exception("El periodo seleccionado no pertenece al ciclo escolar del grupo.");
 
+            // ---------------------------------------------------------
+            // Validación: Verificar que la materia está asignada al grupo
+            // ---------------------------------------------------------
+            var materiaAsignadaAlGrupo = await _unitOfWork.GrupoMateriaMaestros.FirstOrDefaultAsync(gmm =>
+                gmm.GrupoId == dto.GrupoId &&
+                gmm.MateriaId == dto.MateriaId &&
+                gmm.EscuelaId == dto.EscuelaId)
+                ?? throw new Exception("La materia no está asignada a este grupo.");
+
             // Regla de periodo
             var permiteInsercion = periodo.PuedeCapturarCalificaciones();
             var permiteRecalificacion = periodo.PuedeModificarCalificaciones() || periodo.EstaEnPeriodoRecalificacion();
@@ -278,6 +287,10 @@ namespace SchoolSystem.Application.Services.Implementations
                     if (!dto.PermitirRecalificarExistentes)
                         continue;
 
+                    // Validación: Si se va a recalificar, el motivo es obligatorio
+                    if (string.IsNullOrWhiteSpace(dto.MotivoModificacion))
+                        throw new InvalidOperationException("Debe indicar un motivo de recalificación.");
+
                     // Segunda validación (por si cambian reglas o se llamó en otro flujo)
                     if (!permiteRecalificacion)
                     {
@@ -289,11 +302,39 @@ namespace SchoolSystem.Application.Services.Implementations
                         continue;
                     }
 
+                    // Validación: No se puede recalificar una calificación bloqueada
+                    if (existente.Bloqueada)
+                    {
+                        resultado.Errores.Add(new CalificacionMasivaErrorDto
+                        {
+                            AlumnoId = item.AlumnoId,
+                            Motivo = "La calificación está bloqueada y no puede ser modificada."
+                        });
+                        continue;
+                    }
+
+                    // AUDITORÍA DE RECALIFICACIÓN
+                    // Capturar la calificación original ANTES de cambiarla
+                    if (!existente.EsRecalificacion)
+                    {
+                        existente.CalificacionOriginal = existente.CalificacionNumerica;
+                    }
+
+                    // Actualizar datos de la calificación
                     existente.Observaciones = item.Observaciones;
                     existente.CapturadoPor = dto.CapturadoPor;
                     existente.FechaCaptura = DateTime.Now;
                     existente.TipoEvaluacion = "Ordinaria";
                     existente.EstablecerCalificacion(item.CalificacionNumerica, 6.0m);
+
+                    // Registrar auditoría de la recalificación
+                    existente.EsRecalificacion = true;
+                    existente.FechaRecalificacion = DateTime.Now;
+                    existente.TipoRecalificacion = "Masiva";
+                    existente.FueModificada = true;
+                    existente.FechaUltimaModificacion = DateTime.Now;
+                    existente.ModificadoPor = dto.CapturadoPor;
+                    existente.MotivoModificacion = dto.MotivoModificacion;
 
                     calificacionesActualizar.Add(existente);
                     continue;

@@ -1,4 +1,4 @@
-﻿@using SchoolSystem.Web.Models
+@using SchoolSystem.Web.Models
 @using MudBlazor
 
 <MudDialog>
@@ -49,7 +49,7 @@
             else
             {
                 <MudText Typo="Typo.body2" Color="Color.Secondary">
-                    Si activas esta opción, se actualizarán únicamente los alumnos listados como “Ya tenían”.
+                    Si activas esta opción, se actualizarán únicamente los alumnos listados como "Ya tenían".
                 </MudText>
             }
 
@@ -70,8 +70,33 @@
                 </RowTemplate>
             </MudTable>
 
+            @if (Model.Errores != null && Model.Errores.Count > 0)
+            {
+                <MudDivider />
+
+                <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined">
+                    <MudStack Spacing="1">
+                        <MudText Typo="Typo.body2">
+                            <b>⚠️ Alumnos que serán omitidos:</b> Los siguientes alumnos se omitirán aunque actives la opción de recalificar.
+                            Revisa los motivos y considera contactar al administrador si hay algún problema.
+                        </MudText>
+                    </MudStack>
+                </MudAlert>
+
+                <MudTable Items="Model.Errores" Dense="true" Hover="true" Bordered="true">
+                    <HeaderContent>
+                        <MudTh>AlumnoId</MudTh>
+                        <MudTh>Motivo de omisión</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="AlumnoId">@context.AlumnoId</MudTd>
+                        <MudTd DataLabel="Motivo">@context.Motivo</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            }
+
             <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined">
-                Si eliges “Guardar solo nuevas”, los alumnos ya calificados se omitirán sin cambios.
+                Si eliges "Guardar solo nuevas", los alumnos ya calificados se omitirán sin cambios.
             </MudAlert>
         </MudStack>
     </DialogContent>
