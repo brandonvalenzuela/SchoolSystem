@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SchoolSystem.API.Extensions;
 using SchoolSystem.API.Services;
 using SchoolSystem.Application.Common.Wrappers;
 using SchoolSystem.Application.Mappings;
@@ -14,6 +15,7 @@ using SchoolSystem.Application.Validations.Alumnos;
 using SchoolSystem.Domain.Interfaces;
 using SchoolSystem.Infrastructure.Persistence.Context;
 using SchoolSystem.Infrastructure.Persistence.Repositories;
+using SchoolSystem.Infrastructure.Seeding;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -170,7 +172,10 @@ var app = builder.Build();
 
 // --- PIPELINE DE PETICIONES HTTP ---
 
-// Middleware de manejo de errores global (Debe ser el primero para capturar todo)
+// Middleware de CorrelationId (debe ir muy al inicio para capturar desde el principio)
+app.UseMiddleware<SchoolSystem.API.Middleware.CorrelationIdMiddleware>();
+
+// Middleware de manejo de errores global (Debe ir después de CorrelationId para heredar el scope)
 // Asegúrate de que el namespace coincida con tu carpeta (Middleware vs Middlewares)
 app.UseMiddleware<SchoolSystem.API.Middleware.ErrorHandlerMiddleware>();
 
@@ -190,5 +195,49 @@ app.UseAuthentication(); // 1. ¿Quién eres?
 app.UseAuthorization();  // 2. ¿Qué puedes hacer?
 
 app.MapControllers();
+
+// --- ? VERIFICACIÓN DE MIGRACIONES PENDIENTES ---
+// Detectar y manejar migraciones pendientes según la configuración del environment
+using (var scope = app.Services.CreateScope())
+{
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        logger.LogInformation("?? Verificando migraciones pendientes...");
+        await app.VerifyPendingMigrationsAsync();
+    }
+    catch (Exception ex)
+    {
+        logger.LogCritical(ex, "? Error crítico durante la verificación de migraciones. La aplicación se detiene.");
+        throw;
+    }
+}
+
+// --- DATABASE SEEDING ---
+// Ejecutar seeder de materias después de migraciones y antes de aceptar solicitudes
+//try
+//{
+//    using (var scope = app.Services.CreateScope())
+//    {
+//        var db = scope.ServiceProvider.GetRequiredService<SchoolSystemDbContext>();
+//        var logger = scope.ServiceProvider.GetRequiredService<ILogger<SchoolSystemDbContext>>();
+
+//        // Aplicar migraciones pendientes
+//        logger.LogInformation("?? Aplicando migraciones pendientes...");
+//        await db.Database.MigrateAsync();
+
+//        // Ejecutar seed de materias (idempotente)
+//        logger.LogInformation("?? Ejecutando seed de datos académicos...");
+//        await AcademicSeed.SeedMateriasAsync(db, logger);
+
+//        logger.LogInformation("? Inicialización de BD completada correctamente");
+//    }
+//}
+//catch (Exception ex)
+//{
+//    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+//    logger.LogError(ex, "? Error crítico durante la inicialización de la BD. Revisar logs.");
+//    throw;
+//}
 
 app.Run();

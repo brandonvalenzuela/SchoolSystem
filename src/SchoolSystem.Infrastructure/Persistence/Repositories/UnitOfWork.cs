@@ -30,6 +30,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         private IRepository<Alumno> _alumnos;
         private IRepository<Asistencia> _asistencias;
         private IRepository<Calificacion> _calificaciones;
+        private IRepository<CalificacionAuditLog> _calificacionesAuditLog;
         private IRepository<Escuela> _escuelas;
         private IRepository<Grado> _grados;
         private IRepository<Grupo> _grupos;
@@ -61,6 +62,7 @@ namespace SchoolSystem.Infrastructure.Persistence.Repositories
         public IRepository<Alumno> Alumnos => _alumnos ??= new Repository<Alumno>(_context);
         public IRepository<Asistencia> Asistencias => _asistencias ??= new Repository<Asistencia>(_context);
         public IRepository<Calificacion> Calificaciones => _calificaciones ??= new Repository<Calificacion>(_context);
+        public IRepository<CalificacionAuditLog> CalificacionesAuditLog => _calificacionesAuditLog ??= new Repository<CalificacionAuditLog>(_context);
         public IRepository<Escuela> Escuelas => _escuelas ??= new Repository<Escuela>(_context);
         public IRepository<Grado> Grados => _grados ??= new Repository<Grado>(_context);
         public IRepository<Grupo> Grupos => _grupos ??= new Repository<Grupo>(_context);

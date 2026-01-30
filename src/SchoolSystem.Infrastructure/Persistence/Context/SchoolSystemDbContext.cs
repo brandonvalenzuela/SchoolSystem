@@ -148,6 +148,12 @@ namespace SchoolSystem.Infrastructure.Persistence.Context
         public DbSet<Calificacion> Calificaciones { get; set; }
 
         /// <summary>
+        /// Log de auditoría para recalificaciones realizadas
+        /// Registra toda modificación en captura masiva de calificaciones
+        /// </summary>
+        public DbSet<CalificacionAuditLog> CalificacionesAuditLog { get; set; }
+
+        /// <summary>
         /// Asistencias de alumnos
         /// </summary>
         public DbSet<Asistencia> Asistencias { get; set; }

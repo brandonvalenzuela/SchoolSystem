@@ -39,9 +39,11 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .HasConversion<string>()
                 .HasMaxLength(50);
 
-            // Color
-            builder.Property(m => m.Color)
-                .HasMaxLength(7); // Para formato hexadecimal #FFFFFF
+            // ColorHex: Código hexadecimal (#RGB o #RRGGBB)
+            builder.Property(m => m.ColorHex)
+                .IsRequired(false)
+                .HasMaxLength(7) // Máximo: #RRGGBB (7 caracteres)
+                .HasDefaultValue(null);
 
             builder.Property(m => m.Activo)
                 .IsRequired()
@@ -169,11 +171,33 @@ namespace SchoolSystem.Infrastructure.Persistence.Configurations
                 .IsUnique()
                 .HasDatabaseName("IX_Materias_Escuela_Clave_Unique");
 
+            // HARDENING: Índice compuesto para (EscuelaId, Nombre)
+            // Nota: Se proporciona para consultas eficientes y como validación de aplicación
+            // El index NO es único en BD debido a duplicados históricos, pero la validación
+            // en MateriaService previene nuevos duplicados
+            builder.HasIndex(m => new { m.EscuelaId, m.Nombre })
+                .HasDatabaseName("IX_Materias_Escuela_Nombre");
+
             builder.HasIndex(m => new { m.EscuelaId, m.Activo })
                 .HasDatabaseName("IX_Materias_Escuela_Activo");
 
             builder.HasIndex(m => new { m.EscuelaId, m.Area, m.Activo })
                 .HasDatabaseName("IX_Materias_Escuela_Area_Activo");
+
+            // HARDENING: Check constraint para ColorHex
+            // Permite NULL o valor en formato #RRGGBB válido
+            // Validar: NULL o exactamente 7 caracteres empezando con # y luego 6 hex válidos
+            builder.HasCheckConstraint(
+                "CK_Materias_ColorHex",
+                "(ColorHex IS NULL OR (CHAR_LENGTH(ColorHex)=7 AND ColorHex REGEXP '^#[0-9A-Fa-f]{6}$'))"
+            );
+
+            // HARDENING: Check constraint para Nombre (no whitespace)
+            // Asegurar que Nombre no sea solo espacios en blanco
+            builder.HasCheckConstraint(
+                "CK_Materias_Nombre_NotWhitespace",
+                "(TRIM(Nombre) <> '')"
+            );
 
             // Propiedades calculadas (ignoradas en BD)
             builder.Ignore(m => m.CantidadGrados);

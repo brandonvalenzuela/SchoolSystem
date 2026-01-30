@@ -25,7 +25,7 @@ namespace SchoolSystem.Application.DTOs.Materias
         public string Clave { get; set; }
 
         [StringLength(1000)]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         [Required]
         public AreaAcademica Area { get; set; }
@@ -35,8 +35,14 @@ namespace SchoolSystem.Application.DTOs.Materias
 
         public IconoMateria? Icono { get; set; }
 
-        [StringLength(7, ErrorMessage = "El color debe ser un código hexadecimal de 7 caracteres (ej: #RRGGBB).")]
-        public string Color { get; set; }
+        /// <summary>
+        /// Color en formato hexadecimal (#RGB o #RRGGBB).
+        /// Ejemplo: "#FF5" o "#FF5733"
+        /// Nullable: permite omitir color
+        /// </summary>
+        [StringLength(7, MinimumLength = 4, ErrorMessage = "El ColorHex debe ser #RGB (4) o #RRGGBB (7).")]
+        [RegularExpression(@"^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$", ErrorMessage = "ColorHex debe ser #RGB o #RRGGBB con valores hexadecimales válidos.")]
+        public string? ColorHex { get; set; }
 
         [Range(1, 5, ErrorMessage = "El nivel de dificultad debe estar entre 1 y 5.")]
         public int? NivelDificultad { get; set; }

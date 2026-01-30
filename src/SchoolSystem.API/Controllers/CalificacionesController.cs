@@ -218,9 +218,26 @@ namespace SchoolSystem.API.Controllers
                     "Usuario: {UserId}, Insertadas: {Insertadas}, Actualizadas: {Actualizadas}",
                     correlationId, claimUserId, resultado.Insertadas, resultado.Actualizadas);
 
-                return Ok(response);
-            }
-            catch (ConflictException conflictEx)
+                    return Ok(response);
+                }
+                catch (ConcurrencyConflictException concurrencyEx)
+                {
+                    // 409 Conflict: Concurrencia detectada por ConcurrencyConflictException (manejo robusto)
+                    _logger.LogWarning(
+                        "Conflicto de concurrencia (ConcurrencyConflictException). CorrelationId: {CorrelationId}, " +
+                        "GrupoId: {GrupoId}, MateriaId: {MateriaId}, PeriodoId: {PeriodoId}, " +
+                        "CapturadoPor: {CapturadoPor}, ContextData: {@ContextData}",
+                        correlationId, dto.GrupoId, dto.MateriaId, dto.PeriodoId,
+                        dto.CapturadoPor, concurrencyEx.ContextData);
+
+                    return Conflict(new ApiResponse<CalificacionMasivaResultadoDto>(
+                        "Se detectó una captura simultánea. Recarga y vuelve a intentar.")
+                    {
+                        CorrelationId = correlationId,
+                        StatusCode = 409
+                    });
+                }
+                catch (ConflictException conflictEx)
             {
                 // 409 Conflict: Concurrencia detectada por ConflictException
                 _logger.LogWarning(

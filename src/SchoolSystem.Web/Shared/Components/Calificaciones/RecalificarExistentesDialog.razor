@@ -58,7 +58,7 @@
             {
                 <MudPaper Class="pa-3 my-3 bg-info-light">
                     <MudText Typo="Typo.caption" Color="Color.Info">
-                        <strong>ℹ️ Se recalificarán:</strong> @Model.Existentes.Count alumno(s)
+                        <strong>ℹ️ Resumen:</strong> Se recalificarán <strong>@Model.Existentes.Count</strong> alumno(s)
                     </MudText>
                 </MudPaper>
 
@@ -66,7 +66,7 @@
                 {
                     <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Error" Class="mb-3">
                         <MudText Typo="Typo.body2">
-                            <strong>❌ Motivo requerido:</strong> Debes indicar un motivo para recalificar.
+                            <strong>❌ Motivo requerido:</strong> Debes indicar un motivo para recalificar (mínimo 10 caracteres).
                         </MudText>
                     </MudAlert>
                 }
@@ -80,7 +80,10 @@
                               FullWidth="true"
                               Counter="500"
                               MaxLength="500"
-                              HelperText="Proporciona un motivo claro para la auditoría. Se registrará en la BD." />
+                              Required="true"
+                              RequiredError="El motivo es obligatorio"
+                              HelperText="Proporciona un motivo claro (mín. 10 caracteres). Se registrará en auditoría."
+                              CharacterCounter="true" />
             }
 
             <MudDivider />
@@ -170,7 +173,7 @@
         /// <summary>
         /// Valida si el usuario puede recalificar:
         /// - Debe haber seleccionado recalificar
-        /// - Debe haber indicado un motivo (auditoría)
+        /// - Debe haber indicado un motivo válido (mínimo 10 caracteres)
         /// </summary>
         private bool PuedeRecalificar()
         {
@@ -178,18 +181,18 @@
                 return false;
 
             if (!_recalificar)
-                return true; // Si no está marcado, el botón no debe estar deshabilitado, solo no hacer nada
+                return true; // Si no está marcado recalificar, permite otros botones
 
-            // Si está marcado recalificar, el motivo es obligatorio
-            return !string.IsNullOrWhiteSpace(_motivoRecalificacion);
+            // Si está marcado recalificar, el motivo es obligatorio y debe tener mínimo 10 caracteres
+            return !string.IsNullOrWhiteSpace(_motivoRecalificacion) && _motivoRecalificacion.Length >= 10;
         }
 
         private void RecalificarYGuardar()
         {
             _mostrarErrorMotivo = false;
 
-            // Validación: Si intenta recalificar sin motivo, mostrar error
-            if (_recalificar && string.IsNullOrWhiteSpace(_motivoRecalificacion))
+            // Validación: Si intenta recalificar sin motivo o con motivo muy corto
+            if (_recalificar && (string.IsNullOrWhiteSpace(_motivoRecalificacion) || _motivoRecalificacion.Length < 10))
             {
                 _mostrarErrorMotivo = true;
                 return;
@@ -198,7 +201,7 @@
             MudDialog.Close(DialogResult.Ok(new RecalificarDecision 
             { 
                 PermitirRecalificarExistentes = _recalificar,
-                MotivoRecalificacion = _recalificar ? _motivoRecalificacion : null
+                MotivoRecalificacion = _recalificar ? _motivoRecalificacion?.Trim() : null
             }));
         }
     }

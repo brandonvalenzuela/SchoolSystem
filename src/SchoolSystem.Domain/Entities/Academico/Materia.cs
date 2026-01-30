@@ -55,9 +55,11 @@ namespace SchoolSystem.Domain.Entities.Academico
 
         /// <summary>
         /// Color representativo de la materia (código hexadecimal para UI)
-        /// Ejemplo: "#FF5733"
+        /// Formato: #RGB o #RRGGBB
+        /// Ejemplo: "#FF5", "#FF5733"
+        /// Nullable: permite omitir color
         /// </summary>
-        public string Color { get; set; }
+        public string? ColorHex { get; set; }
 
         /// <summary>
         /// Indica si la materia está activa
@@ -220,7 +222,7 @@ namespace SchoolSystem.Domain.Entities.Academico
         public Materia()
         {
             Area = AreaAcademica.Ciencias;
-            Color = "#FFFFFF";
+            ColorHex = "#3B82F6"; // Azul por defecto
             Tipo = TipoMateria.Teorica;
             Icono = IconoMateria.Book;
             Activo = true;

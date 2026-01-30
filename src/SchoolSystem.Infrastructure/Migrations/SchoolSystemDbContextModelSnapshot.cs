@@ -1068,8 +1068,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<string>("Color")
-                        .IsRequired()
+                    b.Property<string>("ColorHex")
                         .HasMaxLength(7)
                         .HasColumnType("varchar(7)");
 
@@ -1174,12 +1173,19 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_Materias_Escuela_Clave_Unique");
 
+                    b.HasIndex("EscuelaId", "Nombre")
+                        .HasDatabaseName("IX_Materias_Escuela_Nombre");
+
                     b.HasIndex("EscuelaId", "Area", "Activo")
                         .HasDatabaseName("IX_Materias_Escuela_Area_Activo");
 
                     b.ToTable("Materias", null, t =>
                         {
+                            t.HasCheckConstraint("CK_Materias_ColorHex", "(ColorHex IS NULL OR (CHAR_LENGTH(ColorHex)=7 AND ColorHex REGEXP '^#[0-9A-Fa-f]{6}$'))");
+
                             t.HasCheckConstraint("CK_Materias_NivelDificultad", "`NivelDificultad` IS NULL OR (`NivelDificultad` >= 1 AND `NivelDificultad` <= 5)");
+
+                            t.HasCheckConstraint("CK_Materias_Nombre_NotWhitespace", "(TRIM(Nombre) <> '')");
                         });
                 });
 
@@ -5753,6 +5759,112 @@ namespace SchoolSystem.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("SchoolSystem.Domain.Entities.Evaluacion.CalificacionAuditLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AlumnoId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("CalificacionAnterior")
+                        .HasColumnType("DECIMAL(5,2)");
+
+                    b.Property<int>("CalificacionId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("CalificacionNueva")
+                        .HasColumnType("DECIMAL(5,2)");
+
+                    b.Property<string>("CorrelationId")
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EscuelaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GrupoId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("MateriaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<string>("ObservacionesAnteriores")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ObservacionesNuevas")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Origen")
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<int>("PeriodoId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("RecalificadoAtUtc")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("RecalificadoPor")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CalificacionId");
+
+                    b.HasIndex("CorrelationId")
+                        .HasDatabaseName("IX_Audit_CorrelationId");
+
+                    b.HasIndex("RecalificadoAtUtc")
+                        .HasDatabaseName("IX_Audit_RecalificadoAtUtc");
+
+                    b.HasIndex("EscuelaId", "CalificacionId")
+                        .HasDatabaseName("IX_Audit_Escuela_Calificacion");
+
+                    b.HasIndex("EscuelaId", "RecalificadoPor")
+                        .HasDatabaseName("IX_Audit_Escuela_RecalificadoPor");
+
+                    b.HasIndex("EscuelaId", "AlumnoId", "PeriodoId")
+                        .HasDatabaseName("IX_Audit_Escuela_Alumno_Periodo");
+
+                    b.HasIndex("EscuelaId", "GrupoId", "PeriodoId")
+                        .HasDatabaseName("IX_Audit_Escuela_Grupo_Periodo");
+
+                    b.HasIndex("EscuelaId", "MateriaId", "PeriodoId")
+                        .HasDatabaseName("IX_Audit_Escuela_Materia_Periodo");
+
+                    b.ToTable("CalificacionesAuditLog", (string)null);
+                });
+
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Evaluacion.PeriodoEvaluacion", b =>
                 {
                     b.Property<int>("Id")
@@ -8380,6 +8492,25 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Navigation("Materia");
 
                     b.Navigation("Periodo");
+                });
+
+            modelBuilder.Entity("SchoolSystem.Domain.Entities.Evaluacion.CalificacionAuditLog", b =>
+                {
+                    b.HasOne("SchoolSystem.Domain.Entities.Evaluacion.Calificacion", "Calificacion")
+                        .WithMany()
+                        .HasForeignKey("CalificacionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SchoolSystem.Domain.Entities.Escuelas.Escuela", "Escuela")
+                        .WithMany()
+                        .HasForeignKey("EscuelaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Calificacion");
+
+                    b.Navigation("Escuela");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Evaluacion.PeriodoEvaluacion", b =>

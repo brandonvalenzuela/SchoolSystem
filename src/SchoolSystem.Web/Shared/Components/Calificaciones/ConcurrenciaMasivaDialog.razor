@@ -1,0 +1,97 @@
+@using MudBlazor
+@namespace SchoolSystem.Web.Shared.Components.Calificaciones
+@using System.Threading.Tasks
+
+<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="3">
+            <MudIcon Icon="@Icons.Material.Filled.Warning" Size="Size.Large" Color="Color.Warning" />
+
+            <MudText Typo="Typo.h6">
+                Conflicto de Captura Simultánea
+            </MudText>
+
+            <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined">
+                <MudText Typo="Typo.body2">
+                    Detectamos que otro maestro capturó calificaciones <strong>al mismo tiempo</strong> en este grupo/materia/periodo.
+                </MudText>
+                <MudText Typo="Typo.caption" Class="mt-2">
+                    Para evitar conflictos, tienes tres opciones:
+                </MudText>
+            </MudAlert>
+
+            <MudStack Spacing="2">
+                <MudPaper Class="pa-3 bg-info-light">
+                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                        <MudIcon Icon="@Icons.Material.Filled.Refresh" Size="Size.Medium" Color="Color.Info" />
+                        <MudStack Spacing="0">
+                            <MudText Typo="Typo.body2"><strong>Recargar Estado</strong></MudText>
+                            <MudText Typo="Typo.caption">
+                                Actualiza la lista para ver qué capturó el otro maestro.
+                                Tus cambios se conservarán.
+                            </MudText>
+                        </MudStack>
+                    </MudStack>
+                </MudPaper>
+
+                <MudPaper Class="pa-3 bg-success-light">
+                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                        <MudIcon Icon="@Icons.Material.Filled.Repeat" Size="Size.Medium" Color="Color.Success" />
+                        <MudStack Spacing="0">
+                            <MudText Typo="Typo.body2"><strong>Reintentar Guardar</strong></MudText>
+                            <MudText Typo="Typo.caption">
+                                Intenta guardar nuevamente con tus cambios actuales.
+                                El sistema manejará automáticamente cualquier conflicto.
+                            </MudText>
+                        </MudStack>
+                    </MudStack>
+                </MudPaper>
+
+                <MudPaper Class="pa-3 bg-error-light">
+                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                        <MudIcon Icon="@Icons.Material.Filled.Cancel" Size="Size.Medium" Color="Color.Error" />
+                        <MudStack Spacing="0">
+                            <MudText Typo="Typo.body2"><strong>Cancelar</strong></MudText>
+                            <MudText Typo="Typo.caption">
+                                Cierra este diálogo. Tus datos se mantienen en la pantalla.
+                            </MudText>
+                        </MudStack>
+                    </MudStack>
+                </MudPaper>
+            </MudStack>
+        </MudStack>
+    </DialogContent>
+
+        <DialogActions>
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="OnCancelarClick">
+                Cancelar
+            </MudButton>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="OnRecargarClick">
+                Recargar Estado
+            </MudButton>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="OnReintentarClick">
+                Reintentar Guardar
+            </MudButton>
+        </DialogActions>
+    </MudDialog>
+
+    @code {
+        [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+
+        private void OnCancelarClick()
+        {
+            MudDialog.Close(DialogResult.Ok("cancelar"));
+        }
+
+        private void OnRecargarClick()
+        {
+            MudDialog.Close(DialogResult.Ok("recargar"));
+        }
+
+        private void OnReintentarClick()
+        {
+            MudDialog.Close(DialogResult.Ok("reintentar"));
+        }
+    }

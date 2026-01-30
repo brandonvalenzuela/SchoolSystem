@@ -3,6 +3,7 @@
 @using SchoolSystem.Web.Models
 @using SchoolSystem.Web.Services
 @using SchoolSystem.Web.Services.Toast
+@using MudBlazor
 @inject MateriaService MateriaService
 @inject NavigationManager Navigation
 @inject ToastService ToastService
@@ -46,21 +47,88 @@
                             <InputText class="form-control" @bind-Value="modelo.Nombre" />
                             <ValidationMessage For="@(() => modelo.Nombre)" />
                         </div>
-                         
-                        <!-- Color (Opcional) -->
-                        <div class="col-md-3">
-                            <label class="form-label">Color (Hex)</label>
-                            <div class="input-group">
-                                <InputText type="color" class="form-control form-control-color" @bind-Value="modelo.Color" title="Elige un color" />
-                                <InputText class="form-control" @bind-Value="modelo.Color" placeholder="#FFFFFF" />
+
+                        <!-- ColorHex (Opcional) con Color Picker -->
+                        <div class="col-12">
+                            <label class="form-label">Color de la Materia</label>
+
+                            <!-- Paleta de colores sugeridos -->
+                            <div class="mb-2">
+                                <small class="form-text text-muted d-block mb-2">Colores sugeridos:</small>
+                                <div class="d-flex flex-wrap gap-2" style="align-content: flex-start;">
+                                    @foreach (var color in GetColoresSugeridos())
+                                    {
+                                        <button type="button" 
+                                                class="btn btn-sm"
+                                                style="
+                                                    width: 40px;
+                                                    height: 40px;
+                                                    padding: 0;
+                                                    border-radius: 4px;
+                                                    background-color: @color;
+                                                    border: @(modelo.ColorHex == color ? "3px solid #333" : "2px solid #ddd");
+                                                    cursor: pointer;
+                                                    transition: all 0.2s;
+                                                    flex-shrink: 0;
+                                                "
+                                                title="@color"
+                                                @onclick="() => SelectColorSugerido(color)">
+                                        </button>
+                                    }
+                                </div>
                             </div>
+
+                            <!-- Color Picker Manual + Hex Text -->
+                            <div class="d-flex align-items-center gap-2">
+                                <!-- Input Color (visual picker) -->
+                                <input type="color" 
+                                       class="form-control form-control-color flex-shrink-0" 
+                                       style="width: 50px; height: 40px;"
+                                       @bind="modelo.ColorHex" />
+
+                                <!-- Input Hex Text -->
+                                <InputText class="form-control" 
+                                           @bind-Value="modelo.ColorHex" 
+                                           placeholder="#FF5733" />
+                            </div>
+                            <small class="form-text text-muted d-block mt-1">
+                                O escribe manualmente el color en formato #RGB o #RRGGBB (ej: #FF5 o #FF5733)
+                            </small>
+                            <ValidationMessage For="@(() => modelo.ColorHex)" style="color: #dc3545;" />
+
+                            <!-- Preview del Color -->
+                            @if (!string.IsNullOrWhiteSpace(modelo.ColorHex))
+                            {
+                                <div style="margin-top: 8px; padding: 8px; border-radius: 4px; background-color: @GetValidColorOrDefault(modelo.ColorHex); height: 30px; display: flex; align-items: center; justify-content: center;">
+                                    <small style="color: white; font-weight: bold; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">@modelo.ColorHex</small>
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="margin-top: 8px; padding: 8px; border-radius: 4px; background-color: #9E9E9E; height: 30px; display: flex; align-items: center; justify-content: center;">
+                                    <small style="color: white; font-weight: bold; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">#9E9E9E (por defecto)</small>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Descripción (Multiline) -->
+                        <div class="col-12">
+                            <label class="form-label">Descripción</label>
+                            <InputTextArea class="form-control" 
+                                          @bind-Value="modelo.Descripcion" 
+                                          rows="4"
+                                          placeholder="Describe brevemente el contenido y objetivos de esta materia..."
+                                          maxlength="1000" />
+                            <small class="form-text text-muted d-block mt-1">
+                                @(string.IsNullOrWhiteSpace(modelo.Descripcion) ? "0" : modelo.Descripcion.Length) / 1000 caracteres
+                            </small>
+                            <ValidationMessage For="@(() => modelo.Descripcion)" />
                         </div>
 
                         <!-- Área Académica -->
                         <div class="col-md-6">
                             <label class="form-label">Área Académica *</label>
                             <InputSelect class="form-select" @bind-Value="modelo.Area">
-                                <!-- Ajusta estos valores a los de tu Enum Domain.Enums.Academico.AreaAcademica -->
                                 <option value="1">Ciencias Exactas</option>
                                 <option value="2">Ciencias Naturales</option>
                                 <option value="3">Humanidades</option>
@@ -77,7 +145,6 @@
                         <div class="col-md-6">
                             <label class="form-label">Tipo *</label>
                             <InputSelect class="form-select" @bind-Value="modelo.Tipo">
-                                <!-- Ajusta estos valores a los de tu Enum TipoMateria -->
                                 <option value="1">Teórica</option>
                                 <option value="2">Práctica</option>
                                 <option value="3">Taller</option>
@@ -86,14 +153,6 @@
                             </InputSelect>
                             <ValidationMessage For="@(() => modelo.Tipo)" />
                         </div>
-                        
-                        <!-- Descripción -->
-                        <div class="col-12">
-                            <label class="form-label">Descripción</label>
-                            <InputTextArea class="form-control" @bind-Value="modelo.Descripcion" rows="3" />
-                        </div>
-
-                        <!-- Configuración Avanzada -->
                         <div class="col-12">
                             <div class="card bg-light border-0">
                                 <div class="card-body">
@@ -152,7 +211,7 @@
 
 @code {
     [Parameter] public int Id { get; set; }
-    private CreateMateriaDto modelo = new CreateMateriaDto { Color = "#3b82f6", Area = 1, Tipo = 1 }; // Valores por defecto
+    private CreateMateriaDto modelo = new CreateMateriaDto { ColorHex = "#3B82F6", Area = 1, Tipo = 1 }; // Valores por defecto
     private bool isLoading = false;
     private bool isSubmitting = false;
     private string errorMessage;
@@ -217,9 +276,12 @@
                     Area = modelo.Area,
                     Tipo = modelo.Tipo,
                     Activo = modelo.Activo,
-                    // Agrega aquí los demás campos si tu UpdateDto los tiene:
-                    // Color = modelo.Color,
-                    // Descripcion = modelo.Descripcion
+                    Descripcion = modelo.Descripcion,
+                    ColorHex = modelo.ColorHex,
+                    RequiereMateriales = modelo.RequiereMateriales,
+                    MaterialesRequeridos = modelo.MaterialesRequeridos,
+                    RequiereInstalacionesEspeciales = modelo.RequiereInstalacionesEspeciales,
+                    InstalacionesRequeridas = modelo.InstalacionesRequeridas
                 };
                 
                 var response = await MateriaService.UpdateAsync(Id, updateDto);
@@ -236,11 +298,57 @@
         }
         catch (Exception ex)
         {
-            ToastService.ShowError("Error: " + ex.Message);
-        }
-        finally
-        {
-            isSubmitting = false;
-        }
-    }
-}
+                                    ToastService.ShowError("Error: " + ex.Message);
+                                }
+                                finally
+                                {
+                                    isSubmitting = false;
+                                }
+                            }
+
+                                /// <summary>
+                                /// Obtiene un color válido o fallback (#9E9E9E - gris neutral)
+                                /// </summary>
+                                private string GetValidColorOrDefault(string? colorHex)
+                                {
+                                    if (string.IsNullOrWhiteSpace(colorHex))
+                                        return "#9E9E9E";
+
+                                    // Validar formato #RGB o #RRGGBB
+                                    if (System.Text.RegularExpressions.Regex.IsMatch(colorHex, @"^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$"))
+                                        return colorHex;
+
+                                    return "#9E9E9E";
+                                }
+
+                                /// <summary>
+                                /// Retorna paleta de colores sugeridos para materias
+                                /// Seleccionados para ser visibles, profesionales y educativos
+                                /// </summary>
+                                private List<string> GetColoresSugeridos()
+                                {
+                                    return new List<string>
+                                    {
+                                        "#FF6B6B", // Rojo - Ciencias Sociales/Historia
+                                        "#4ECDC4", // Turquesa - Ciencias Naturales
+                                        "#45B7D1", // Azul - Matemáticas
+                                        "#FFA502", // Naranja - Arte/Artes Plásticas
+                                        "#95E1D3", // Verde Menta - Educación Física
+                                        "#C7CEEA", // Lavanda - Idiomas
+                                        "#B19CD9", // Púrpura - Tecnología
+                                        "#FFD93D", // Amarillo - Educación/Tutoría
+                                        "#6BCF7F", // Verde - Biología
+                                        "#FF6B9D", // Rosa - Artes Escénicas
+                                        "#A8E6CF", // Verde Pastel - Ecología
+                                        "#FFD3B6"  // Peach - Diseño
+                                    };
+                                }
+
+                                /// <summary>
+                                /// Callback para seleccionar un color de la paleta sugerida
+                                /// </summary>
+                                private void SelectColorSugerido(string color)
+                                {
+                                    modelo.ColorHex = color;
+                                }
+                            }

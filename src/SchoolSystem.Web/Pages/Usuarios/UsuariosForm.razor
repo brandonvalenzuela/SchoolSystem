@@ -53,10 +53,13 @@
                             <label>Rol</label>
                             <!-- Solo permitimos roles administrativos aquí -->
                             <InputSelect class="form-select" @bind-Value="modelo.Rol">
+                                <option value="">-- Seleccione Rol --</option>
+                                <option value="1">Super Admin</option>
                                 <option value="2">Director</option>
                                 <option value="3">Subdirector</option>
                                 <option value="4">Administrativo</option>
                             </InputSelect>
+                            <ValidationMessage For="@(() => modelo.Rol)" />
                         </div>
                         <div class="col-md-6">
                             <label>Email</label>
@@ -97,51 +100,115 @@
     {
         if (Id > 0)
         {
-            isLoading = true;
-            var response = await UsuarioService.GetByIdAsync(Id);
-
-            if (response.Succeeded)
-            {
-                var u = response.Data;
-                modelo.Nombre = u.Nombre;
-                modelo.ApellidoPaterno = u.ApellidoPaterno;
-                modelo.ApellidoMaterno = u.ApellidoMaterno;
-                modelo.Email = u.Email;
-                modelo.Username = u.Username;
-                modelo.Telefono = u.Telefono;
-                // Mapear rol string a int es tedioso, simplificamos asumiendo Administrativo para demo
-                // modelo.Rol = ...
-                modelo.Password = "PLACEHOLDER";
-            }
-            isLoading = false;
+            await CargarUsuarioParaEditar();
         }
     }
 
-    private async Task Guardar()
+    private async Task CargarUsuarioParaEditar()
     {
-        isSubmitting = true;
-        // Lógica de Create / Update similar a la de Alumnos
-        // ... (Implementa la llamada al servicio aquí) ...
-        try
+        isLoading = true;
+        var response = await UsuarioService.GetByIdAsync(Id);
+
+        if (response.Succeeded)
         {
-            if (Id == 0)
+            var u = response.Data;
+            modelo.Nombre = u.Nombre ?? string.Empty;
+            modelo.ApellidoPaterno = u.ApellidoPaterno ?? string.Empty;
+            modelo.ApellidoMaterno = u.ApellidoMaterno ?? string.Empty;
+            modelo.Email = u.Email ?? string.Empty;
+            modelo.Username = u.Username ?? string.Empty;
+            modelo.Telefono = u.Telefono ?? string.Empty;
+
+            // MAPEO DE ROL: convertir string "Director" a int (2)
+            modelo.Rol = ConvertirRolStringAInt(u.Rol);
+
+            // Placeholder para contraseña en edición (no debe ser visible)
+            modelo.Password = "PLACEHOLDER";
+        }
+        else
+        {
+            ToastService.ShowError("No se pudo cargar el usuario.");
+        }
+        isLoading = false;
+    }
+
+    /// <summary>
+    /// Convierte el string de rol (del DTO) a int (para el modelo del formulario).
+    /// </summary>
+    private int ConvertirRolStringAInt(string rol)
+    {
+        return rol?.ToLower() switch
+        {
+            "superadmin" => 1,
+            "director" => 2,
+            "subdirector" => 3,
+            "administrativo" => 4,
+            "maestro" => 5,
+            "padre" => 6,
+            "alumno" => 7,
+            _ => 4 // Default: Administrativo
+        };
+    }
+
+            private async Task Guardar()
             {
-                var res = await UsuarioService.CreateAsync(modelo);
-                if (res.Succeeded)
-                { 
-                    ToastService.ShowSuccess("Usuario creado.");
-                    Navigation.NavigateTo("usuarios"); 
+                isSubmitting = true;
+                errorMessage = null;
+
+                try
+                {
+                    if (Id == 0)
+                    {
+                        // Crear usuario
+                        var res = await UsuarioService.CreateAsync(modelo);
+                        if (res.Succeeded)
+                        { 
+                            ToastService.ShowSuccess("¡Usuario creado exitosamente!");
+                            Navigation.NavigateTo("usuarios"); 
+                        }
+                        else
+                        {
+                            ToastService.ShowError(res.Message ?? "Error al crear usuario.");
+                            errorMessage = res.Message;
+                        }
+                    }
+                    else
+                    {
+                        // Editar usuario - mapear a UpdateUsuarioDto (Web Models)
+                        var updateDto = new UpdateUsuarioDto
+                        {
+                            Id = this.Id,
+                            Username = modelo.Username ?? string.Empty,
+                            Email = modelo.Email ?? string.Empty,
+                            Rol = modelo.Rol, // int
+                            Nombre = modelo.Nombre ?? string.Empty,
+                            ApellidoPaterno = modelo.ApellidoPaterno ?? string.Empty,
+                            ApellidoMaterno = modelo.ApellidoMaterno ?? string.Empty,
+                            Telefono = modelo.Telefono ?? string.Empty,
+                            Activo = true // Activo por defecto
+                        };
+
+                        var res = await UsuarioService.UpdateAsync(Id, updateDto);
+                        if (res.Succeeded)
+                        {
+                            ToastService.ShowSuccess("¡Usuario actualizado exitosamente!");
+                            Navigation.NavigateTo("usuarios");
+                        }
+                        else
+                        {
+                            ToastService.ShowError(res.Message ?? "Error al actualizar usuario.");
+                            errorMessage = res.Message;
+                        }
+                    }
                 }
-                else
-                    ToastService.ShowError(res.Message);
-            }
-            else
-            {
-                // Mapear a UpdateDto y llamar UpdateAsync
-                // Recuerda manejar el mapeo de Rol correctamente
+                catch (Exception ex)
+                {
+                    errorMessage = ex.Message;
+                    ToastService.ShowError($"Error de conexión: {ex.Message}");
+                }
+                finally
+                {
+                    isSubmitting = false;
+                }
             }
         }
-        catch (Exception ex) { errorMessage = ex.Message; }
-        isSubmitting = false;
-    }
-}

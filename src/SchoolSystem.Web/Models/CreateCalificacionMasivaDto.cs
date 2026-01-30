@@ -23,18 +23,18 @@ namespace SchoolSystem.Web.Models
         public bool PermitirRecalificarExistentes { get; set; } = false;
         public bool SoloValidar { get; set; } = false;
 
-        /// <summary>
-        /// Motivo de recalificación. Requerido si PermitirRecalificarExistentes es true y hay existentes.
-        /// </summary>
-        public string? MotivoModificacion { get; set; }
+                /// <summary>
+                /// Motivo de recalificación. Requerido si PermitirRecalificarExistentes es true y hay existentes.
+                /// </summary>
+                public string? MotivoModificacion { get; set; }
 
-        /// <summary>
-        /// Alias para MotivoModificacion (más descriptivo para recalificaciones).
-        /// </summary>
-        public string? MotivoRecalificacion 
-        { 
-            get => MotivoModificacion;
-            set => MotivoModificacion = value;
+                /// <summary>
+                /// Alias para MotivoModificacion. Si se proporciona MotivoRecalificacion, se usa en lugar de MotivoModificacion.
+                /// </summary>
+                public string? MotivoRecalificacion
+                {
+                    get => MotivoModificacion;
+                    set => MotivoModificacion = value;
+                }
+            }
         }
-    }
-}

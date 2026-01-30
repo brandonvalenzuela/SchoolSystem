@@ -190,6 +190,131 @@
             </MudAlert>
         }
 
+        <!-- ✅ PASO 5C: Panel resumen de guardado (si hay respuesta) -->
+        @if (_mostrarPanelResumenGuardado && _ultimaRespuestaGuardado != null)
+        {
+            <MudPaper Class="pa-4 mb-4 bg-warning-light border-left-4 border-warning">
+                <MudStack Spacing="2">
+                    <MudText Typo="Typo.h6" Color="Color.Warning">
+                        📊 Resumen de Guardado Parcial
+                    </MudText>
+
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <MudText Typo="Typo.caption">Insertadas</MudText>
+                                <MudText Typo="Typo.h5" Color="Color.Success">@_ultimaRespuestaGuardado.Insertadas</MudText>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <MudText Typo="Typo.caption">Recalificadas</MudText>
+                                <MudText Typo="Typo.h5" Color="Color.Info">@_ultimaRespuestaGuardado.Actualizadas</MudText>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <MudText Typo="Typo.caption">Errores</MudText>
+                                <MudText Typo="Typo.h5" Color="Color.Error">@_ultimaRespuestaGuardado.Errores.Count</MudText>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <MudText Typo="Typo.caption">Total Procesado</MudText>
+                                <MudText Typo="Typo.h5" Color="Color.Primary">
+                                    @(_ultimaRespuestaGuardado.Insertadas + _ultimaRespuestaGuardado.Actualizadas)
+                                </MudText>
+                            </div>
+                        </div>
+                    </div>
+
+                                <MudAlert Severity="Severity.Warning" Variant="Variant.Text" Icon="@Icons.Material.Filled.Info">
+                                    <MudText Typo="Typo.body2">
+                                        Se guardaron <strong>@(_ultimaRespuestaGuardado.Insertadas + _ultimaRespuestaGuardado.Actualizadas)</strong> calificaciones, 
+                                        pero <strong>@_ultimaRespuestaGuardado.Errores.Count</strong> alumno(s) tuvieron problemas. 
+                                        Revisa los errores (filas en rojo) y reintenta guardar.
+                                    </MudText>
+                                </MudAlert>
+
+                                <!-- ✅ NUEVO: Tabla de Errores Detallada -->
+                                @if (_ultimaRespuestaGuardado.Errores.Any())
+                                {
+                                    <MudExpansionPanel @bind-Expanded="_mostrarTablaErrores">
+                                        <TitleContent>
+                                            <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                                                <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Color="Color.Error" />
+                                                <MudText Typo="Typo.body2">
+                                                    <strong>📋 Detalles de Errores (@_ultimaRespuestaGuardado.Errores.Count)</strong>
+                                                </MudText>
+                                            </MudStack>
+                                        </TitleContent>
+                                        <ChildContent>
+                                            <MudTable Items="@_ultimaRespuestaGuardado.Errores" Dense="true" Hover="true">
+                                                <HeaderContent>
+                                                    <MudTh><strong>Alumno ID</strong></MudTh>
+                                                    <MudTh><strong>Nombre</strong></MudTh>
+                                                    <MudTh><strong>Motivo del Error</strong></MudTh>
+                                                </HeaderContent>
+                                                <RowTemplate>
+                                                    <MudTr Class="@(context.Motivo?.Contains("bloqueada") == true ? "table-danger" : "")">
+                                                        <MudTd DataLabel="ID">
+                                                            <MudChip T="string" Color="Color.Error" Size="Size.Small">
+                                                                @context.AlumnoId
+                                                            </MudChip>
+                                                        </MudTd>
+                                                        <MudTd DataLabel="Nombre">
+                                                            @{
+                                                                var alumno = modelo.Calificaciones?.FirstOrDefault(c => c.AlumnoId == context.AlumnoId);
+                                                                <MudText Typo="Typo.body2">@(alumno?.NombreAlumno ?? "N/A")</MudText>
+                                                            }
+                                                        </MudTd>
+                                                        <MudTd DataLabel="Motivo">
+                                                            <MudAlert Severity="Severity.Error" Variant="Variant.Text" Typo="Typo.caption">
+                                                                @context.Motivo
+                                                            </MudAlert>
+                                                        </MudTd>
+                                                    </MudTr>
+                                                </RowTemplate>
+                                            </MudTable>
+                                        </ChildContent>
+                                    </MudExpansionPanel>
+                                }
+
+                                <MudStack Row="true" Spacing="2" Class="mt-3">
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Warning" 
+                                               StartIcon="@Icons.Material.Filled.Refresh"
+                                               OnClick="() => _mostrarPanelResumenGuardado = false">
+                                        Cerrar Resumen
+                                    </MudButton>
+                                </MudStack>
+                            </MudStack>
+                        </MudPaper>
+                    }
+
+                    <!-- ✅ PASO 5C: Botón "Recargar alumnos" visible cuando hay errores o 409 -->
+        @if (_mostrarBotonRecargarAlumnos && modelo.GrupoId > 0 && modelo.MateriaId > 0 && modelo.PeriodoId > 0)
+        {
+            <MudStack Row="true" Spacing="2" Class="mb-4" AlignItems="AlignItems.Center">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" 
+                           StartIcon="@Icons.Material.Filled.Refresh"
+                           OnClick="CargarAlumnos"
+                           Disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                        <span>Recargando alumnos...</span>
+                    }
+                    else
+                    {
+                        <span>🔄 Recargar Alumnos</span>
+                    }
+                </MudButton>
+                <MudText Typo="Typo.caption" Color="Color.Default">
+                    Recarga la lista de alumnos para ver cambios recientes
+                </MudText>
+            </MudStack>
+        }
+
         <!-- PASO 14: Mostrar alertas de errores críticos -->
         @if (modelo.Calificaciones.Any(c => c.EstadoPreview == "Error"))
         {
@@ -200,6 +325,22 @@
                     </MudText>
                     <MudText Typo="Typo.caption">
                         Total: <strong>@modelo.Calificaciones.Count(c => c.EstadoPreview == "Error")</strong> alumno(s) con problemas.
+                    </MudText>
+                </MudStack>
+            </MudAlert>
+        }
+
+        <!-- ✅ PASO 6B: Alert para errores post-guardado -->
+        @if (_alumnosConError.Any())
+        {
+            <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined" Class="mb-3" Icon="@Icons.Material.Filled.ErrorOutline">
+                <MudStack Spacing="1">
+                    <MudText Typo="Typo.body2">
+                        <strong>⚠️ Guardado Parcial:</strong> @_alumnosConError.Count alumno(s) tuvieron problemas al guardarse. 
+                        Se muestran resaltados en <span style="color: var(--mud-palette-error)"><strong>rojo</strong></span> en la tabla.
+                    </MudText>
+                    <MudText Typo="Typo.caption">
+                        Revisa los motivos de error en el panel "Detalles de Errores" y reintenta guardar después de corregir.
                     </MudText>
                 </MudStack>
             </MudAlert>
@@ -228,7 +369,7 @@
                         <tbody>
                             @foreach (var item in GetItemsAMostrar())
                             {
-                                <tr class="@(item.EstadoPreview == "Error" ? "table-danger" : item.YaTieneCalificacion && _mostrarAlertaConcurrencia ? "table-warning" : "")">
+                                <tr class="@(GetClaseFilaAlumno(item))">
                                     <td>@item.Matricula</td>
                                     <td class="fw-bold">@item.NombreAlumno</td>
 
@@ -380,6 +521,13 @@
     private int _totalAlumnos => modelo.Calificaciones?.Count ?? 0;
     private int _alumnosPendientes => modelo.Calificaciones?.Count(x => !x.YaTieneCalificacion) ?? 0;
     private int _alumnosYaCalificados => modelo.Calificaciones?.Count(x => x.YaTieneCalificacion) ?? 0;
+
+    // ✅ PASO 5C: Estado para rastrear última respuesta de guardado
+    private CalificacionMasivaResultadoDto? _ultimaRespuestaGuardado;
+    private bool _mostrarPanelResumenGuardado;
+    private bool _mostrarBotonRecargarAlumnos;
+    private bool _mostrarTablaErrores = true;  // ✅ Expansión tabla de errores
+    private HashSet<int> _alumnosConError = new();  // ✅ IDs de alumnos con error
 
     protected override async Task OnInitializedAsync()
     {
@@ -652,26 +800,20 @@
                     // AUDITORÍA: Capturar motivo de recalificación
                     if (permitirRecalificar)
                     {
-                        modelo.MotivoRecalificacion = decision?.MotivoRecalificacion;
+                        modelo.MotivoRecalificacion = decision?.MotivoRecalificacion?.Trim();
 
-                        // Validación adicional: si viene vacío, rechazar
-                        if (string.IsNullOrWhiteSpace(modelo.MotivoRecalificacion))
+                        // Validación adicional: si viene vacío o muy corto, rechazar
+                        if (string.IsNullOrWhiteSpace(modelo.MotivoRecalificacion) || modelo.MotivoRecalificacion.Length < 10)
                         {
-                            ToastService.ShowError("El motivo de recalificación es requerido.");
+                            ToastService.ShowError("El motivo de recalificación debe tener al menos 10 caracteres.");
                             permitirRecalificar = false;
+                            modelo.MotivoRecalificacion = null;
                         }
-                        else
-                        {
-                            // AUDITORÍA: Propagar motivo a cada alumno que será recalificado
-                            // Esto se enviará al backend en el modelo.Calificaciones
-                            foreach (var item in modelo.Calificaciones)
-                            {
-                                if (item.YaTieneCalificacion)
-                                {
-                                    item.MotivoModificacion = modelo.MotivoRecalificacion;
-                                }
-                            }
-                        }
+                    }
+                    else
+                    {
+                        // Si no se va a recalificar, asegurar que el motivo sea null
+                        modelo.MotivoRecalificacion = null;
                     }
 
                     // Validación: si usuario quiere recalificar pero el período no lo permite
@@ -698,6 +840,9 @@
 
             if (resp.Succeeded)
             {
+                // ✅ PASO 5C: Guardar respuesta para mostrar panel resumen
+                _ultimaRespuestaGuardado = resp.Data;
+
                 // FEEDBACK: Mostrar resumen completo
                 var tieneErrores = resp.Data.Errores?.Any() == true;
 
@@ -707,14 +852,35 @@
 
                 if (tieneErrores)
                 {
+                    // ✅ PASO 5C: Guardado parcial con errores
                     mensaje += $"\n• ⚠️ Errores: {resp.Data.Errores.Count}";
                     ToastService.ShowWarning(mensaje);
 
-                    // NO navegar si hay errores: dejar que el usuario vea y corrija
-                    ToastService.ShowInfo("No navegamos automáticamente. Revisa los errores y reintenta si es necesario.");
+                    // ✅ PASO 6B: Marcar alumnos con error
+                    _alumnosConError.Clear();
+                    foreach (var error in resp.Data.Errores)
+                    {
+                        _alumnosConError.Add(error.AlumnoId);
+
+                        // Marcar en modelo.Calificaciones
+                        var item = modelo.Calificaciones?.FirstOrDefault(c => c.AlumnoId == error.AlumnoId);
+                        if (item != null)
+                        {
+                            item.TieneError = true;
+                            item.ErrorMotivo = error.Motivo;
+                        }
+                    }
+
+                    // Mostrar panel resumen + botón recargar
+                    _mostrarPanelResumenGuardado = true;
+                    _mostrarBotonRecargarAlumnos = true;
+                    _mostrarTablaErrores = true;  // Expandir tabla de errores automáticamente
+
+                    ToastService.ShowInfo("Guardado parcial. Revisa los errores y reintenta si es necesario.");
                 }
                 else
                 {
+                    // ✅ PASO 5C: Todo exitoso, sin errores
                     ToastService.ShowSuccess(mensaje);
 
                     // Navegar después de 1.5 segundos para que el usuario vea el toast
@@ -791,6 +957,27 @@
                 : modelo.Calificaciones;
         }
 
+        // ✅ PASO 6B: Método helper para determinar la clase CSS de la fila según estado
+        private string GetClaseFilaAlumno(CalificacionAlumnoDto item)
+        {
+            // Prioridad:
+            // 1. Error post-guardado (TieneError)
+            // 2. Error de preview (validación pre-guardado)
+            // 3. Conflicto de concurrencia (ya tiene calificación + alert activa)
+            // 4. Normal
+
+            if (item.TieneError)
+                return "table-danger";  // Fila roja: error al guardar
+
+            if (item.EstadoPreview == "Error")
+                return "table-danger";  // Fila roja: error de validación
+
+            if (item.YaTieneCalificacion && _mostrarAlertaConcurrencia)
+                return "table-warning";  // Fila amarilla: detectado post-409
+
+            return "";  // Normal
+        }
+
             // PASO 5: Mejorar manejo de 409 Conflict en GuardarCalificaciones
             private async Task ManejarRespuestaGuardado(ApiResponse<CalificacionMasivaResultadoDto> resp)
             {
@@ -798,40 +985,93 @@
                 {
                     // AUDITORÍA: Detectar error por motivo requerido
                     var esErrorMotivo = resp.Message != null && 
-                        resp.Message.Contains("motivo", StringComparison.OrdinalIgnoreCase);
+                                resp.Message.Contains("motivo", StringComparison.OrdinalIgnoreCase);
 
-                    if (esErrorMotivo)
-                    {
-                        ToastService.ShowError("❌ El motivo de recalificación es requerido. Abre el diálogo nuevamente e indica un motivo.");
-                        return;
-                    }
+                            if (esErrorMotivo)
+                            {
+                                ToastService.ShowError("❌ El motivo de recalificación es requerido. Abre el diálogo nuevamente e indica un motivo.");
+                                return;
+                            }
 
-                    // PASO 5: Detectar error por concurrencia/duplicados (409 Conflict o heurística)
-                    // Detecta: "Conflicto", "ya fueron capturadas", "duplicate", "unique", "concurrencia"
-                    var esConflictoConcurrencia = resp.Message != null && 
-                        (resp.Message.Contains("Conflicto", StringComparison.OrdinalIgnoreCase) ||
-                         resp.Message.Contains("ya fueron capturadas", StringComparison.OrdinalIgnoreCase) ||
-                         resp.Message.Contains("duplicate", StringComparison.OrdinalIgnoreCase) ||
-                         resp.Message.Contains("unique", StringComparison.OrdinalIgnoreCase) ||
-                         resp.Message.Contains("concurrencia", StringComparison.OrdinalIgnoreCase));
+                                // ✅ PASO 5C: Detectar 409 Conflict (concurrencia robusta)
+                                if (resp.StatusCode == 409)
+                                {
+                                    ToastService.ShowError("❌ Otro usuario calificó al mismo tiempo. Recarga la lista y vuelve a intentar.");
 
-                    if (esConflictoConcurrencia)
-                    {
-                        ToastService.ShowWarning("⚠️ Otro usuario ya capturó algunas calificaciones. Actualizando lista…");
+                                    // Abre dialog de concurrencia con opciones
+                                    var parameters = new DialogParameters<ConcurrenciaMasivaDialog>();
+                                    var options = new DialogOptions
+                                    {
+                                        CloseOnEscapeKey = false,
+                                        CloseButton = false,
+                                        MaxWidth = MaxWidth.Small,
+                                        FullWidth = true
+                                    };
 
-                        // Ejecutar precheck fresco automáticamente
-                        await AplicarPrecheckExistentesAsync(mostrarToast: false);
+                                    var dialog = await DialogService.ShowAsync<ConcurrenciaMasivaDialog>(
+                                        "Conflicto de Concurrencia", parameters, options);
 
-                        // Mostrar alert de conflicto permanente
-                        _mostrarAlertaConflictoGuardado = true;
+                                    var result = await dialog.Result;
 
-                        // Mostrar feedback adicional
-                        ToastService.ShowInfo("Se actualizó la lista. Revisa los cambios y reintenta si es necesario.");
+                                    if (!result.Canceled)
+                                    {
+                                        var decision = (string)result.Data ?? "cancelar";
 
-                        return;
-                    }
+                                        switch (decision)
+                                        {
+                                            case "recargar":
+                                                // Recargar estado (precheck + marcar filas)
+                                                ToastService.ShowInfo("Recargando estado del servidor...");
+                                                await AplicarPrecheckExistentesAsync(mostrarToast: true);
+                                                // Mostrar botón recargar alumnos
+                                                _mostrarBotonRecargarAlumnos = true;
+                                                break;
 
-                    ToastService.ShowError(resp.Message ?? "No se pudo guardar.");
-                }
+                                            case "reintentar":
+                                                // Reintentar guardar respetando decisión actual
+                                                ToastService.ShowInfo("Reintentando guardar...");
+                                                modelo.SoloValidar = false;
+                                                await GuardarCalificaciones();
+                                                break;
+
+                                            case "cancelar":
+                                            default:
+                                                ToastService.ShowInfo("Operación cancelada. Verifica tus cambios e intenta de nuevo.");
+                                                _mostrarBotonRecargarAlumnos = true;
+                                                break;
+                                        }
+                                    }
+                                    return;
+                                }
+
+                                // PASO 5: Detectar error por concurrencia/duplicados (heurística con mensaje)
+                                var esConflictoConcurrencia = resp.Message != null && 
+                                    (resp.Message.Contains("Conflicto", StringComparison.OrdinalIgnoreCase) ||
+                                     resp.Message.Contains("ya fueron capturadas", StringComparison.OrdinalIgnoreCase) ||
+                                     resp.Message.Contains("duplicate", StringComparison.OrdinalIgnoreCase) ||
+                                     resp.Message.Contains("unique", StringComparison.OrdinalIgnoreCase) ||
+                                     resp.Message.Contains("concurrencia", StringComparison.OrdinalIgnoreCase));
+
+                                if (esConflictoConcurrencia)
+                                {
+                                    ToastService.ShowWarning("⚠️ Otro usuario ya capturó algunas calificaciones. Actualizando lista…");
+
+                                    // Ejecutar precheck fresco automáticamente
+                                    await AplicarPrecheckExistentesAsync(mostrarToast: false);
+
+                                    // Mostrar alert de conflicto permanente
+                                    _mostrarAlertaConflictoGuardado = true;
+
+                                    // Mostrar feedback adicional
+                                    ToastService.ShowInfo("Se actualizó la lista. Revisa los cambios y reintenta si es necesario.");
+
+                                    // Mostrar botón recargar alumnos
+                                    _mostrarBotonRecargarAlumnos = true;
+
+                                    return;
+                                }
+
+                                ToastService.ShowError(resp.Message ?? "No se pudo guardar.");
+                            }
             }
         }

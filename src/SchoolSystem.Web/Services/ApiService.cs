@@ -145,7 +145,11 @@ namespace SchoolSystem.Web.Services
             {
                 var result = JsonSerializer.Deserialize<T>(content, _jsonOptions);
                 if (result != null)
+                {
+                    // Asignar StatusCode si la respuesta lo soporta
+                    typeof(T).GetProperty("StatusCode")?.SetValue(result, (int)response.StatusCode);
                     return result;
+                }
             }
             catch (Exception ex)
             {
@@ -191,7 +195,8 @@ namespace SchoolSystem.Web.Services
                     message += $" | Respuesta: {snippet}";
                 }
 
-                // Asignar Succeeded=false y Message si esas propiedades existen en T
+                // Asignar StatusCode, Succeeded=false y Message si esas propiedades existen en T
+                typeof(T).GetProperty("StatusCode")?.SetValue(fallback, (int)response.StatusCode);
                 typeof(T).GetProperty("Succeeded")?.SetValue(fallback, false);
                 typeof(T).GetProperty("Message")?.SetValue(fallback, message);
 
@@ -200,7 +205,9 @@ namespace SchoolSystem.Web.Services
 
             // 3) Si fue success pero no se pudo deserializar, devolvemos instancia vacía
             // (esto evita crashear la UI)
-            return Activator.CreateInstance<T>();
+            var empty = Activator.CreateInstance<T>();
+            typeof(T).GetProperty("StatusCode")?.SetValue(empty, (int)response.StatusCode);
+            return empty;
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SchoolSystem.Application.Common.Models;
 using SchoolSystem.Application.DTOs.Calificacion;
 using SchoolSystem.Application.DTOs.Calificaciones;
 using SchoolSystem.Application.Exceptions;
+using SchoolSystem.Application.Extensions;
 using SchoolSystem.Application.Services.Interfaces;
 using SchoolSystem.Domain.Entities.Academico;
 using SchoolSystem.Domain.Entities.Auditoria;
@@ -12,8 +14,10 @@ using SchoolSystem.Domain.Enums.Auditoria;
 using SchoolSystem.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SchoolSystem.Application.Services.Implementations
@@ -22,11 +26,13 @@ namespace SchoolSystem.Application.Services.Implementations
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<CalificacionService> _logger;
 
-        public CalificacionService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CalificacionService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CalificacionService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<CalificacionDto> GetByIdAsync(int id)
@@ -139,6 +145,8 @@ namespace SchoolSystem.Application.Services.Implementations
         // ============================================================
         public async Task<CalificacionMasivaResultadoDto> CreateMasivoAsync(CreateCalificacionMasivaDto dto)
         {
+            var stopwatch = Stopwatch.StartNew();
+
             // ---------------------------------------------------------
             // PASO 0: Validaciones de Consistencia
             // ---------------------------------------------------------
@@ -146,6 +154,16 @@ namespace SchoolSystem.Application.Services.Implementations
                 throw new ArgumentNullException(nameof(dto));
             if (dto.Calificaciones == null || dto.Calificaciones.Count == 0)
                 throw new Exception("Debe enviar al menos una calificación.");
+
+            // ✅ LOGGING: Inicio de operación con contexto completo
+            _logger.LogInformation(
+                "📋 CalificacionesMasivo_Start: Iniciando captura masiva. " +
+                "EscuelaId: {EscuelaId}, GrupoId: {GrupoId}, MateriaId: {MateriaId}, PeriodoId: {PeriodoId}, " +
+                "TotalEnviadas: {TotalEnviadas}, SoloValidar: {SoloValidar}, PermitirRecalificar: {PermitirRecalificar}, " +
+                "CapturadoPor: {CapturadoPor}",
+                dto.EscuelaId, dto.GrupoId, dto.MateriaId, dto.PeriodoId,
+                dto.Calificaciones.Count, dto.SoloValidar, dto.PermitirRecalificarExistentes,
+                dto.CapturadoPor);
 
             // Normalizar: si viene el mismo alumno repetido, nos quedamos con la última captura
             var califsNormalizadas = dto.Calificaciones
@@ -182,15 +200,22 @@ namespace SchoolSystem.Application.Services.Implementations
             var permiteInsercion = periodo.PuedeCapturarCalificaciones();
             var permiteRecalificacion = periodo.PuedeModificarCalificaciones() || periodo.EstaEnPeriodoRecalificacion();
 
-            if (!dto.SoloValidar)
-            {
-                // Si NO viene con intención de recalificar, requiere permitir captura normal
-                if (!dto.PermitirRecalificarExistentes && !permiteInsercion)
-                    throw new Exception("Este periodo no permite captura (inactivo, definitivo o fuera de plazo).");
+            // ✅ CAMBIO IMPORTANTE: NO lanzar excepciones globales en modo COMMIT
+            // Las reglas de período se aplican POR ALUMNO en el loop de abajo
+            // Esto permite batch mixto: algunos inserts (permitidos), algunos updates (rechazados si período no permite)
 
-                // Si SÍ viene con intención de recalificar, requiere permitir recalificación/modificación
+            if (dto.SoloValidar)
+            {
+                // En modo validar, sí podemos verificar restricciones globales para información
+                if (!dto.PermitirRecalificarExistentes && !permiteInsercion)
+                {
+                    // Solo informar, no bloquear todo - el precheck dirá qué alumnos tienen problemas
+                }
+
                 if (dto.PermitirRecalificarExistentes && !permiteRecalificacion)
-                    throw new Exception("Este periodo no permite recalificación/modificación.");
+                {
+                    // Solo informar - mismo comportamiento
+                }
             }
 
             // ---------------------------------------------------------
@@ -320,15 +345,29 @@ namespace SchoolSystem.Application.Services.Implementations
                             resultado.PreviewPorAlumno.Add(preview);
                         }
 
-                        // AUDITORÍA: Setear flag si se requiere motivo de recalificación
-                        // (cuando hay calificaciones a recalificar y el período lo permite)
-                        resultado.RequiereMotivoRecalificacion = resultado.TotalActualizarias > 0 && permiteRecalificacion;
+                            // AUDITORÍA: Setear flag si se requiere motivo de recalificación
+                            // (cuando hay calificaciones a recalificar y el período lo permite)
+                            resultado.RequiereMotivoRecalificacion = resultado.TotalActualizarias > 0 && permiteRecalificacion;
 
-                        return resultado;
-                    }
+                            // ✅ LOGGING: Resumen del precheck
+                            stopwatch.Stop();
+                            _logger.LogInformation(
+                                "CalificacionesMasivo_Precheck: Validación previa completada. " +
+                                "EscuelaId: {EscuelaId}, GrupoId: {GrupoId}, MateriaId: {MateriaId}, PeriodoId: {PeriodoId}, " +
+                                "AlumnosValidos: {AlumnosValidos}, Existentes: {Existentes}, PermiteInsercion: {PermiteInsercion}, " +
+                                "PermiteRecalificacion: {PermiteRecalificacion}, Preview[Insertar: {TotalInsertarias}, " +
+                                "Actualizar: {TotalActualizarias}, Omitir: {TotalOmitirias}, Errores: {TotalErrores}], " +
+                                "DuracionMs: {DuracionMs}",
+                                dto.EscuelaId, dto.GrupoId, dto.MateriaId, dto.PeriodoId,
+                                idsAlumnosValidos.Count, existentesPorAlumno.Count, permiteInsercion, permiteRecalificacion,
+                                resultado.TotalInsertarias, resultado.TotalActualizarias, resultado.TotalOmitirias,
+                                resultado.TotalErrores, stopwatch.ElapsedMilliseconds);
+
+                            return resultado;
+                        }
 
             // ---------------------------------------------------------
-            // PASO 2: Construir inserts y updates
+            // PASO 2: Construir inserts y updates (con validaciones POR ALUMNO)
             // ---------------------------------------------------------
             var nuevasCalificaciones = new List<Calificacion>();
             var calificacionesActualizar = new List<Calificacion>();
@@ -353,20 +392,23 @@ namespace SchoolSystem.Application.Services.Implementations
                     if (!dto.PermitirRecalificarExistentes)
                         continue;
 
-                    // Validación: Si se va a recalificar, el motivo es obligatorio
-                    if (string.IsNullOrWhiteSpace(dto.MotivoModificacion))
-                        throw new InvalidOperationException("Debe indicar un motivo de recalificación.");
-
-                    // Segunda validación (por si cambian reglas o se llamó en otro flujo)
+                    // ✅ CAMBIO: Validación por período POR ALUMNO (no global)
                     if (!permiteRecalificacion)
                     {
                         resultado.Errores.Add(new CalificacionMasivaErrorDto
                         {
                             AlumnoId = item.AlumnoId,
-                            Motivo = "El periodo no permite recalificación/modificación."
+                            Motivo = "El período no permite recalificación/modificación para este alumno."
                         });
                         continue;
                     }
+
+                    // Validación: Si se va a recalificar, el motivo es obligatorio y debe tener mínimo 10 caracteres
+                    if (string.IsNullOrWhiteSpace(dto.MotivoModificacion))
+                        throw new InvalidOperationException("Debe indicar un motivo de recalificación.");
+
+                    if (dto.MotivoModificacion.Length < 10)
+                        throw new InvalidOperationException("El motivo de recalificación debe tener mínimo 10 caracteres.");
 
                     // Validación: No se puede recalificar una calificación bloqueada
                     if (existente.Bloqueada)
@@ -402,26 +444,37 @@ namespace SchoolSystem.Application.Services.Implementations
                     existente.ModificadoPor = dto.CapturadoPor;
                     existente.MotivoModificacion = dto.MotivoModificacion;
 
-                    calificacionesActualizar.Add(existente);
-                    continue;
-                }
+                        calificacionesActualizar.Add(existente);
+                        continue;
+                    }
 
-                // No existe: crear nueva
-                var calificacion = new Calificacion
-                {
-                    EscuelaId = dto.EscuelaId,
-                    GrupoId = dto.GrupoId,
-                    MateriaId = dto.MateriaId,
-                    PeriodoId = dto.PeriodoId,
-                    CapturadoPor = dto.CapturadoPor,
-                    AlumnoId = item.AlumnoId,
-                    Observaciones = item.Observaciones,
-                    FechaCaptura = DateTime.Now,
-                    TipoEvaluacion = "Ordinaria"
-                };
+                    // No existe: crear nueva
+                    // ✅ CAMBIO: Validación por período POR ALUMNO (inserts)
+                    if (!permiteInsercion)
+                    {
+                        resultado.Errores.Add(new CalificacionMasivaErrorDto
+                        {
+                            AlumnoId = item.AlumnoId,
+                            Motivo = "El período no permite captura de nuevas calificaciones para este alumno."
+                        });
+                        continue;
+                    }
 
-                calificacion.EstablecerCalificacion(item.CalificacionNumerica, 6.0m);
-                nuevasCalificaciones.Add(calificacion);
+                    var calificacion = new Calificacion
+                    {
+                        EscuelaId = dto.EscuelaId,
+                        GrupoId = dto.GrupoId,
+                        MateriaId = dto.MateriaId,
+                        PeriodoId = dto.PeriodoId,
+                        CapturadoPor = dto.CapturadoPor,
+                        AlumnoId = item.AlumnoId,
+                        Observaciones = item.Observaciones,
+                        FechaCaptura = DateTime.Now,
+                        TipoEvaluacion = "Ordinaria"
+                    };
+
+                    calificacion.EstablecerCalificacion(item.CalificacionNumerica, 6.0m);
+                    nuevasCalificaciones.Add(calificacion);
             }
 
             // ---------------------------------------------------------
@@ -440,14 +493,64 @@ namespace SchoolSystem.Application.Services.Implementations
                 if (calificacionesActualizar.Any())
                     await _unitOfWork.Calificaciones.UpdateRangeAsync(calificacionesActualizar);
 
+                // AUDITORÍA: Crear logs de recalificación
+                var auditLogs = new List<CalificacionAuditLog>();
+
+                foreach (var calificacionActualizada in calificacionesActualizar)
+                {
+                    // Buscar el item en DTO para obtener valores nuevos
+                    var itemEnDto = califsNormalizadas.FirstOrDefault(x => x.AlumnoId == calificacionActualizada.AlumnoId!.Value);
+
+                    if (itemEnDto != null)
+                    {
+                        var auditLog = new CalificacionAuditLog
+                        {
+                            EscuelaId = dto.EscuelaId,
+                            CalificacionId = calificacionActualizada.Id,
+                            AlumnoId = calificacionActualizada.AlumnoId!.Value,
+                            GrupoId = dto.GrupoId,
+                            MateriaId = dto.MateriaId,
+                            PeriodoId = dto.PeriodoId,
+                            CalificacionAnterior = calificacionActualizada.CalificacionOriginal ?? calificacionActualizada.CalificacionNumerica,
+                            CalificacionNueva = itemEnDto.CalificacionNumerica,
+                            ObservacionesAnteriores = calificacionActualizada.Observaciones,
+                            ObservacionesNuevas = itemEnDto.Observaciones,
+                            Motivo = dto.MotivoModificacion ?? "Recalificación masiva",
+                            RecalificadoPor = dto.CapturadoPor,
+                            RecalificadoAtUtc = DateTime.UtcNow,
+                            Origen = "Web",
+                            CorrelationId = null,
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow
+                        };
+
+                        auditLogs.Add(auditLog);
+                    }
+                }
+
+                // Persistir audit logs en la misma transacción
+                if (auditLogs.Any())
+                    await _unitOfWork.CalificacionesAuditLog.AddRangeAsync(auditLogs);
+
                 if (!nuevasCalificaciones.Any() && !calificacionesActualizar.Any())
                 {
                     // Si no hay cambios, rollback y retornamos resultado
                     await _unitOfWork.RollbackTransactionAsync();
+
+                    stopwatch.Stop();
+
+                    // ✅ LOGGING: Sin cambios (batch vacío o todos rechazados)
+                    _logger.LogWarning(
+                        "⚠️ CalificacionesMasivo_NoChanges: Ninguna calificación pudo ser procesada (todos rechazados). " +
+                        "EscuelaId: {EscuelaId}, GrupoId: {GrupoId}, MateriaId: {MateriaId}, PeriodoId: {PeriodoId}, " +
+                        "TotalEnviadas: {TotalEnviadas}, Errores: {Errores}, DuracionMs: {DuracionMs}",
+                        dto.EscuelaId, dto.GrupoId, dto.MateriaId, dto.PeriodoId,
+                        califsNormalizadas.Count, resultado.Errores.Count, stopwatch.ElapsedMilliseconds);
+
                     return resultado;
                 }
 
-                // Primer SaveChanges dentro de la transacción (calificaciones)
+                // Primer SaveChanges dentro de la transacción (calificaciones + auditLogs)
                 await _unitOfWork.SaveChangesAsync();
 
                 resultado.Insertadas = nuevasCalificaciones.Count;
@@ -497,39 +600,91 @@ namespace SchoolSystem.Application.Services.Implementations
                     // COMMIT TRANSACTION
                     await _unitOfWork.CommitTransactionAsync();
 
-                                return resultado;
+                    stopwatch.Stop();
+
+                    // ✅ LOGGING: Fin exitoso (con distintos niveles según errores)
+                    if (resultado.TotalErrores > 0)
+                    {
+                        // LogWarning si hay errores (batch parcial)
+                        _logger.LogWarning(
+                            "⚠️ CalificacionesMasivo_End_Partial: Captura masiva completada parcialmente (con errores). " +
+                            "EscuelaId: {EscuelaId}, GrupoId: {GrupoId}, MateriaId: {MateriaId}, PeriodoId: {PeriodoId}, " +
+                            "TotalEnviadas: {TotalEnviadas}, Insertadas: {Insertadas}, Actualizadas: {Actualizadas}, " +
+                            "TotalProcesadas: {TotalProcesadas}, Errores: {Errores}, DuracionMs: {DuracionMs}",
+                            dto.EscuelaId, dto.GrupoId, dto.MateriaId, dto.PeriodoId,
+                            califsNormalizadas.Count, resultado.Insertadas, resultado.Actualizadas,
+                            resultado.Insertadas + resultado.Actualizadas, resultado.Errores.Count,
+                            stopwatch.ElapsedMilliseconds);
+                    }
+                    else
+                    {
+                        // LogInformation si fue todo exitoso
+                        _logger.LogInformation(
+                            "✅ CalificacionesMasivo_End: Captura masiva completada exitosamente. " +
+                            "EscuelaId: {EscuelaId}, GrupoId: {GrupoId}, MateriaId: {MateriaId}, PeriodoId: {PeriodoId}, " +
+                            "Insertadas: {Insertadas}, Actualizadas: {Actualizadas}, TotalProcesadas: {TotalProcesadas}, " +
+                            "DuracionMs: {DuracionMs}",
+                            dto.EscuelaId, dto.GrupoId, dto.MateriaId, dto.PeriodoId,
+                            resultado.Insertadas, resultado.Actualizadas,
+                            resultado.Insertadas + resultado.Actualizadas,
+                            stopwatch.ElapsedMilliseconds);
+                    }
+
+                    return resultado;
                             }
                             catch (DbUpdateException dbEx) when (IsDuplicateKey(dbEx))
                             {
+                                stopwatch.Stop();
+
                                 // ROLLBACK on duplicate key violation (MySQL error 1062)
                                 await _unitOfWork.RollbackTransactionAsync();
 
-                                // MANEJO ENTERPRISE DE CONCURRENCIA
-                                // Resetear conteos de éxito
-                                resultado.Insertadas = 0;
-                                resultado.Actualizadas = 0;
-                                resultado.AlumnoIdsInsertados.Clear();
-                                resultado.AlumnoIdsActualizados.Clear();
+                                // LOGGING: Warning con CorrelationId y contexto
+                                _logger.LogWarning(
+                                    "❌ CalificacionesMasivo_ConcurrencyDuplicate: Conflicto de concurrencia detectado (UNIQUE violation). " +
+                                    "EscuelaId: {EscuelaId}, GrupoId: {GrupoId}, MateriaId: {MateriaId}, PeriodoId: {PeriodoId}, " +
+                                    "TotalEnviadas: {TotalEnviadas}, Insertadas: {Insertadas}, Actualizadas: {Actualizadas}, " +
+                                    "Errores: {Errores}, DuracionMs: {DuracionMs}, InnerException: {InnerException}",
+                                    dto.EscuelaId, dto.GrupoId, dto.MateriaId, dto.PeriodoId,
+                                    califsNormalizadas.Count, resultado.Insertadas, resultado.Actualizadas,
+                                    resultado.Errores.Count, stopwatch.ElapsedMilliseconds,
+                                    dbEx.InnerException?.Message ?? "No details");
 
-                                // Agregar error global de concurrencia
-                                    resultado.Errores.Add(new CalificacionMasivaErrorDto
+                                // Lanzar ConcurrencyConflictException con contexto
+                                throw new ConcurrencyConflictException(
+                                    "Se detectó una captura simultánea. Recarga y vuelve a intentar.",
+                                    contextData: new Dictionary<string, object>
                                     {
-                                        AlumnoId = 0,  // 0 indica error global, no específico de un alumno
-                                        Motivo = "Ya existe calificación (concurrencia). Reintenta."
-                                    });
+                                        { "EscuelaId", dto.EscuelaId },
+                                        { "GrupoId", dto.GrupoId },
+                                        { "MateriaId", dto.MateriaId },
+                                        { "PeriodoId", dto.PeriodoId },
+                                        { "CapturadoPor", dto.CapturadoPor },
+                                        { "InnerException", dbEx.InnerException?.Message ?? "N/A" }
+                                    }
+                                );
+                            }
+                            catch (Exception ex)
+                            {
+                                stopwatch.Stop();
 
-                                    resultado.TotalErrores += 1;
-                                    resultado.Exitoso = false;
-                                    resultado.Mensaje = "No se pudo completar la operación por conflicto de concurrencia. Otro usuario capturó calificaciones simultáneamente.";
+                                // ROLLBACK on any other exception
+                                await _unitOfWork.RollbackTransactionAsync();
 
-                                    // Lanzar ConflictException para que el controller devuelva 409
-                                    throw new ConflictException(resultado.Mensaje);
-                                }
-                                catch (Exception)
-                                {
-                                    // ROLLBACK on any other exception
-                                    await _unitOfWork.RollbackTransactionAsync();
-                                    throw;
+                                // ✅ LOGGING: Error inesperado con stacktrace y contexto
+                                _logger.LogError(
+                                    ex,
+                                    "🔥 CalificacionesMasivo_Error: Excepción inesperada durante captura masiva. " +
+                                    "EscuelaId: {EscuelaId}, GrupoId: {GrupoId}, MateriaId: {MateriaId}, PeriodoId: {PeriodoId}, " +
+                                    "TotalEnviadas: {TotalEnviadas}, Insertadas: {Insertadas}, Actualizadas: {Actualizadas}, " +
+                                    "Errores: {Errores}, DuracionMs: {DuracionMs}, " +
+                                    "ExceptionType: {ExceptionType}, ExceptionMessage: {ExceptionMessage}",
+                                    dto.EscuelaId, dto.GrupoId, dto.MateriaId, dto.PeriodoId,
+                                    califsNormalizadas.Count, resultado.Insertadas, resultado.Actualizadas,
+                                    resultado.Errores.Count, stopwatch.ElapsedMilliseconds,
+                                    ex.GetType().Name, ex.Message);
+
+                                throw;
                                 }
                     }
 
@@ -744,43 +899,19 @@ namespace SchoolSystem.Application.Services.Implementations
                     // ============================================================
                     /// <summary>
                     /// Detecta si una excepción DbUpdateException es causada por
-                    /// un error de violación de clave única (MySQL error 1062).
+                    /// una violación de clave única (MySQL error 1062).
+                    /// 
+                    /// Delegado a la extensión DbUpdateExceptionExtensions.IsDuplicateKeyError()
+                    /// para reutilizar lógica y mantener consistencia.
                     /// 
                     /// Esto es usado en CreateMasivoAsync para manejar race conditions
                     /// cuando múltiples usuarios capturan calificaciones simultáneamente.
                     /// </summary>
                     private bool IsDuplicateKey(DbUpdateException ex)
                     {
-                        // En MySQL, el error de clave duplicada es 1062
-                        // Buscamos en la InnerException si la propiedad "Number" es 1062
-
-                        if (ex?.InnerException == null)
-                            return false;
-
-                        // Si la InnerException tiene una propiedad "Number" igual a 1062
-                        // entonces es un error de clave duplicada en MySQL
-                        var innerEx = ex.InnerException;
-
-                        // Intentar acceder a la propiedad Number (tipo dinámico o reflexión)
-                        try
-                        {
-                            var numberProperty = innerEx.GetType().GetProperty("Number");
-                            if (numberProperty != null)
-                            {
-                                var number = (int?)numberProperty.GetValue(innerEx);
-                                return number == 1062; // MySQL Duplicate entry error
-                            }
-                        }
-                        catch
-                        {
-                            // Si falla la reflexión, intentar en el mensaje
-                        }
-
-                        // Fallback: buscar en el mensaje si contiene "Duplicate entry"
-                        if (innerEx.Message != null && innerEx.Message.Contains("Duplicate entry", StringComparison.OrdinalIgnoreCase))
-                            return true;
-
-                        return false;
+                        // Usar la extensión que ya tiene lógica robusta
+                        // Compatible con Pomelo MySQL y MySqlConnector
+                        return ex.IsDuplicateKeyError();
                     }
                 }
             }

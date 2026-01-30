@@ -23,6 +23,7 @@ namespace SchoolSystem.Domain.Interfaces
         IRepository<Alumno> Alumnos { get; }
         IRepository<Asistencia> Asistencias { get; }
         IRepository<Calificacion> Calificaciones { get; }
+        IRepository<CalificacionAuditLog> CalificacionesAuditLog { get; }
         IRepository<Escuela> Escuelas { get; }
         IRepository<Grado> Grados { get; }
         IRepository<Grupo> Grupos { get; }

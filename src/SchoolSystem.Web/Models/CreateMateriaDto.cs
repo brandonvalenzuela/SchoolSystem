@@ -16,20 +16,30 @@ namespace SchoolSystem.Web.Models
 
         public int Tipo { get; set; } = 1; // 1 = Teórica (por defecto)
 
-        // --- PROPIEDADES QUE FALTABAN ---
+        // --- PROPIEDADES MEJORADAS ---
 
-        public string Color { get; set; } = "#FFFFFF"; // Valor por defecto para el input color
+        /// <summary>
+        /// Color en formato hexadecimal (#RGB o #RRGGBB)
+        /// Ejemplo: "#FF5733"
+        /// Nullable
+        /// </summary>
+        [StringLength(7, MinimumLength = 4, ErrorMessage = "ColorHex debe ser #RGB (4) o #RRGGBB (7).")]
+        [RegularExpression(@"^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$", ErrorMessage = "ColorHex debe ser #RGB o #RRGGBB con valores hexadecimales.")]
+        public string? ColorHex { get; set; }
 
-        public string Descripcion { get; set; }
+        [StringLength(1000)]
+        public string? Descripcion { get; set; }
 
         public bool Activo { get; set; } = true;
 
         public bool RequiereMateriales { get; set; }
 
-        public string MaterialesRequeridos { get; set; }
+        [StringLength(1000)]
+        public string? MaterialesRequeridos { get; set; }
 
         public bool RequiereInstalacionesEspeciales { get; set; }
 
-        public string InstalacionesRequeridas { get; set; } // Por si acaso la usas
+        [StringLength(500)]
+        public string? InstalacionesRequeridas { get; set; }
     }
 }

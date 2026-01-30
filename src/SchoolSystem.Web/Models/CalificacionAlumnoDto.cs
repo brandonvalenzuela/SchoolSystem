@@ -27,10 +27,21 @@ namespace SchoolSystem.Web.Models
         /// </summary>
         public string? MotivoPreview { get; set; }
 
-        /// <summary>
-        /// AUDITORÍA: Motivo de recalificación. Se propaga cuando el usuario activa "Recalificar".
-        /// Se usa para auditoría en la BD (tabla Calificacion.MotivoModificacion).
-        /// </summary>
-        public string? MotivoModificacion { get; set; }
-    }
-}
+                /// <summary>
+                /// AUDITORÍA: Motivo de recalificación. Se propaga cuando el usuario activa "Recalificar".
+                /// Se usa para auditoría en la BD (tabla Calificacion.MotivoModificacion).
+                /// </summary>
+                public string? MotivoModificacion { get; set; }
+
+                /// <summary>
+                /// ✅ PASO 6B: Flag para marcar si hubo error al guardar
+                /// Se usa para resaltar la fila en rojo en la tabla de errores
+                /// </summary>
+                public bool TieneError { get; set; }
+
+                /// <summary>
+                /// ✅ PASO 6B: Motivo del error si lo hubo al guardar
+                /// </summary>
+                public string? ErrorMotivo { get; set; }
+            }
+        }

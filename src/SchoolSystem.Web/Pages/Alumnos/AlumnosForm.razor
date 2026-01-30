@@ -137,22 +137,40 @@
         if (response.Succeeded)
         {
             var alumno = response.Data;
-            // Mapeo manual del DTO de lectura al modelo del formulario
-            modelo.Matricula = alumno.Matricula;
-            modelo.Nombre = alumno.Nombre;
-            modelo.ApellidoPaterno = alumno.ApellidoPaterno;
-            modelo.ApellidoMaterno = alumno.ApellidoMaterno;
+            // Mapeo completo del DTO de lectura al modelo del formulario
+            modelo.Matricula = alumno.Matricula ?? string.Empty;
+            modelo.Nombre = alumno.Nombre ?? string.Empty;
+            modelo.ApellidoPaterno = alumno.ApellidoPaterno ?? string.Empty;
+            modelo.ApellidoMaterno = alumno.ApellidoMaterno ?? string.Empty;
             modelo.FechaNacimiento = alumno.FechaNacimiento;
-            modelo.Email = alumno.Email;
-            // modelo.Genero = ... (Aquí necesitarías mapear el string "Masculino" a int 1, o ajustar el DTO)
-            // modelo.Telefono = alumno.Telefono; 
-            // etc...
+            modelo.Email = alumno.Email ?? string.Empty;
+            modelo.Telefono = alumno.Telefono ?? string.Empty;
+            modelo.Direccion = alumno.Direccion ?? string.Empty;
+
+            // Mapeo de Género: convertir string a int
+            // AlumnoDto devuelve "Masculino", "Femenino", "Otro"
+            // CreateAlumnoDto espera int (1 = Masculino, 2 = Femenino, 3 = Otro)
+            modelo.Genero = ConvertirGeneroStringAInt(alumno.Genero);
         }
         else
         {
             ToastService.ShowError("No se pudo cargar el alumno.");
         }
         isLoading = false;
+    }
+
+    /// <summary>
+    /// Convierte el string de género (del DTO) a int (para el modelo del formulario).
+    /// </summary>
+    private int ConvertirGeneroStringAInt(string genero)
+    {
+        return genero?.ToLower() switch
+        {
+            "masculino" => 1,
+            "femenino" => 2,
+            "otro" => 3,
+            _ => 1 // Default: Masculino
+        };
     }
 
     private async Task GuardarAlumno()
@@ -167,27 +185,27 @@
 
             if (Id == 0)
             {
-                // Crear
+                // Crear - el modelo ya tiene todos los campos mapeados
                 var response = await AlumnoService.CreateAsync(modelo);
                 exito = response.Succeeded;
                 msg = response.Message;
             }
             else
             {
-                // Editar
+                // Editar - mapear CreateAlumnoDto a UpdateAlumnoDto
                 var updateDto = new UpdateAlumnoDto
                 {
                     Id = this.Id,
-                    Matricula = modelo.Matricula,
-                    Nombre = modelo.Nombre,
-                    ApellidoPaterno = modelo.ApellidoPaterno,
-                    ApellidoMaterno = modelo.ApellidoMaterno,
+                    Matricula = modelo.Matricula ?? string.Empty,
+                    Nombre = modelo.Nombre ?? string.Empty,
+                    ApellidoPaterno = modelo.ApellidoPaterno ?? string.Empty,
+                    ApellidoMaterno = modelo.ApellidoMaterno ?? string.Empty,
                     FechaNacimiento = modelo.FechaNacimiento,
-                    Genero = modelo.Genero,
-                    Email = modelo.Email,
-                    Telefono = modelo.Telefono,
-                    Direccion = modelo.Direccion,
-                    Estatus = 1 // Activo por defecto al editar, o agregar campo
+                    Genero = modelo.Genero, // Ya es int en el modelo
+                    Email = modelo.Email ?? string.Empty,
+                    Telefono = modelo.Telefono ?? string.Empty,
+                    Direccion = modelo.Direccion ?? string.Empty,
+                    Estatus = 1 // Activo (1 = Activo)
                 };
 
                 var response = await AlumnoService.UpdateAsync(Id, updateDto);
