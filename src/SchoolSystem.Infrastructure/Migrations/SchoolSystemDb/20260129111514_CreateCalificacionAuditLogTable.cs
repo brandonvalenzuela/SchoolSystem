@@ -12,9 +12,15 @@ namespace SchoolSystem.Infrastructure.Migrations.SchoolSystemDb
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "UX_Materias_Escuela_Nombre",
-                table: "Materias");
+            // ✅ SEGURA: Verifica si el índice existe antes de eliminarlo
+            // Necesario para versiones de MySQL anteriores a 5.7.4
+            migrationBuilder.Sql(
+                @"SELECT @index_count := COUNT(*) FROM information_schema.STATISTICS 
+                WHERE TABLE_NAME='Materias' AND INDEX_NAME='UX_Materias_Escuela_Nombre' AND TABLE_SCHEMA=DATABASE();
+                SET @sql := IF(@index_count > 0, 'DROP INDEX `UX_Materias_Escuela_Nombre` ON `Materias`', 'SELECT 1');
+                PREPARE stmt FROM @sql;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;");
 
             migrationBuilder.CreateTable(
                 name: "CalificacionesAuditLog",
@@ -120,10 +126,11 @@ namespace SchoolSystem.Infrastructure.Migrations.SchoolSystemDb
             migrationBuilder.DropTable(
                 name: "CalificacionesAuditLog");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Materias_Escuela_Nombre",
-                table: "Materias");
+            // ✅ SEGURA: Eliminar índice solo si existe
+            migrationBuilder.Sql(
+                @"ALTER TABLE `Materias` DROP INDEX IF EXISTS `IX_Materias_Escuela_Nombre`");
 
+            // ✅ SEGURA: Recrear índice unique
             migrationBuilder.CreateIndex(
                 name: "UX_Materias_Escuela_Nombre",
                 table: "Materias",
